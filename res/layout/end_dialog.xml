@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+    
+    <TableRow
+        android:id="@+id/endRow1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+
+    <RatingBar 
+        android:id="@+id/scoreBar"
+        android:numStars="3"
+        android:rating="0"
+        style="?android:attr/ratingBarStyleIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        />
+    </TableRow>
+        <TableRow
+        android:id="@+id/endRow2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+    
+     <TextView
+        android:id="@+id/Message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" 
+         android:textSize="20px"
+         android:textStyle="italic"
+         android:textAlignment="center"
+         android:gravity="center_horizontal"
+        />
+    </TableRow>
+    
+            <TableRow
+        android:id="@+id/endRow3"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+        
+    <TextView
+        android:id="@+id/Completeness"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Completeness: " 
+        android:textSize="20dp"
+        />
+    </TableRow>
+    
+                <TableRow
+        android:id="@+id/endRow4"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+            
+    <TextView
+        android:id="@+id/streak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+      	android:text="Your Longest Streak: "
+      	android:paddingBottom="10dp"
+      	android:textSize="20dp"
+        />
+    
+    </TableRow>
+    
+                
+                
+        <TableRow
+        android:id="@+id/endRow5"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+    <TextView
+        android:id="@+id/improveCompleteness"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:text="*To Improve Completeness, use fewer hints and attempts to answer*"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:textSize="20px"
+        />
+    
+    </TableRow>
+    
+        
+        <TableRow
+        android:id="@+id/endRow6"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+        
+    <View
+     android:id="@+id/divider"
+    android:layout_width="fill_parent"
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp"
+    android:layout_centerHorizontal="true"
+    android:layout_height="2dp"
+    android:background="@android:color/holo_blue_light"/>
+    
+    </TableRow>
+    
+            <TableRow
+        android:id="@+id/endRow7"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+        
+    <TextView
+        android:id="@+id/endScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Score: " 
+        android:textSize="20dp"
+        />
+    
+    
+    </TableRow>
+    
+            
+                <TableRow
+        android:id="@+id/endRow8"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+            
+    <TextView
+        android:id="@+id/endScoreTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Total Score: " 
+        android:textSize="20dp"
+        />
+    
+    </TableRow>             
+             
+        <TableRow
+        android:id="@+id/endRow11"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+             
+    <View
+     android:id="@+id/divider2"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp"
+    android:layout_centerHorizontal="true"
+    android:layout_height="2dp"
+    android:layout_below="@id/bestStreak"
+    android:background="@android:color/holo_blue_light"/>
+    
+    </TableRow>
+            <TableRow
+        android:id="@+id/endRow12"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+        
+    <TextView
+        android:id="@+id/sendReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+      	android:text="Send a detailed report of this set via Email? "
+      	android:layout_below="@id/divider2"
+      	android:textSize="20px"
+      	android:paddingBottom="15dp"
+      	android:paddingTop="5dp"
+      	android:gravity="center_horizontal"
+      	android:layout_centerHorizontal="true"
+        />
+    
+    </TableRow>
+    
+            <TableRow
+        android:id="@+id/endRow12"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+    </TableRow>
+            
+            
+</LinearLayout>
+
+<!-- 
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <TableRow
+        android:id="@+id/tableRow0"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/congrats"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/congrats"
+            android:textColor="#000000"
+            android:textSize="60sp"
+            android:textStyle="normal"
+            android:typeface="normal" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <RatingBar
+            android:id="@+id/scoreBar0"
+            style="?android:attr/ratingBarStyleIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:numStars="10"
+            android:rating="0" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/completedQuestions"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/completeness"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="normal"
+            android:typeface="normal" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/pointsEarned"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/you_earned"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="normal"
+            android:typeface="normal" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/aggregateScore"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/all_time_score"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="normal"
+            android:typeface="normal" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/aggregateScoreValue"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="0"
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="normal"
+            android:typeface="normal" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow6"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/endReplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/restart" />
+
+        <Button
+            android:id="@+id/endMainMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/menu" />
+
+        <Button
+            android:id="@+id/endEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/email_btn" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow7"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.1"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="50sp"
+            android:textStyle="normal"
+            android:typeface="normal" />
+    </TableRow>
+
+</LinearLayout>
+
+-->

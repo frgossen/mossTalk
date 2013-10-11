@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#ffffff" >
+
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:singleLine="true"
+                android:text="@string/user_name_base"
+                android:textColor="#000000"
+                android:textSize="50sp"
+                android:textStyle="normal"
+                android:typeface="normal"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+             >
+
+            <EditText
+                android:id="@+id/baseName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:drawableBottom="@drawable/border"
+                android:drawableLeft="@drawable/border"
+                android:drawableRight="@drawable/border"
+                android:drawableTop="@drawable/border"
+                android:ems="8"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:textSize="50sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:singleLine="true"
+                android:text="@string/email_base"
+                android:textColor="#000000"
+                android:textSize="50sp"
+                android:textStyle="normal"
+                android:typeface="normal"
+                android:gravity="center" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"  >
+
+            <EditText
+                android:background="@drawable/border"
+                android:id="@+id/baseEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/border"
+               android:drawableBottom="@drawable/border"
+                android:drawableLeft="@drawable/border"
+               android:drawableRight="@drawable/border"
+                 android:ems="8"
+				android:textSize="50sp"
+                android:inputType="textEmailAddress"
+                android:gravity="center" />
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow5"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"  >
+
+
+        <TextView 
+            android:layout_width="0dp" 
+            android:layout_height="wrap_content" 
+            android:layout_weight=".33" /> 
+        <Button
+            android:id="@+id/loginId"
+            android:text="@string/login" 
+            android:layout_width="0dp" 
+            android:layout_height="wrap_content" 
+            android:layout_weight=".33" />
+        
+        <TextView
+            android:layout_width="0dp" 
+            android:layout_height="wrap_content" 
+            android:layout_weight=".33" />
+           
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow6"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight=".5"
+            android:gravity="center"  >
+
+            <ImageView
+                android:contentDescription="@string/cont_desc_logo"
+                android:id="@+id/baseLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo" />
+            
+        </TableRow>
+
+</LinearLayout>
