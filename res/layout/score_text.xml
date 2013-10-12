@@ -6,7 +6,7 @@
     android:background="@drawable/white" >
     
     <TextView
-        android:id="@+id/scoretext"
+        android:id="@+id/textScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

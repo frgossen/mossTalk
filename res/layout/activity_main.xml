@@ -1,23 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffff"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <ImageSwitcher
-        android:id="@+id/ImageSwitcher1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/linearLayout1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/btnChangeImage"
-        android:background="@android:color/white"
-        android:paddingTop="10dp" >
-    </ImageSwitcher>
-
+    <!--
     <TextView
         android:id="@+id/hintText"
         android:layout_width="wrap_content"
@@ -70,12 +58,6 @@
                 android:text="Answer" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/speakButton"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:drawableLeft="@drawable/ic_action_microphone"
-            android:text="@string/speak" />
     </LinearLayout>
 
     <ViewFlipper
@@ -96,15 +78,8 @@
             android:textColor="#000000"
             android:textSize="30sp" />
     </ViewFlipper>
-
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ViewFlipper"
-        android:layout_centerHorizontal="true" />
-
+    -->
+    <!--
     <Button
         android:id="@+id/btnChangeImage"
         android:layout_width="wrap_content"
@@ -112,26 +87,106 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:drawableLeft="@drawable/finger2" />
-
-    <!--
-    <Button
-        android:id="@+id/nextSetButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:onClick="onNextSetButtonClick"
-        android:text="@string/nextSet" />
     -->
 
-    <Chronometer
-        android:id="@+id/chronometer1"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp" 
+        android:layout_weight="0">
+
+        <ProgressBar
+            android:id="@+id/progBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+
+            <ViewFlipper
+        android:id="@+id/ViewFlipper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/scoretext"
-        android:layout_marginLeft="7sp"
-        android:text="Chronometer"
-        android:textSize="30sp" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+        <TextView
+            android:id="@+id/txtScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="0"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:text="@string/score"/>
+        </ViewFlipper>
+    </LinearLayout>
 
-</RelativeLayout>
+    <ImageSwitcher
+        android:id="@+id/imgSwitcher"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:background="@android:color/black" >
+    </ImageSwitcher>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="horizontal"
+        android:padding="16dp" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".7"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/hintOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/btnHintSound"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="@string/btnSound"
+		            android:textSize="22sp"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/btnHintWord"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:textSize="22sp"
+                    android:text="@string/btnWord"
+                    tools:ignore="ButtonStyle" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSpeak"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".3"
+                android:textSize="22sp"
+                android:drawableLeft="@drawable/ic_action_microphone"
+                android:text="@string/speak" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="22sp"
+            android:layout_weight="0.3"
+            android:onClick="onNextSetButtonClick"
+            android:text="@string/nextSet" />
+
+    </LinearLayout>
+    
+</LinearLayout>

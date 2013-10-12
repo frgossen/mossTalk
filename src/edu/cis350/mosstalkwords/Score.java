@@ -12,7 +12,7 @@ public class Score extends Activity {
 	    super.onCreate(savedInstanceState);
 	    Intent i = getIntent();
 	    int score = i.getIntExtra("score", 0);
-	    TextView view = (TextView)findViewById(R.id.scoretext);
+	    TextView view = (TextView)findViewById(R.id.textScore);
 	    view.setText("Score = " + score);
 	    try {
 			i.wait(3000);

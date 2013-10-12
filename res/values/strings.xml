@@ -57,7 +57,13 @@
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">15dp</item>
     </style>		
-	
+	    <string name="btnWord">Word</string>
+        <string name="btnSound">Sound</string>
+        <string name="logo">Logo</string>
+        <string name="reset">Reset Score</string>
+        <string name="favourites">Favourites</string>
+        <string name="wordQuest">Word Quest</string>
+        <string name="categories">Categories</string>	
 
     
 

@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	final Context context = this;
 
 
-	Chronometer timer;
+	//Chronometer timer;
 
 	String currentImage;
 	private int stimulusSetSize=10;
@@ -125,7 +125,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		setContentView(R.layout.activity_main);
 
-		imSwitcher = (ImageSwitcher) findViewById(R.id.ImageSwitcher1);
+		imSwitcher = (ImageSwitcher) findViewById(R.id.imgSwitcher);
 		imSwitcher.setFactory(this);
 		imSwitcher.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
 		imSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
@@ -137,16 +137,16 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		new InitCategoriesBackgroundTask().execute();
 
-		pbar = (ProgressBar) findViewById(R.id.progressBar1);
+		pbar = (ProgressBar) findViewById(R.id.progBar);
 
-		timer = (Chronometer) findViewById(R.id.chronometer1);
-		TextView txtView = (TextView)findViewById(R.id.chronometer1);
-		TextView scoreView = (TextView)findViewById(R.id.scoretext);
-		txtView.setTextColor(Color.RED);
+		//timer = (Chronometer) findViewById(R.id.chronometer1);
+		//TextView txtView = (TextView)findViewById(R.id.chronometer1);
+		TextView scoreView = (TextView)findViewById(R.id.txtScore);
+		//txtView.setTextColor(Color.RED);
 		Typeface typeface = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-BoldCondensed.ttf");
-		txtView.setTypeface(typeface);
+		//txtView.setTypeface(typeface);
 		scoreView.setTypeface(typeface);
-		timer.start();
+		//timer.start();
 
 
 		addListenerForButton();
@@ -239,11 +239,11 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 	public void addListenerForButton()
 	{
-		speakBtn = (Button) findViewById(R.id.speakButton);
+		speakBtn = (Button) findViewById(R.id.btnSpeak);
 
-		imSwitcher=(ImageSwitcher) findViewById(R.id.ImageSwitcher1);
+		imSwitcher=(ImageSwitcher) findViewById(R.id.imgSwitcher);
 
-		nextButton = (Button) findViewById(R.id.btnChangeImage);
+		nextButton = (Button) findViewById(R.id.btnNext);
 
 		nextButton.setBackgroundColor(Color.WHITE);
 		nextButton.setOnClickListener(new OnClickListener()
@@ -360,10 +360,10 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 			Drawable drawableBitmap = new BitmapDrawable(getResources(),im);
 			imSwitcher.setImageDrawable(drawableBitmap);
 
-			TextView hintView= (TextView)findViewById(R.id.hintText);
-			hintView.setText("");	
+			//TextView hintView= (TextView)findViewById(R.id.btnHintSound);
+			//hintView.setText("");	
 		}
-		timer.setBase(SystemClock.elapsedRealtime());
+		//timer.setBase(SystemClock.elapsedRealtime());
 	}
 
 	public void resetMetricsImage() {
@@ -381,7 +381,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		Log.d("imagecounter","image counter is: " + imageCounter);
 		imCache.clearCache();
 		new LoadHintsBackgroundTask().execute();
-		TextView hintView= (TextView)findViewById(R.id.hintText);
+		TextView hintView= (TextView)findViewById(R.id.btnHintSound);
 		hintView.setText("");
 	}	
 	public void playSet()
@@ -399,7 +399,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		if (im == null) { Log.d("nextImage","null bitmap- that's bad/" + currentImage); } 
 		Drawable drawableBitmap = new BitmapDrawable(getResources(),im);
 		imSwitcher.setImageDrawable(drawableBitmap);
-		timer.setBase(SystemClock.elapsedRealtime());
+		//timer.setBase(SystemClock.elapsedRealtime());
 		//currentImage = currentSet.getStimuli().get(imageCounter).getName();
 	}
 	public void onNextSetButtonClick(View view) {
@@ -460,7 +460,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 			//new InitCategoriesBackgroundTask().execute();
 			currentSet = allStimulusSets.get(index);
 			new LoadHintsBackgroundTask().execute();
-			timer.setBase(SystemClock.elapsedRealtime());
+			//timer.setBase(SystemClock.elapsedRealtime());
 
 		}
 		if(requestCode==4)
@@ -500,7 +500,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 					int thisImageScore = (300-100*hintsUsed <= 0 ? 100:300-100*hintsUsed);
 					currentUser.updateImageScore(currentSet.getName(), imageCounter, thisImageScore);
 					ViewFlipper scoreTextView = (ViewFlipper)findViewById(R.id.ViewFlipper);
-					TextView scoreView = (TextView)scoreTextView.findViewById(R.id.scoretext);
+					TextView scoreView = (TextView)scoreTextView.findViewById(R.id.txtScore);
 
 					scoreView.setText("Score: " + String.valueOf(currentUser.getTotalScore()));
 					ViewPropertyAnimator animate = scoreTextView.animate();
@@ -556,7 +556,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 	//Handler for sentence hint
 	public void onSentenceHintButtonClick(View view) {
-		TextView hintView= (TextView)findViewById(R.id.hintText);
+		TextView hintView= (TextView)findViewById(R.id.btnHintSound);
 		String hint = currentSet.getStimuli().get(imageCounter).getSentence();
 		hintView.setText(hint);
 		speak(hint, 1);
@@ -565,7 +565,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 	//handler for similar word hint
 	public void onRhymeHintButtonClick(View view) {
-		TextView hintView= (TextView)findViewById(R.id.hintText);
+		TextView hintView= (TextView)findViewById(R.id.btnHintSound);
 		String[] rhymes = currentSet.getStimuli().get(imageCounter).getRhymes();
 		Log.d("rhyme hints","rhymes:" + rhymes.toString());
 		Log.d("rhyme hints","rhyme ptr: " + rhymePtr);
@@ -579,7 +579,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 	//handler for giving up and getting answer
 	public void onAnswerHintButtonClick(View view) {
-		TextView hintView= (TextView)findViewById(R.id.hintText);
+		TextView hintView= (TextView)findViewById(R.id.btnHintWord);
 		String hint = currentSet.getStimuli().get(imageCounter).getName();
 		hintView.setText(hint);
 		speak(hint, 1);
