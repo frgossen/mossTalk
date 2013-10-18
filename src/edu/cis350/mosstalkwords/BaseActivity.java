@@ -25,6 +25,11 @@ public class BaseActivity extends Activity implements OnClickListener{
 
 	Button login;
 
+	EditText n;
+	EditText e;
+	//store name and email
+	SharedPreferences userSettings;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -33,6 +38,12 @@ public class BaseActivity extends Activity implements OnClickListener{
 		login = (Button)findViewById(R.id.loginId);
 		login.setOnClickListener(this);
 		
+		n = (EditText)findViewById(R.id.baseName);
+		e = (EditText)findViewById(R.id.baseEmail);
+		
+		userSettings=getSharedPreferences("UserPreferences", MODE_PRIVATE);
+		n.setText(userSettings.getString("name123", ""));
+		e.setText(userSettings.getString("email123", ""));
 	}
 	
 	public void onClick(View v) {
@@ -40,22 +51,17 @@ public class BaseActivity extends Activity implements OnClickListener{
 		Intent i = getIntent();
 		if(v.getId() == login.getId())
 		{
-			EditText n = (EditText)findViewById(R.id.baseName);
-			EditText e = (EditText)findViewById(R.id.baseEmail);
+			 SharedPreferences.Editor editor = userSettings.edit();
+			
 			String name = n.getText().toString();
 			String email = e.getText().toString();
 			if(name != null && email != null && !name.equals("") && !email.equals(""))
 			{
-				System.out.println(name + " " + email);
-				i.putExtra("name", name);
-				i.putExtra("email", email);
 				setResult(RESULT_OK, i);
 				
-				//store name and email
-				SharedPreferences userSettings=getSharedPreferences("userpreferences", MODE_PRIVATE);
-				 SharedPreferences.Editor editor = userSettings.edit();
-				 editor.putString("name", name);
-				 editor.putString("email", email);
+				 editor.putString("name123", name);
+				 editor.putString("email123", email);
+				 
 				 editor.commit();
 				 
 

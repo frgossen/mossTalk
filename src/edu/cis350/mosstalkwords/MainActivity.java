@@ -106,6 +106,8 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	ArrayList<StimulusSet> allStimulusSets;
 	StimulusSet currentSet;
 
+	int setScore = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("on create");
@@ -326,6 +328,8 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		Intent endSet=new Intent(this, EndSetActivity.class);
 		endSet.putExtra("User", currentUser);
 		endSet.putExtra("currentSet", currentSet.getName());
+		endSet.putExtra("setScore", setScore);
+		setScore = 0;
 		startActivityForResult(endSet,4);
 
 	}
@@ -498,6 +502,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 				if (s.toLowerCase().contains(currentImage.toLowerCase())) {
 					//subtract 100 for each hint used, but if 3+ are used make the score 100 anyway
 					int thisImageScore = (300-100*hintsUsed <= 0 ? 100:300-100*hintsUsed);
+					setScore += thisImageScore;
 					currentUser.updateImageScore(currentSet.getName(), imageCounter, thisImageScore);
 					ViewFlipper scoreTextView = (ViewFlipper)findViewById(R.id.ViewFlipper);
 					TextView scoreView = (TextView)scoreTextView.findViewById(R.id.txtScore);

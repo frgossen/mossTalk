@@ -33,7 +33,8 @@ public class EndSetActivity extends Activity {
 	    
 	    
 	    LayoutInflater inflater = this.getLayoutInflater();//(LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View layout = inflater.inflate(R.layout.dialog_endset, null);
+	    //View layout = inflater.inflate(R.layout.dialog_endset, null);
+	    View layout = inflater.inflate(R.layout.end_dialog, null);
 	   
 	    RatingBar score=(RatingBar) layout.findViewById(R.id.scoreBar);
 	    int starScore=currentUser.getStarScore(currentSet);
@@ -53,21 +54,31 @@ public class EndSetActivity extends Activity {
 	    message.setText(msg);
 	    
 	    TextView completeness=(TextView) layout.findViewById(R.id.Completeness);
-	    String efficiencyPercent=new Integer(currentUser.getAverageEfficiencyPercent(currentSet)).toString();
+	    String efficiencyPercent = new Integer(currentUser.getAverageEfficiencyPercent(currentSet)).toString();
 	    completeness.setText(completeness.getText()+efficiencyPercent+"%");
 	    
 	    TextView streak=(TextView) layout.findViewById(R.id.streak);
-	    String longestStreak=new Integer(currentUser.getLongestStreak(currentSet)).toString();
+	    String longestStreak= new Integer(currentUser.getLongestStreak(currentSet)).toString();
 	    streak.setText(streak.getText()+longestStreak);
 	    
-	    RatingBar bestScore=(RatingBar) layout.findViewById(R.id.bestScoreBar);
+	    TextView setScoreNum = (TextView) layout.findViewById(R.id.endScore);
+	    setScoreNum.setText(setScoreNum.getText().toString() + this.getIntent().getExtras().getInt("setScore")); 
+
+	    
+	    TextView totalScoreNum = (TextView) layout.findViewById(R.id.endScoreTotal);
+	    totalScoreNum.setText(totalScoreNum.getText().toString() + currentUser.getTotalScore()); 
+
+	    
+	    
+	    /*RatingBar bestScore=(RatingBar) layout.findViewById(R.id.bestScoreBar);
 	    int bestStarScore=0;
 	    if(currentUser.bestScoresForSets.containsKey(currentSet))
 	    	bestStarScore=currentUser.bestScoresForSets.get(currentSet);
 	    if(bestStarScore>0)
 	    	bestScore.setNumStars(bestStarScore);
 	    bestScore.setRating(bestStarScore);
-	    
+	    */
+	    /*
 	    TextView bestCompleteness=(TextView) layout.findViewById(R.id.bestCompleteness);
 	    String bestEfficiencyPercent=Integer.valueOf(currentUser.bestCompletenessForSets.get(currentSet)).toString();
 	    bestCompleteness.setText(bestCompleteness.getText()+bestEfficiencyPercent+"%");
@@ -75,7 +86,7 @@ public class EndSetActivity extends Activity {
 	    TextView bestStreak=(TextView) layout.findViewById(R.id.bestStreak);
 	    String bestLongestStreak=Integer.valueOf(currentUser.bestStreaksForSets.get(currentSet)).toString();
 	    bestStreak.setText(bestStreak.getText()+bestLongestStreak);
-	    
+	    */
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setCancelable(false);
 			builder.setTitle("Congratulations!")//hackish extra spaces to center the title since not an option
