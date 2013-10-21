@@ -3,6 +3,8 @@ package edu.cis350.mosstalkwords;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.PropertiesCredentials;
@@ -26,12 +28,19 @@ public class Images_SDB {
     private static String myDomain = "mossWords";
     private static AmazonSimpleDB sdb;
     
-    public static void main(String[] args) throws Exception {
-
-    	
+    public Images_SDB() {
+       	try {
         sdb = new AmazonSimpleDBClient(new PropertiesCredentials(
                 Images_SDB.class.getResourceAsStream("AwsCredentials.properties")));
+       	}
+       	catch(Exception e) {
+       		System.out.println(e);
+       	}
+    }
+    
+    public static void main(String[] args) throws Exception {
 
+ 
         System.out.println("===========================================");
         System.out.println("Getting Started with Amazon SimpleDB");
         System.out.println("===========================================\n");
@@ -69,30 +78,36 @@ public class Images_SDB {
     }
     
 
-    public static List<Image> returnImages(String category) {
+    public List<Image> returnImages(String category) {
     	List<Image> img= new ArrayList<Image>();
         String selectExpression = "select * from `" + myDomain + "` where Category = '"+category+"' ";
         System.out.println("Selecting: " + selectExpression + "\n");
+        try{
         SelectRequest selectRequest = new SelectRequest(selectExpression);
-
         String[] arg= new String[6];
         int num=0;
         
-        for (Item item : sdb.select(selectRequest).getItems()) {
-        	if(num==20)
-        		break;
-        	arg[0]=item.getName();
-            int i=1;
-            System.out.println("    Name: " + item.getName());
-            for (Attribute attribute : item.getAttributes()) {
-                arg[i]=","+attribute.getValue();
-                i++;
-            	System.out.println("      Attribute");
-                System.out.println("        Name:  " + attribute.getName());
-                System.out.println("        Value: " + attribute.getValue());
-            }
-            img.add(new Image(arg[0],arg[1].substring(1),arg[2].substring(1),arg[3].substring(1),arg[4].substring(1),arg[5].substring(1)));
-            num++;
+	        for (Item item : sdb.select(selectRequest).getItems()) {
+	        	if(num==20)
+	        		break;
+	        	arg[0]=item.getName();
+	            int i=1;
+	            //System.out.println("    Name: " + item.getName());
+	            for (Attribute attribute : item.getAttributes()) {
+	                arg[i]=","+attribute.getValue();
+	                i++;
+	            	/*System.out.println("      Attribute");
+	                System.out.println("        Name:  " + attribute.getName());
+	                System.out.println("        Value: " + attribute.getValue());*/
+	            }
+	            img.add(new Image(arg[0],arg[1].substring(1),arg[2].substring(1),arg[3].substring(1),arg[4].substring(1),arg[5].substring(1)));
+	            num++;
+	        }
+        }
+        catch(Exception e)
+        {
+        	Log.d("exception",e.toString());
+        	
         }
         return img;
     }
@@ -102,7 +117,7 @@ public class Images_SDB {
      * We have getters for all the attributes of the images.
      */
     public static void displayImages() {
-    	List<Image> img=returnImages("Living");
+    	List<Image> img=new Images_SDB().returnImages("Living");
     	for(int i=0;i<img.size();i++) {
     		System.out.println(img.get(i).getUrl());
     	}

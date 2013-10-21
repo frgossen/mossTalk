@@ -671,7 +671,16 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 				//load the categories
 				URL aURL = new URL("https://s3.amazonaws.com/mosstalkdata/categories" + s3append + ".txt");				
 				Log.d("url", aURL.toString());
-
+				
+				/*--------------------------------------------------------------
+				 * Sample Code for testing the returnImages method
+				Log.d("Login","Login Button Clicked");
+				
+				Images_SDB imgsdb=new Images_SDB();
+				List<Image> list1 = imgsdb.returnImages("Living");
+				Log.d("First Word",list1.get(0).getWord());
+				------------------------------------------------------------
+				*/
 				BufferedReader bread = new BufferedReader(new InputStreamReader(aURL.openStream()));
 				int setIdx = 0;
 				String line;
