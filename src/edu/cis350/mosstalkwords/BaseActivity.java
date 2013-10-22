@@ -64,7 +64,8 @@ public class BaseActivity extends Activity implements OnClickListener{
 				 
 				 editor.commit();
 				 
-
+				//Intent userEntry = new Intent(this, WelcomeActivity.class);
+					
 				Intent userEntry = new Intent(this, MainActivity.class);
 				startActivity(userEntry);
 					

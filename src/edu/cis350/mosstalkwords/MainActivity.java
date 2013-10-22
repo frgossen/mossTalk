@@ -125,6 +125,8 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		tts = new TextToSpeech(this, this);
 
+		
+		
 		setContentView(R.layout.activity_main);
 
 		imSwitcher = (ImageSwitcher) findViewById(R.id.imgSwitcher);
