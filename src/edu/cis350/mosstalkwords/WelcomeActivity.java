@@ -52,7 +52,11 @@ public class WelcomeActivity extends Activity implements OnClickListener {
 		}
 		else if (view.getId() == category_list.getId()) {
 			Intent categoryListEntry = new Intent(this, CategoryList.class);	
-			startActivity(categoryListEntry);
+			//startActivity(categoryListEntry);
+			
+			startActivityForResult(categoryListEntry, 3);
+			setResult(RESULT_OK, i);
+			finish();
 		} 
 		else if (view.getId() == favorite.getId()) {
 			Intent favoriteEntry = new Intent(this, MainActivity.class);	

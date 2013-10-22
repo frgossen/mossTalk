@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -41,6 +44,19 @@ public class CategoryList extends Activity {
 	    // The row layout that is used during the row creation
 	    // The View id used to show the data. The key number and the view id must match
 	    lv.setAdapter(new CategoryListAdapter(this, categoryList));
+	    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+	        public void onItemClick(AdapterView<?> parent, final View view,
+	            int position, long id) {
+	          final String item = (String) parent.getItemAtPosition(position);
+	          System.out.println(""+position);
+	          Intent i = getIntent();
+	  		 i.putExtra("indexOfSetsArray", position);
+	  		setResult(RESULT_OK, i);
+	  		finish();
+	        }
+
+	      });
+	    }
 	}
 		
-}

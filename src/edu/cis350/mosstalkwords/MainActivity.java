@@ -86,6 +86,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 	Button popup;
 
+	Button wordHintBtn;
 
 	final Context context = this;
 
@@ -210,6 +211,8 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		userEntry.putExtra("User", currentUser);
 		startActivityForResult(userEntry,2);
 	}
+	
+	///changed to main_menu
 	private void openWelcomePage() {
 		Intent welcome = new Intent(this, WelcomeActivity.class);
 		welcome.putExtra("User", currentUser);
@@ -249,7 +252,10 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		nextButton = (Button) findViewById(R.id.btnNext);
 
+		wordHintBtn = (Button) findViewById(R.id.btnHintWord);
+		
 		nextButton.setBackgroundColor(Color.WHITE);
+		
 		nextButton.setOnClickListener(new OnClickListener()
 		{
 			//next button: user didn't get the word so score = 0 and streak ends; switch images
@@ -265,6 +271,17 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		speakBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
 				startVoiceRecognitionActivity();
+			}
+		});
+		
+		wordHintBtn.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View arg0) {
+				hintsUsed++;
+				String hint = currentSet.getStimuli().get(imageCounter).getName();
+				
+				speak(hint, 1);
+				//numAttempts=3;
 			}
 		});
 	}
@@ -331,7 +348,12 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		endSet.putExtra("User", currentUser);
 		endSet.putExtra("currentSet", currentSet.getName());
 		endSet.putExtra("setScore", setScore);
+		
+		//@@
 		setScore = 0;
+		TextView scoreView = (TextView)findViewById(R.id.txtScore);
+		scoreView.setText("Score: " + String.valueOf(setScore));
+		
 		startActivityForResult(endSet,4);
 
 	}
@@ -377,6 +399,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		numAttempts=0;//starts at one because does not increment when answered correctly
 	}
 
+	//@@
 	public void nextSet() {
 		
 		setCounter=(setCounter + 1)%allStimulusSets.size();
@@ -387,8 +410,12 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		Log.d("imagecounter","image counter is: " + imageCounter);
 		imCache.clearCache();
 		new LoadHintsBackgroundTask().execute();
-		TextView hintView= (TextView)findViewById(R.id.btnHintSound);
-		hintView.setText("");
+		
+		
+		// what????
+		//TextView hintView= (TextView)findViewById(R.id.btnHintSound);
+		//hintView.setText("");
+		
 	}	
 	public void playSet()
 	{
@@ -473,13 +500,13 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		{
 			if(data.getBooleanExtra("Send", false))
 			{
-				if(currentUser.name==null)
+				//if(currentUser.name==null)
 					enterNameAndEmail();
-				else
-				{
-					createAndSendReport();
+				//else
+				//{
+				//	createAndSendReport();
 
-				}
+				//}
 			}
 			else if(data.getBooleanExtra("No", false))
 			{
@@ -503,13 +530,26 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 			for (String s: matches) {
 				if (s.toLowerCase().contains(currentImage.toLowerCase())) {
 					//subtract 100 for each hint used, but if 3+ are used make the score 100 anyway
-					int thisImageScore = (300-100*hintsUsed <= 0 ? 100:300-100*hintsUsed);
+					int thisImageScore = 0;
+					if(hintsUsed == 0)
+						thisImageScore = 100;
+					else if(hintsUsed == 1)
+						thisImageScore = 80;
+					else if(hintsUsed == 2)
+						thisImageScore = 60;
+					else
+						thisImageScore = 0;
+					
 					setScore += thisImageScore;
+
+					//@@
+					//int thisImageScore = (100-20*hintsUsed <= 0 ? 100:100-20*hintsUsed);
+					//setScore += thisImageScore;
 					currentUser.updateImageScore(currentSet.getName(), imageCounter, thisImageScore);
 					ViewFlipper scoreTextView = (ViewFlipper)findViewById(R.id.ViewFlipper);
 					TextView scoreView = (TextView)scoreTextView.findViewById(R.id.txtScore);
 
-					scoreView.setText("Score: " + String.valueOf(currentUser.getTotalScore()));
+					scoreView.setText("Score: " + String.valueOf(setScore));
 					ViewPropertyAnimator animate = scoreTextView.animate();
 					animate.rotationBy(360);
 
@@ -673,16 +713,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 				//load the categories
 				URL aURL = new URL("https://s3.amazonaws.com/mosstalkdata/categories" + s3append + ".txt");				
 				Log.d("url", aURL.toString());
-				
-				/*--------------------------------------------------------------
-				 * Sample Code for testing the returnImages method
-				Log.d("Login","Login Button Clicked");
-				
-				Images_SDB imgsdb=new Images_SDB();
-				List<Image> list1 = imgsdb.returnImages("Living");
-				Log.d("First Word",list1.get(0).getWord());
-				------------------------------------------------------------
-				*/
+
 				BufferedReader bread = new BufferedReader(new InputStreamReader(aURL.openStream()));
 				int setIdx = 0;
 				String line;
