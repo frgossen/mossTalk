@@ -51,9 +51,9 @@ public class CategoryList extends Activity {
 	          final String item = (String) parent.getItemAtPosition(position);
 	          System.out.println(""+position);
 	          Intent i = getIntent();
-	  		 i.putExtra("indexOfSetsArray", position);
-	  		setResult(RESULT_OK, i);
-	  		finish();
+	          i.putExtra("indexOfSetsArray", position);
+	  		  setResult(RESULT_OK, i);
+	  		  finish();
 	        }
 
 	      });

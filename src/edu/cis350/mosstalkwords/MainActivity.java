@@ -217,7 +217,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		Intent welcome = new Intent(this, WelcomeActivity.class);
 		welcome.putExtra("User", currentUser);
 		startActivityForResult(welcome, 3);
-
+		//startActivity(welcome);
 	}
 	private void returnFromSet()
 	{

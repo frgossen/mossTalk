@@ -54,13 +54,26 @@ public class WelcomeActivity extends Activity implements OnClickListener {
 			Intent categoryListEntry = new Intent(this, CategoryList.class);	
 			//startActivity(categoryListEntry);
 			
-			startActivityForResult(categoryListEntry, 3);
-			setResult(RESULT_OK, i);
-			finish();
+			startActivityForResult(categoryListEntry, 99);
 		} 
 		else if (view.getId() == favorite.getId()) {
 			Intent favoriteEntry = new Intent(this, MainActivity.class);	
 			startActivity(favoriteEntry);
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if(requestCode == 99)
+		{
+			if(resultCode == RESULT_OK)
+			{
+				Intent i = this.getIntent();
+				i.putExtra("indexOfSetsArray", data.getExtras().getInt("indexOfSetsArray"));
+				setResult(RESULT_OK, i);
+				finish();
+			}
 		}
 	}
 	
