@@ -1,137 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="#ffffff" >
+    android:background="@android:color/holo_blue_dark" >
 
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:singleLine="true"
-                android:text="@string/user_name_base"
-                android:textColor="#000000"
-                android:textSize="50sp"
-                android:textStyle="normal"
-                android:typeface="normal"
-                android:gravity="center" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-             >
-
-            <EditText
-                android:id="@+id/baseName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:drawableBottom="@drawable/border"
-                android:drawableLeft="@drawable/border"
-                android:drawableRight="@drawable/border"
-                android:drawableTop="@drawable/border"
-                android:ems="8"
-                android:gravity="center"
-                android:inputType="textPersonName"
-                android:textSize="50sp" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:singleLine="true"
-                android:text="@string/email_base"
-                android:textColor="#000000"
-                android:textSize="50sp"
-                android:textStyle="normal"
-                android:typeface="normal"
-                android:gravity="center" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow4"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center"  >
-
-            <EditText
-                android:background="@drawable/border"
-                android:id="@+id/baseEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableTop="@drawable/border"
-               android:drawableBottom="@drawable/border"
-                android:drawableLeft="@drawable/border"
-               android:drawableRight="@drawable/border"
-                 android:ems="8"
-				android:textSize="50sp"
-                android:inputType="textEmailAddress"
-                android:gravity="center" />
-        </TableRow>
-        
-        <TableRow
-            android:id="@+id/tableRow5"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center"  >
-
-
-        <TextView 
-            android:layout_width="0dp" 
-            android:layout_height="wrap_content" 
-            android:layout_weight=".33" /> 
-        <Button
-            android:id="@+id/loginId"
-            android:text="@string/login" 
-            android:layout_width="0dp" 
-            android:layout_height="wrap_content" 
-            android:layout_weight=".33" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="100dp"
+        android:background="@android:color/white"
+        android:padding="16dp" >
+           
+		<ImageView
+        	android:id="@+id/logo"
+        	android:layout_width="wrap_content"
+       		android:layout_height="100dp"
+        	android:src="@drawable/logo1001" 
+        	android:layout_alignParentLeft="true"
+        	android:layout_alignParentTop="true"
+        	android:layout_alignParentRight="true"/>     
         
         <TextView
-            android:layout_width="0dp" 
-            android:layout_height="wrap_content" 
-            android:layout_weight=".33" />
-           
-        </TableRow>
+            android:id="@+id/textView2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/baseName"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:text="@string/user_name_base"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/baseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/logo"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@+id/textView2"
+            android:inputType="textPersonName"
+            android:textSize="30sp" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/baseEmail"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:text="@string/email_base"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/baseEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/baseName"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@+id/textView3"
+            android:inputType="textEmailAddress"
+            android:textSize="30sp" >
+        </EditText>
+
+        <Button
+            android:id="@+id/loginId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/baseEmail"
+            android:layout_marginTop="16dp"
+            android:onClick="login"
+            android:text="@string/login"
+            android:textSize="30sp" />
         
-        <TableRow
-            android:id="@+id/tableRow6"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight=".5"
-            android:gravity="center"  >
+    </RelativeLayout>
 
-            <ImageView
-                android:contentDescription="@string/cont_desc_logo"
-                android:id="@+id/baseLogo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/logo" />
-            
-        </TableRow>
-
-</LinearLayout>
+</RelativeLayout>

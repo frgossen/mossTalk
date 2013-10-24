@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -21,60 +23,59 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class WelcomeActivity extends Activity implements OnClickListener {
+public class WelcomeActivity extends Activity {
 	
 	private Button word_quest;
 	private Button category_list;
 	private Button favorite;
+	private SharedPreferences userSettings;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
-		Intent i=getIntent();
-		
-		word_quest = (Button)findViewById(R.id.btnWordQuest);
-		word_quest.setOnClickListener(this);
-		
-		category_list = (Button)findViewById(R.id.btnCategories);
-		category_list.setOnClickListener(this);
-		
-		favorite = (Button)findViewById(R.id.btnFavourites);
-		favorite.setOnClickListener(this);
+		userSettings = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+		TextView v = (TextView) findViewById(R.id.txtScore);
+		v.setText("Score = " + userSettings.getInt("totalScore", 0));
 	}
 	
-	public void onClick(View view) {
-		Intent i = getIntent();
-		if (view.getId() == word_quest.getId())
-		{	 
-			Intent wordQuestEntry = new Intent(this, DifficultLevel.class);	
-			startActivity(wordQuestEntry);				
-		}
-		else if (view.getId() == category_list.getId()) {
-			Intent categoryListEntry = new Intent(this, CategoryList.class);	
-			//startActivity(categoryListEntry);
-			
-			startActivityForResult(categoryListEntry, 99);
-		} 
-		else if (view.getId() == favorite.getId()) {
-			Intent favoriteEntry = new Intent(this, MainActivity.class);	
-			startActivity(favoriteEntry);
-		}
+	public void resetUserData(View v){
+		/*
+		new AlertDialog.Builder(this)
+		.setTitle("Reset user data")
+		.setMessage("Are you sure you want to reset all user data? This cannot be undone.")
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            	performUserReset();
+            	new AlerDialog.Builder(this)
+            	.setTitle("Successfully reset")
+            	.setMessage("All user data has been successfully reset. ")
+            	.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            		
+            	}).show();
+            }
+        })
+        .setNegativeButton("No", null).show();	
+        */
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		if(requestCode == 99)
-		{
-			if(resultCode == RESULT_OK)
-			{
-				Intent i = this.getIntent();
-				i.putExtra("indexOfSetsArray", data.getExtras().getInt("indexOfSetsArray"));
-				setResult(RESULT_OK, i);
-				finish();
-			}
-		}
+	public void openWordQuest(View v){
+		
 	}
 	
+	public void openFavourites(View v){
+		
+	}
+	
+	public void openCategories(View v){
+		Intent wordQuestEntry = new Intent(this, CategoryList.class);	
+		startActivity(wordQuestEntry);				
+	}
+	
+	private void performUserReset(){
+		SharedPreferences.Editor editor = userSettings.edit();
+		editor.putString("userName", "");
+		editor.putString("userEmail", "");
+		editor.commit();
+	}
 }

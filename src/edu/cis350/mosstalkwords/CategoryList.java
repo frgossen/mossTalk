@@ -1,11 +1,6 @@
 package edu.cis350.mosstalkwords;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,12 +14,20 @@ import android.widget.ListView;
 public class CategoryList extends Activity {
 
 	// The data to show
-	ArrayList<String> categoryList = new ArrayList<String>();
+	ArrayList<Category> categoryList;
 	
 	private void initList() {
+		categoryList = new ArrayList<Category>();
 	    // We populate the category list
-		categoryList.add("Living");
-		categoryList.add("NonLiving");
+		categoryList.add(new Category(R.drawable.living, "Living"));
+		categoryList.add(new Category(R.drawable.nonliving, "NonLiving"));
+	}
+	
+	public void startMain(String categoryName)
+	{
+		Intent activityMain= new Intent(this, MainActivity.class);
+		activityMain.putExtra("categoryName", categoryName);
+		startActivity(activityMain);
 	}
 	
 	
@@ -43,18 +46,21 @@ public class CategoryList extends Activity {
 	    // Data list
 	    // The row layout that is used during the row creation
 	    // The View id used to show the data. The key number and the view id must match
-	    lv.setAdapter(new CategoryListAdapter(this, categoryList));
+	    lv.setAdapter(new CategoryListAdapter(this, R.layout.row_image, categoryList));
 	    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 	        public void onItemClick(AdapterView<?> parent, final View view,
 	            int position, long id) {
-	          final String item = (String) parent.getItemAtPosition(position);
-	          System.out.println(""+position);
-	          Intent i = getIntent();
-	          i.putExtra("indexOfSetsArray", position);
-	  		  setResult(RESULT_OK, i);
-	  		  finish();
-	        }
+	          //final String item = (String) parent.getItemAtPosition(position);
+	          //System.out.println(""+position);
+	          //Intent i = getIntent();
+	          //this should be a string, not position
+//	          i.putExtra("categoryName", categoryList.get(position).getName());
+	          //i.putExtra("indexOfSetsArray", position);
+	  		  //setResult(RESULT_OK, i);
+	  		  //finish();
+	          startMain(categoryList.get(position).getName());
+	  	    }
 
 	      });
 	    }

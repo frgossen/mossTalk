@@ -69,11 +69,14 @@ import android.widget.ViewSwitcher;
 
 public class MainActivity extends Activity implements ViewFactory, TextToSpeech.OnInitListener{
 
+	//private CategoryMappings CategoryMappings = new CategoryMappings();
+	private String categoryName = ""; 
+	private Images_SDB sdb = new Images_SDB();
 	private static final int REQUEST_CODE = 1234;
 	final int REQUIRE_HEIGHT = 1280;
 	final int REQUIRE_WIDTH = 800;
 	private final String PREFERENCE_NAME="UserPreferences";
-	private int index;
+	//private int index;
 
 	private TextToSpeech tts;
 	private ProgressBar pbar;
@@ -89,25 +92,29 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	Button wordHintBtn;
 
 	final Context context = this;
+	int wordHintUsed = 0;
+	int syllableHintUsed = 0;
 
-
-	//Chronometer timer;
 
 	String currentImage;
-	private int stimulusSetSize=10;
-	private int rhymePtr;
 
 	//game metrics--MOST OF THESE WENT TO THE USER CLASS AFTER REFACTORING
-	int hintsUsed=0;
+	// int hintsUsed=0;
 	int numAttempts=0;//starts at one because does not increment when answered correctly
 	///end metrics
 
 	int imageCounter=0;
 	int setCounter=0;
-	ArrayList<StimulusSet> allStimulusSets;
-	StimulusSet currentSet;
-
+	//ArrayList<StimulusSet> allStimulusSets;
+	//StimulusSet currentSet;
+	
+	List<Image> currentSet = new ArrayList<Image>();
 	int setScore = 0;
+	
+	//int categoryPosition = 0;
+	
+	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +122,27 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		super.onCreate(savedInstanceState);
 
-		new InitCategoriesBackgroundTask().execute();
+
+		Log.d("in oncreate0", "in oncreate0");
+		
+		//new InitCategoriesBackgroundTask().execute();
+		
 		currentUser = new User();/*must be initialized before welcome page for initial start up so that
 		rating bars can be populated with scores the same way everytime, even if the sets haven't been played*/
 
 		retrievePreferences();//get the current user and their data if already exists
 		
-		//openWelcomePage();
+		categoryName = this.getIntent().getExtras().getString("categoryName");
+		
+		new InitCategoriesBackgroundTask().execute();
 
+		new ImageBackgroundTask().execute();
+
+		//new InitCategoriesBackgroundTask().execute();
+		
+		//openWelcomePage();
+		
+		Log.d("in oncreate", currentSet.size()+"");
 
 		tts = new TextToSpeech(this, this);
 
@@ -137,13 +157,13 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		imCache = new ImageCache();
 
-		rhymePtr = 0;
+		
 
-
-		new InitCategoriesBackgroundTask().execute();
-
+		//new InitCategoriesBackgroundTask().execute();
+		
+		
 		pbar = (ProgressBar) findViewById(R.id.progBar);
-
+		pbar.setMax(20);
 		//timer = (Chronometer) findViewById(R.id.chronometer1);
 		//TextView txtView = (TextView)findViewById(R.id.chronometer1);
 		TextView scoreView = (TextView)findViewById(R.id.txtScore);
@@ -172,10 +192,12 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		 editor.putString("name", currentUser.name);
 		 editor.putString("email", currentUser.email);
 		 editor.putInt("totalScore", currentUser.getTotalScore());
+		/* ????
 		 for(String set:currentUser.starsForSets.keySet())
 		 {
 			 editor.putString(set, Integer.toString(currentUser.starsForSets.get(set)));
 		 }
+		 */
 		 editor.commit();
 		 
 	}
@@ -189,21 +211,32 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 			currentUser.email=prefs.getString("email",null);
 			currentUser.setTotalScore(prefs.getInt("totalScore", 0));
 			HashMap<String, Integer> stars=new HashMap<String, Integer>();
+			
+			
+			
+			Log.d("ret pref", currentSet.size() + " " + currentSet.isEmpty());
+			
+			///fix this <-----
+			 /*
 			while(allStimulusSets==null||allStimulusSets.isEmpty())
 			{
 				
 			}
+			*/
+			/*
 			for(StimulusSet set:allStimulusSets)
 			{
 				stars.put(set.getName(),Integer.valueOf(prefs.getString(set.getName(), "0")));
 			}
+			
 			currentUser.starsForSets.putAll(stars);
 			for(String s: currentUser.starsForSets.keySet())
 			{
 				System.out.println(s+": "+currentUser.starsForSets.get(s));
 			}
+			*/
 		}
-		openWelcomePage();
+		//openWelcomePage();
 	}
 	public void enterNameAndEmail()
 	{
@@ -254,16 +287,16 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		wordHintBtn = (Button) findViewById(R.id.btnHintWord);
 		
-		nextButton.setBackgroundColor(Color.WHITE);
+		//nextButton.setBackgroundColor(Color.WHITE);
 		
 		nextButton.setOnClickListener(new OnClickListener()
 		{
 			//next button: user didn't get the word so score = 0 and streak ends; switch images
 			public void onClick(View arg0) {
-				currentUser.updateImageScore(currentSet.getName(), imageCounter, 0);
-				currentUser.streakEnded(currentSet.setName);
-				hintsUsed=3;
-				numAttempts=3;
+				currentUser.updateImageScore(imageCounter, 0);
+				currentUser.streakEnded();
+				//hintsUsed=3;
+				//numAttempts=3;
 				nextImage();
 			}
 		});
@@ -277,10 +310,13 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		wordHintBtn.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View arg0) {
-				hintsUsed++;
-				String hint = currentSet.getStimuli().get(imageCounter).getName();
-				
+				wordHintUsed++;
+				//String hint = currentSet.getStimuli().get(imageCounter).getName();
+				Log.d("asdf1","1"+currentSet.get(imageCounter).getWord());
+				String hint = currentSet.get(imageCounter).getWord();
+				Log.d("asdf2","2"+currentSet.get(imageCounter).getWord());
 				speak(hint, 1);
+				Log.d("asdf3","3"+currentSet.get(imageCounter).getWord());
 				//numAttempts=3;
 			}
 		});
@@ -294,9 +330,16 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		File path =Environment.getExternalStorageDirectory();
 		File dir=new File(path.getAbsolutePath()+"/textfiles");
 		dir.mkdirs();
-		File reportFile=new File(dir,(currentSet.getName()+"Report.txt"));
+		
+		//
+		File reportFile=new File(dir,("Report.txt"));
 		//OutputStreamWriter reportOut = new OutputStreamWriter(openFileOutput(currentSet.getName()+"Report.txt", this.MODE_PRIVATE));
-		String reportString=currentUser.generateSetReport(currentSet);
+		ArrayList<String> imgNames = new ArrayList<String>();
+		for (Image curImage : currentSet) {
+			imgNames.add(curImage.getWord());
+		}
+		
+		String reportString=currentUser.generateSetReport(imgNames);
 		FileWriter report=new FileWriter(reportFile);
 		report.write(reportString);
 		//reportOut.write(reportString);
@@ -312,7 +355,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
 				new String[]{currentUser.email});
-		String subject="Wordle "+currentSet.getName() +" Report";
+		String subject="Wordle "/*+currentSet.getName()*/ +" Report";
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 		String body= "Your report is attached below. Good Work!";
 		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
@@ -343,14 +386,18 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	}
 	public void finishedSet()
 	{
+		SharedPreferences sp =  getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
+		sp.edit().putInt("totalScore", currentUser.getTotalScore());
 		imSwitcher.setImageDrawable(null);
 		Intent endSet=new Intent(this, EndSetActivity.class);
 		endSet.putExtra("User", currentUser);
-		endSet.putExtra("currentSet", currentSet.getName());
+		//////// <---
+		//endSet.putExtra("currentSet", currentSet.getName());
 		endSet.putExtra("setScore", setScore);
-		
+		currentUser.setCurrentScore(0);
 		//@@
 		setScore = 0;
+		pbar.setProgress(0);
 		TextView scoreView = (TextView)findViewById(R.id.txtScore);
 		scoreView.setText("Score: " + String.valueOf(setScore));
 		
@@ -358,7 +405,8 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 	}
 	public void nextImage() {
-		currentUser.updateImageEfficiency(currentSet.getName(), imageCounter, hintsUsed, numAttempts);
+	//int imageIdx, int wordHintUsed,int syllableHintUsed, int attempts
+		currentUser.updateImageEfficiency(imageCounter, wordHintUsed, syllableHintUsed, numAttempts);
 		Log.d("attempts image", "attempts used: "+String.valueOf(numAttempts));
 	
 		resetMetricsImage();
@@ -366,20 +414,25 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		
 		//animate.scaleXBy(1/10);
 		//if at the end of the set then go into finishedSet setup
-		if(imageCounter==currentSet.getStimuli().size()-1) {
-			currentUser.endedSet(currentSet.getName());
+		
+		if(imageCounter==currentUser.getSetNumber() - 1) {
+			currentUser.endedSet();
 			imageCounter = 0;
 			Log.d("imagecounter","image counter is: " + imageCounter);
 			finishedSet();
 		}
 		else {
 			imageCounter++;
-			imageCounter=imageCounter%(currentSet.getStimuli().size());
+			
+			//imageCounter=imageCounter%(currentSet.getStimuli().size());
 			Log.d("imagecounter","imagecounter is: " + imageCounter);
 			//imageCounter=imageCounter%(currentSet.getStimuli().size());
 
 			//load next image
-			currentImage = currentSet.getStimuli().get(imageCounter).getName();
+			//currentImage = currentSet.getStimuli().get(imageCounter).getName();
+			
+			currentImage = currentSet.get(imageCounter).getWord();
+			
 			Bitmap im = imCache.getBitmapFromCache(currentImage); 
 			while (im == null) { //block main thread until it's loaded. could end badly.
 				Log.d("nextImage","BUSY LOOP null bitmap- that's bad/" + currentImage); 
@@ -395,23 +448,36 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	}
 
 	public void resetMetricsImage() {
-		hintsUsed=0;
+		wordHintUsed = 0;
+		syllableHintUsed = 0;
+
 		numAttempts=0;//starts at one because does not increment when answered correctly
 	}
 
 	//@@
 	public void nextSet() {
+		new InitCategoriesBackgroundTask().execute();
+
+		new ImageBackgroundTask().execute();
 		
-		setCounter=(setCounter + 1)%allStimulusSets.size();
-		currentSet = allStimulusSets.get(setCounter);
+		//setCounter=(setCounter + 1)%allStimulusSets.size();
+		//currentSet = allStimulusSets.get(setCounter);
 		playSet();
-		Log.d("nextset","new set is " + currentSet.getName());
+		//Log.d("nextset","new set is " + currentSet.getName());
 		imageCounter=0;
 		Log.d("imagecounter","image counter is: " + imageCounter);
 		imCache.clearCache();
-		new LoadHintsBackgroundTask().execute();
 		
+		//pbar.
+		//new LoadHintsBackgroundTask().execute();
+		//new ImageBackgroundTask().execute();
 		
+		/* <--
+		while(currentSet==null||currentSet.isEmpty())
+		{
+			
+		}
+		*/
 		// what????
 		//TextView hintView= (TextView)findViewById(R.id.btnHintSound);
 		//hintView.setText("");
@@ -421,13 +487,14 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	{
 		resetMetricsImage();
 		pbar.setProgress(0);
-		currentUser.resetLongestStreak(currentSet.setName);
+		currentUser.resetLongestStreak();
 	}
 	public void replaySet()
 	{
 		imageCounter=0;
 		playSet();
-		currentImage = currentSet.getStimuli().get(imageCounter).getName();
+		currentImage = currentSet.get(imageCounter).getWord();
+				//currentSet.getStimuli().get(imageCounter).getName();
 		Bitmap im = imCache.getBitmapFromCache(currentImage); 
 		if (im == null) { Log.d("nextImage","null bitmap- that's bad/" + currentImage); } 
 		Drawable drawableBitmap = new BitmapDrawable(getResources(),im);
@@ -442,7 +509,9 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 	private void startVoiceRecognitionActivity()
 	{
-		currentImage = currentSet.getStimuli().get(imageCounter).getName();
+		//currentImage = currentSet.getStimuli().get(imageCounter).getName();
+
+		currentImage = currentSet.get(imageCounter).getWord();
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
 				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -455,6 +524,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	{
 		if(requestCode==1)//if returning from Play Again? choice
 		{
+			
 			if(data.getBooleanExtra("Replay Set", false))
 			{
 				replaySet();
@@ -486,6 +556,29 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 
 		}
 		if (requestCode == 3) {
+			//categoryPosition = data.getExtras().getInt("indexOfSetsArray");
+			categoryName = data.getExtras().getString("categoryName");
+			
+			new InitCategoriesBackgroundTask().execute();
+
+			new ImageBackgroundTask().execute();
+			
+		//	while(currentSet==null||currentSet.isEmpty())
+		//	{
+		//		System.out.println("ASDF");
+		//	}
+			
+			//<--
+			/*
+			while(currentSet==null||currentSet.isEmpty())
+			{
+				
+			}
+			*/
+			//new LoadHintsBackgroundTask().execute();
+			//new ImageBackgroundTask().execute();
+
+			/*
 			//this is the index of the allStimulusSetsArray
 			index = data.getExtras().getInt("indexOfSetsArray");
 			System.out.println(index);
@@ -494,7 +587,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 			currentSet = allStimulusSets.get(index);
 			new LoadHintsBackgroundTask().execute();
 			//timer.setBase(SystemClock.elapsedRealtime());
-
+			 */
 		}
 		if(requestCode==4)
 		{
@@ -531,21 +624,24 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 				if (s.toLowerCase().contains(currentImage.toLowerCase())) {
 					//subtract 100 for each hint used, but if 3+ are used make the score 100 anyway
 					int thisImageScore = 0;
-					if(hintsUsed == 0)
+					
+					/*
+					if(wordHintUsed + syllableHintUsed == 0)
 						thisImageScore = 100;
-					else if(hintsUsed == 1)
-						thisImageScore = 80;
-					else if(hintsUsed == 2)
+					else if(wordHintUsed == 1 && syllableHintUsed == 0)
+						thisImageScore = 60;
+					else if(word)
 						thisImageScore = 60;
 					else
 						thisImageScore = 0;
-					
+					*/
+					thisImageScore = Math.max (100 - wordHintUsed * 20 - syllableHintUsed * 10, 20);
 					setScore += thisImageScore;
 
 					//@@
 					//int thisImageScore = (100-20*hintsUsed <= 0 ? 100:100-20*hintsUsed);
 					//setScore += thisImageScore;
-					currentUser.updateImageScore(currentSet.getName(), imageCounter, thisImageScore);
+					currentUser.updateImageScore(imageCounter, thisImageScore);
 					ViewFlipper scoreTextView = (ViewFlipper)findViewById(R.id.ViewFlipper);
 					TextView scoreView = (TextView)scoreTextView.findViewById(R.id.txtScore);
 
@@ -554,11 +650,11 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 					animate.rotationBy(360);
 
 					speak("Great Job", 1);
-					if(hintsUsed==0) {
+					if(wordHintUsed + syllableHintUsed == 0) {
 						currentUser.increaseStreak();
 					}
 					else {
-						currentUser.streakEnded(currentSet.setName);
+						currentUser.streakEnded();
 					}
 					MediaPlayer mp=MediaPlayer.create(MainActivity.this,R.raw.ding);
 					mp.start(); //this could be its own class too
@@ -602,35 +698,22 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	}
 
 	//Handler for sentence hint
-	public void onSentenceHintButtonClick(View view) {
+	public void onSoundHintButtonClick(View view) {
 		TextView hintView= (TextView)findViewById(R.id.btnHintSound);
-		String hint = currentSet.getStimuli().get(imageCounter).getSentence();
-		hintView.setText(hint);
-		speak(hint, 1);
-		hintsUsed++;
-	}
-
-	//handler for similar word hint
-	public void onRhymeHintButtonClick(View view) {
-		TextView hintView= (TextView)findViewById(R.id.btnHintSound);
-		String[] rhymes = currentSet.getStimuli().get(imageCounter).getRhymes();
-		Log.d("rhyme hints","rhymes:" + rhymes.toString());
-		Log.d("rhyme hints","rhyme ptr: " + rhymePtr);
-		String hint = rhymes[rhymePtr];
-		hintView.setText(hint);
-		speak(hint, 1);
-		hintsUsed++;
-		rhymePtr = (++rhymePtr)%rhymes.length;
-		Log.d("rhyme hints after","rhyme ptr: " + rhymePtr);
+		//String hint = currentSet.getStimuli().get(imageCounter).getSentence();
+		//hintView.setText(hint);
+		//speak(hint, 1);
+		syllableHintUsed++;
 	}
 
 	//handler for giving up and getting answer
-	public void onAnswerHintButtonClick(View view) {
+	public void onWordHintButtonClick(View view) {
 		TextView hintView= (TextView)findViewById(R.id.btnHintWord);
-		String hint = currentSet.getStimuli().get(imageCounter).getName();
+		//String hint = currentSet.getStimuli().get(imageCounter).getName();
+		String hint = currentSet.get(imageCounter).getWord();
 		hintView.setText(hint);
 		speak(hint, 1);
-		hintsUsed++;
+		wordHintUsed++;
 	}
 
 
@@ -656,7 +739,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		return inSampleSize;
 	}
 
-
+/*
 	public Bitmap fetchImageFromS3(String name) { //STOP TRYING TO MAKE FETCH HAPPEN, GRETCHEN.
 		try {
 			URL aURL = new URL("https://s3.amazonaws.com/mosstalkdata/" +
@@ -700,16 +783,31 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	}
 
 
-
+*/
 	/*-----------------------------------------------------------------------------------------------*/
 	/*-----------------------------------Background Tasks for S3-------------------------------------*/
 	/*-----------------------------------------------------------------------------------------------*/
 
+	
 	class InitCategoriesBackgroundTask extends AsyncTask<String, Integer, Void> {
 		String s3append = "2"; //until we merge our datasets, all of ours end in 2
 		protected Void doInBackground(String... params) {
-			allStimulusSets = new ArrayList<StimulusSet>();
+			//allStimulusSets = new ArrayList<StimulusSet>();
 			try {
+				//String category = CategoryMappings.getCategory(categoryPosition);
+				//currentSet = allStimulusSets.get(index);
+				
+				/*Log.d("Login","Login Button Clicked"); 
+				Images_SDB imgsdb=new Images_SDB(); 
+				List<Image> list1 = imgsdb.returnImages("Living"); 
+				for(int i=0; i<20; i++) 
+					Log.d("Words: ",list1.get(i).getWord());
+					*/
+				currentSet = sdb.returnImages(categoryName);
+				Log.d("asdf3",currentSet.size()+"");
+					
+				
+				/*
 				//load the categories
 				URL aURL = new URL("https://s3.amazonaws.com/mosstalkdata/categories" + s3append + ".txt");				
 				Log.d("url", aURL.toString());
@@ -725,23 +823,27 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 				
 				//currentSet = allStimulusSets.get(0);//set current set to first set
 				//new LoadHintsBackgroundTask().execute();
-			} catch (MalformedURLException e) {
+				 * 
+				 * 
+				 */
+			} catch (Exception e) {
 				// TODO we should make a crash/error screen
 				e.printStackTrace();
 				Log.e("exception","malformedURL");
-			} catch (IOException e) {
+			}/* catch (IOException e) {
 				e.printStackTrace();
 				Log.e("exception","IOexception");
-			} finally {  }
+			}*/ finally {  }
 			return null;
 		}		
 		
 	}
 
+/*	
 	class LoadHintsBackgroundTask extends AsyncTask<String, Integer, Void> {
 		String s3append = "2"; //until we merge our datasets, all of ours end in 2
 		protected Void doInBackground(String... params) {
-			String setName = currentSet.getName();
+	//		String setName = currentSet.getName();
 			//String[] imageNames = currentSet.getStimuliNames();		
 			ArrayList<Stimulus> tmpSet = new ArrayList<Stimulus>();	
 			try {		
@@ -779,17 +881,16 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 			return null;
 		}		
 	}
-
+*/
 	class ImageBackgroundTask extends AsyncTask<String, Integer, Drawable[]> {
-		public String[] remoteURLS = currentSet.getStimuliNames();
-
+		//public String[] remoteURLS = currentSet.getStimuliNames();
+		
 		protected Drawable[] doInBackground(String... params) {		
 			try {
-				for(int i = 0; i < remoteURLS.length; i++) {
+				for(int i = 0; i < currentSet.size(); i++) {
 					//Bitmap bitmap = fetchImageFromS3(remoteURLS[i].toLowerCase());
-
-					URL aURL = new URL("https://s3.amazonaws.com/mosstalkdata/" +
-							currentSet.getName() +"/" + remoteURLS[i].toLowerCase() + ".jpg");				
+					
+					URL aURL = new URL(currentSet.get(i).getUrl());				
 					Log.d("url", aURL.toString());
 					URLConnection conn = aURL.openConnection();
 					conn.connect();
@@ -816,8 +917,8 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 					bis = new BufferedInputStream(conn.getInputStream());
 					Bitmap bitmap = BitmapFactory.decodeStream(bis, r, options); 			   
 
-					imCache.addBitmapToCache( remoteURLS[i] , bitmap);
-					Log.d("async task","added bitmap to cache: " + remoteURLS[i] );
+					imCache.addBitmapToCache( currentSet.get(i).getWord(), bitmap);
+					//Log.d("async task","added bitmap to cache: " + remoteURLS[i] );
 					if (i==0) { 
 						Log.d("async task","first image loaded");
 					}
@@ -837,7 +938,8 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 		protected void onProgressUpdate(Integer...progress) {
 			int im = progress[0];			
 			if (progress[0] == 0) {
-				String name = currentSet.getStimuli().get(0).getName();
+				//String name = currentSet.getStimuli().get(0).getName();
+				String name = currentSet.get(0).getWord();
 				Drawable drawableBitmap = new BitmapDrawable(getResources(),imCache.getBitmapFromCache(name));
 				imSwitcher.setImageDrawable(drawableBitmap);
 				imageCounter = 0;
@@ -856,7 +958,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	}
 
 	public void onInit(int status) {
-		speak("Welcome to Wordle!", 1);
+	//	speak("Welcome to Wordle!", 1);
 	}
 
 }

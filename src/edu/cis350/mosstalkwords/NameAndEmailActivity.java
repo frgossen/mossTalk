@@ -35,8 +35,8 @@ public class NameAndEmailActivity extends Activity
 		EditText username=(EditText) layout.findViewById(R.id.username);
 	    EditText email=(EditText) layout.findViewById(R.id.email);
 
-		username.setText(userSettings.getString("name123", "what"));
-		email.setText(userSettings.getString("email123", "..."));
+		username.setText(userSettings.getString("userName", ""));
+		email.setText(userSettings.getString("userEmail", ""));
 	    
 	    
 	    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

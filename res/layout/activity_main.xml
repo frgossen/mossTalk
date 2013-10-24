@@ -185,7 +185,7 @@
             android:textSize="22sp"
             android:layout_weight="0.3"
             android:onClick="onNextSetButtonClick"
-            android:text="@string/nextSet" />
+            android:text="@string/next" />
 
     </LinearLayout>
     

@@ -25,7 +25,9 @@ public class EndSetActivity extends Activity {
 	    // TODO Auto-generated method stub
 	    Intent i=getIntent();
 	    currentUser=(User) i.getSerializableExtra("User");
-	    String currentSet= (String) i.getStringExtra("currentSet");
+	    
+	    // <----
+	    //String currentSet= (String) i.getStringExtra("currentSet");
 	    
 		//score.setNumStars(3);
 	    Context mContext = this; //this.getApplicationContext();
@@ -37,7 +39,7 @@ public class EndSetActivity extends Activity {
 	    View layout = inflater.inflate(R.layout.end_dialog, null);
 	   
 	    RatingBar score=(RatingBar) layout.findViewById(R.id.scoreBar);
-	    int starScore=currentUser.getStarScore(currentSet);
+	    int starScore=currentUser.getStarScore();
 	    score.setNumStars(starScore);
 	    score.setRating(starScore);
 	    
@@ -54,11 +56,11 @@ public class EndSetActivity extends Activity {
 	    message.setText(msg);
 	    
 	    TextView completeness=(TextView) layout.findViewById(R.id.Completeness);
-	    String efficiencyPercent = new Integer(currentUser.getAverageEfficiencyPercent(currentSet)).toString();
+	    String efficiencyPercent = new Integer(currentUser.getAverageEfficiencyPercent()).toString();
 	    completeness.setText(completeness.getText()+efficiencyPercent+"%");
 	    
 	    TextView streak=(TextView) layout.findViewById(R.id.streak);
-	    String longestStreak= new Integer(currentUser.getLongestStreak(currentSet)).toString();
+	    String longestStreak= new Integer(currentUser.getLongestStreak()).toString();
 	    streak.setText(streak.getText()+longestStreak);
 	    
 	    TextView setScoreNum = (TextView) layout.findViewById(R.id.endScore);

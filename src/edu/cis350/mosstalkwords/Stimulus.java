@@ -9,8 +9,8 @@ import android.graphics.drawable.Drawable;
  * R.drawable.exampleImageName. That is represented as an int and can be used to change the Image Resource or Image Drawable of an ImageView. There are setter and getter 
  * methods for each input.*/
 public class Stimulus {
-	public static final int NUMHINTS = 3;
-	public static final int NUMRHYMES = 3;
+	//public static final int NUMHINTS = 3;
+	//public static final int NUMRHYMES = 3;
 	String name;
 	String[] rhymes; //have to do this so that we can do them individually
 	String sentence;
