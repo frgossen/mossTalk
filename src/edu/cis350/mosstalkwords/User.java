@@ -28,7 +28,7 @@ public class User implements Serializable {
 	private int[] imageSetAttempts = new int[SET_NUMBER];
 	private int[] imageSetHintsWord = new int[SET_NUMBER];
 	private int[] imageSetHintsSyllable = new int[SET_NUMBER];
-	
+
 	private int currentStreak = 0;
 	private int longestStreak = 0;
 	private int totalSetScore = 0;

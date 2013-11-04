@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,14 +24,21 @@ public class BaseActivity extends Activity{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.base);
-
 		n = (EditText)findViewById(R.id.baseName);
 		e = (EditText)findViewById(R.id.baseEmail);
 
 		userSettings = getSharedPreferences("UserPreferences", MODE_PRIVATE);
-
+		
+		if (userSettings.getString("name", null) != null) {
+			Intent gotoMainMenu = new Intent(this, WelcomeActivity.class);
+			startActivity(gotoMainMenu);
+			return;
+		}
+		
 		n.setText(userSettings.getString("Name", ""));
 		e.setText(userSettings.getString("Email address for reports", ""));
 	}
@@ -44,8 +52,13 @@ public class BaseActivity extends Activity{
 
 		if(validName(name) && validEmailAdress(email))
 		{
+			/*
 			editor.putString("userName", name);
 			editor.putString("userEmail", email);
+			*/
+			editor.putString("name", name);
+			editor.putString("email", email);
+			editor.putInt("totalScore", 0);
 			editor.commit();
 
 			//Intent userEntry = new Intent(this, WelcomeActivity.class);

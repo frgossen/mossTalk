@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ public class WelcomeActivity extends Activity {
 	private Button word_quest;
 	private Button category_list;
 	private Button favorite;
+	
 	private SharedPreferences userSettings;
 	
 	@Override
@@ -40,23 +42,30 @@ public class WelcomeActivity extends Activity {
 	}
 	
 	public void resetUserData(View v){
-		/*
-		new AlertDialog.Builder(this)
-		.setTitle("Reset user data")
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setTitle("Reset User Data");
+		alertDialog
 		.setMessage("Are you sure you want to reset all user data? This cannot be undone.")
         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             	performUserReset();
-            	new AlerDialog.Builder(this)
-            	.setTitle("Successfully reset")
-            	.setMessage("All user data has been successfully reset. ")
-            	.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-            		
-            	}).show();
+            	AlertDialog.Builder showDialog1 = new AlertDialog.Builder(WelcomeActivity.this);
+            	showDialog1
+            	.setTitle("Successfully reset user data")
+            	.setMessage("You have successfully reset all user data! You are required to create a new user")
+            	
+            	.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            		public void onClick(DialogInterface dialog, int id) {
+            			dialog.cancel();
+            			Intent gotoBaseMenu = new Intent(WelcomeActivity.this, BaseActivity.class);
+            			startActivity(gotoBaseMenu);
+            		}
+            	})
+            	.show();
+            	
             }
         })
-        .setNegativeButton("No", null).show();	
-        */
+        .setNegativeButton("No", null).show();	 
 	}
 	
 	public void openWordQuest(View v){
@@ -74,8 +83,9 @@ public class WelcomeActivity extends Activity {
 	
 	private void performUserReset(){
 		SharedPreferences.Editor editor = userSettings.edit();
-		editor.putString("userName", "");
-		editor.putString("userEmail", "");
+		editor.putString("name", null);
+		editor.putString("email", null);
+		editor.putInt("userInitScore", 0);
 		editor.commit();
 	}
 }
