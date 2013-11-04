@@ -32,7 +32,7 @@ public class BaseActivity extends Activity{
 		e = (EditText)findViewById(R.id.baseEmail);
 
 		userSettings = getSharedPreferences("UserPreferences", MODE_PRIVATE);
-		
+		// test if there already exists a user
 		if (userSettings.getString("name", null) != null) {
 			Intent gotoMainMenu = new Intent(this, WelcomeActivity.class);
 			startActivity(gotoMainMenu);
