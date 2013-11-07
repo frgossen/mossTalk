@@ -18,8 +18,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList; 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+//import com.example.myfirstapp.DatabaseHandler;
+//import com.example.myfirstapp.UserStimuli;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -77,7 +81,9 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	final int REQUIRE_WIDTH = 800;
 	private final String PREFERENCE_NAME="UserPreferences";
 	//private int index;
-
+	public DatabaseHandler db;
+	
+	
 	private TextToSpeech tts;
 	private ProgressBar pbar;
 
@@ -119,7 +125,7 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("on create");
-
+		db = new DatabaseHandler(this);
 		super.onCreate(savedInstanceState);
 
 
@@ -803,6 +809,50 @@ public class MainActivity extends Activity implements ViewFactory, TextToSpeech.
 				for(int i=0; i<20; i++) 
 					Log.d("Words: ",list1.get(i).getWord());
 					*/
+				
+				/****************************************************************/
+				/* 
+				 * Sample Values added to database for checking.
+				 * --> getTable() method takes in username that user has given in login screen.
+				 * --> setStimuli() method takes object of type UserStimuli and stores values in
+				 * the respective columns of the database table.
+				 * --> getFavoriteStimuli() method returns a list of objects of type UserStimuli
+				 */ 
+				/*
+				
+					// Here karthik is the user name
+				db.getTable("karthik");
+				
+				UserStimuli sampleStimuli = new UserStimuli();
+				sampleStimuli.setImageName("Ant");
+				sampleStimuli.setCategory("insect");
+				sampleStimuli.setIsFavorite(1);
+				sampleStimuli.setAttempts(1);
+				sampleStimuli.setCorrectAttempts(1);
+				sampleStimuli.setSoundHints(1);
+				sampleStimuli.setPlaywordHints(2);
+				sampleStimuli.setNoHint(0);
+				Calendar cd = Calendar.getInstance();
+				sampleStimuli.setLastSeen(cd);
+				sampleStimuli.setDifficulty(3.2);
+				sampleStimuli.setUrl("testURL");
+				
+				
+				db.setStimuli(sampleStimuli);
+				
+				  List<UserStimuli> usList = db.getFavoriteStimuli();
+				  Log.d("length of list",Integer.toString(usList.size()));
+				
+				  Log.d("image added or updated","img");
+				
+				
+				  if(usList.size() != 0)
+					  Log.d("first favorite image name",usList.get(0).getImageName());
+				  else
+					  Log.d("first favorite image name","List is null");  
+		      */
+			  /*****************************************************************/
+			
 				currentSet = sdb.returnImages(categoryName);
 				Log.d("asdf3",currentSet.size()+"");
 					
