@@ -22,7 +22,7 @@ public class NameAndEmailActivity extends Activity
 		   
 	    
 		 Intent i=getIntent();
-		 User currentUser=(User) i.getSerializableExtra("User");
+		 SetStatistics currentUser=(SetStatistics) i.getSerializableExtra("User");
 		    
 
 		 
@@ -35,8 +35,8 @@ public class NameAndEmailActivity extends Activity
 		EditText username=(EditText) layout.findViewById(R.id.username);
 	    EditText email=(EditText) layout.findViewById(R.id.email);
 
-		username.setText(userSettings.getString("name", ""));
-		email.setText(userSettings.getString("email", ""));
+		username.setText(userSettings.getString("userName", ""));
+		email.setText(userSettings.getString("userEmail", ""));
 	    
 	    
 	    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

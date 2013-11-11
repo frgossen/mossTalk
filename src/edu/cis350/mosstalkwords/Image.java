@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Image {
+
+public class Image implements Parcelable {
+	
 	private String category;
 	private String word;
 	private String url;
@@ -13,7 +17,46 @@ public class Image {
 	private int length;
 	private int imageability;
 	
-	Image(String w, String c, String i, String l,String f,String u) {
+	// BEGINNNING --- IMPLEMENT PARCELABLE INTERFACE
+	public int describeContents() {
+        return 0;
+    }
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(category);
+        out.writeString(word);
+        out.writeString(url);
+        out.writeInt(frequency);
+        out.writeInt(length);
+        out.writeInt(imageability);
+    }
+    public static final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
+        public Image createFromParcel(Parcel in) {
+            return new Image(in);
+        }
+
+        public Image[] newArray(int size) {
+            return new Image[size];
+        }
+    };
+    private Image(Parcel in) {
+    	category = in.readString();
+    	word = in.readString();
+    	url = in.readString();
+    	frequency = in.readInt();
+    	length = in.readInt();
+    	imageability = in.readInt();
+    }
+	// END --- IMPLEMENT PARCELABLE INTERFACE
+
+    
+    
+    
+    
+    
+    
+    
+    
+	public Image(String w, String c, String i, String l, String f, String u) {
 		try {
 			this.setCategory(c);
 			this.setWord(w);
@@ -67,8 +110,6 @@ public class Image {
 		this.imageability = imageability;
 	}
 
-
-
 	public String getUrl() {
 		return url;
 	}
@@ -76,6 +117,4 @@ public class Image {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	
 }

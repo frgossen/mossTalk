@@ -8,9 +8,11 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 
 public class ImageCache {
+	private static ImageCache imc;
+	
 	private LruCache<String, Bitmap> imCache; 
 	
-	public ImageCache() {
+	private ImageCache() {
 	//set up cache for images
 		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);	
 		
@@ -25,6 +27,14 @@ public class ImageCache {
 				return bitmap.getByteCount() / 1024;
 			}
 		};
+	}
+	
+	public static ImageCache getInstance()
+	{
+		if (imc == null)
+			imc = new ImageCache();
+
+		return imc;
 	}
 	
 	public void addBitmapToCache(String key, Bitmap bitmap) {

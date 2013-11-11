@@ -13,57 +13,34 @@ import android.widget.Button;
 import android.widget.EditText;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class BaseActivity extends Activity{
-
-	Button login;
-
-	EditText n;
-	EditText e;
-	//store name and email
-	SharedPreferences userSettings;
+public class BaseActivity extends UserActivity{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.base);
-		n = (EditText)findViewById(R.id.baseName);
-		e = (EditText)findViewById(R.id.baseEmail);
-
-		userSettings = getSharedPreferences("UserPreferences", MODE_PRIVATE);
-		// test if there already exists a user
-		if (userSettings.getString("name", null) != null) {
-			Intent gotoMainMenu = new Intent(this, WelcomeActivity.class);
-			startActivity(gotoMainMenu);
-			return;
-		}
-		
-		n.setText(userSettings.getString("Name", ""));
-		e.setText(userSettings.getString("Email address for reports", ""));
 	}
 
+	public void onStart(){
+		super.onStart();
+		if(isLoggedIn()){
+			Intent gotoMainMenu = new Intent(this, WelcomeActivity.class);
+			startActivity(gotoMainMenu);
+		}
+	}
+		
 	public void login(View v) {
-		// TODO Auto-generated method stub
-		SharedPreferences.Editor editor = userSettings.edit();
+
+		EditText n = (EditText)findViewById(R.id.baseName);
+		EditText e = (EditText)findViewById(R.id.baseEmail);
 
 		String name = n.getText().toString();
 		String email = e.getText().toString();
 
-		if(validName(name) && validEmailAdress(email))
-		{
-			/*
-			editor.putString("userName", name);
-			editor.putString("userEmail", email);
-			*/
-			editor.putString("name", name);
-			editor.putString("email", email);
-			editor.putInt("totalScore", 0);
-			editor.commit();
-
-			//Intent userEntry = new Intent(this, WelcomeActivity.class);
-
+		if(login(name, email)){
 			Intent gotoMainMenu = new Intent(this, WelcomeActivity.class);
+			gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+			gotoMainMenu.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(gotoMainMenu);
 		}
 		else{
@@ -75,15 +52,4 @@ public class BaseActivity extends Activity{
 		}
 	}
 	
-	private boolean validName(String name){
-		if(name == null)
-			return false;
-		return !name.equals("");
-	}
-	
-	private boolean validEmailAdress(String mail){
-		if(mail == null)
-			return false;
-		return android.util.Patterns.EMAIL_ADDRESS.matcher(mail).matches();
-	}
 }

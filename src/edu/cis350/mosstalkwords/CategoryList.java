@@ -26,7 +26,7 @@ public class CategoryList extends Activity {
 	public void startMain(String categoryName)
 	{
 		Intent activityMain= new Intent(this, MainActivity.class);
-		activityMain.putExtra("categoryName", categoryName);
+		activityMain.putExtra("startCategory", categoryName);
 		startActivity(activityMain);
 	}
 	

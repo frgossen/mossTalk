@@ -3,140 +3,117 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@android:color/white">
 
-    <!--
-    <TextView
-        android:id="@+id/hintText"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
+
+        <ViewFlipper
+            android:id="@+id/ViewFlipper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" 
+            android:padding="0dp">
+			
+			<TextView
+                android:id="@+id/txtScore"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/score"
+                android:textColor="@android:color/black"
+                android:textSize="30sp" />
+        </ViewFlipper>
+        
+        <ProgressBar
+            android:id="@+id/progBar"
+	        style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/ViewFlipper"
+            android:layout_toRightOf="@+id/mainActivityLogo" 
+            android:layout_alignBaseline="@+id/ViewFlipper"/>
+        
+        <ImageView
+            android:id="@+id/mainActivityLogo"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:contentDescription="@string/logo"
+            android:src="@drawable/logo1001" />
+        
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnChangeImage"
-        android:layout_centerHorizontal="true"
-        android:text=""
-        android:textColor="#000000"
-        android:textSize="20sp" />
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginBottom="16dp">
+        
+        <ImageButton
+            android:id="@+id/btnFav"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical" >
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#CCC"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.41"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/hint2button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ear"
-                android:gravity="left|center_vertical"
-                android:onClick="onRhymeHintButtonClick"
-                android:text="Rhyme" />
-
-            <Button
-                android:id="@+id/hint1button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/sentance"
-                android:gravity="left|center_vertical"
-                android:onClick="onSentenceHintButtonClick"
-                android:text="Sentence" />
-
-            <Button
-                android:id="@+id/hint3button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/answer"
-                android:gravity="left|center_vertical"
-                android:onClick="onAnswerHintButtonClick"
-                android:text="Answer" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <ViewFlipper
-        android:id="@+id/ViewFlipper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
-
+            android:textSize="30sp" />
+        
         <TextView
-            android:id="@+id/scoretext"
+            android:id="@+id/scoBoStatistics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="7sp"
-            android:text="@string/score"
-            android:textColor="#000000"
-            android:textSize="30sp" />
-    </ViewFlipper>
-    -->
-    <!--
-    <Button
-        android:id="@+id/btnChangeImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:drawableLeft="@drawable/finger2" />
-    -->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp" 
-        android:layout_weight="0">
-
-        <ProgressBar
-            android:id="@+id/progBar"
+            android:layout_toLeftOf="@+id/btnFav"
+            android:layout_toRightOf="@+id/imageScoreProgBar"
+            android:textSize="30sp"
+            android:text="Attempts: \nSound hints: \nWord hints: \nImage score: "
+            android:padding="16dp" 
+            android:background="#CCC"
+            android:textColor="@android:color/black"/>
+        
+        <edu.cis350.mosstalkwords.VerticalProgressBar
+            android:id="@+id/imageScoreProgBar"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
-
-            <ViewFlipper
-        android:id="@+id/ViewFlipper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
-        <TextView
-            android:id="@+id/txtScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="0"
-            android:textColor="@android:color/black"
-            android:textSize="22sp"
-            android:text="@string/score"/>
-        </ViewFlipper>
-    </LinearLayout>
-
-    <ImageSwitcher
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@+id/scoBoStatistics"
+            android:layout_marginRight="16dp"
+            android:progress="50" />
+        
+	</RelativeLayout>
+	
+	<ImageSwitcher
         android:id="@+id/imgSwitcher"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:background="@android:color/black" >
+        android:background="@android:color/white"
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out" >
     </ImageSwitcher>
 
-    <LinearLayout
+	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:orientation="horizontal"
-        android:padding="16dp" >
+        android:padding="12dp" >
 
         <LinearLayout
             android:layout_width="0dp"
@@ -152,41 +129,54 @@
                 <Button
                     android:id="@+id/btnHintSound"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:layout_weight=".5"
+                    android:background="@android:color/holo_green_dark"
+                    android:padding="16dp"
                     android:text="@string/btnSound"
-		            android:textSize="22sp"
-                    tools:ignore="ButtonStyle" />
+                    android:onClick="onSoundHintButtonClick"
+                    android:textSize="30sp" />
 
                 <Button
                     android:id="@+id/btnHintWord"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:layout_weight=".5"
-                    android:textSize="22sp"
+                    android:background="@android:color/holo_green_dark"
+                    android:padding="16dp"
                     android:text="@string/btnWord"
-                    tools:ignore="ButtonStyle" />
+                    android:onClick="onWordHintButtonClick"
+                    android:textSize="30sp" />
+
             </LinearLayout>
 
             <Button
                 android:id="@+id/btnSpeak"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 android:layout_weight=".3"
-                android:textSize="22sp"
-                android:drawableLeft="@drawable/ic_action_microphone"
-                android:text="@string/speak" />
-        </LinearLayout>
+                android:background="@android:color/holo_green_dark"
+                android:padding="16dp"
+                android:text="@string/speak"
+                android:onClick="onSpeakButtonClick"
+                android:textSize="30sp" />
+
+		</LinearLayout>
 
         <Button
             android:id="@+id/btnNext"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textSize="22sp"
             android:layout_weight="0.3"
-            android:onClick="onNextSetButtonClick"
-            android:text="@string/next" />
-
+            android:padding="16dp"
+            android:background="@android:color/holo_blue_dark"
+            android:text="@string/next"
+            android:textSize="30sp" 
+            android:onClick="onNextButtonClick"
+            android:layout_margin="4dp"/>
     </LinearLayout>
-    
+
 </LinearLayout>

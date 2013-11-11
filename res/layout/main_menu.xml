@@ -9,8 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:orientation="horizontal" >
+        android:layout_weight="0">
 
         <TextView
             android:id="@+id/txtScore"
@@ -30,6 +29,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:contentDescription="@string/logo"
             android:src="@drawable/logo1001" />
 
@@ -47,7 +47,8 @@
         android:text="@string/favourites"
         android:textColor="@android:color/white"
         android:textSize="50sp" 
-        android:onClick="openFavourites"/>
+        android:onClick="openFavourites"
+        android:padding="16dp"/>
     
     <Button
         android:id="@+id/btnCategories"
@@ -61,7 +62,8 @@
         android:text="@string/categories"
         android:textColor="@android:color/white"
         android:textSize="50sp" 
-        android:onClick="openCategories"/>
+        android:onClick="openCategories"
+        android:padding="16dp"/>
     
     <Button
         android:id="@+id/btnWordQuest"
@@ -75,7 +77,8 @@
         android:text="@string/wordQuest"
         android:textColor="@android:color/white"
         android:textSize="50sp" 
-        android:onClick="openWordQuest"/>
+        android:onClick="openWordQuest"
+        android:padding="16dp"/>
     
     <Button
         android:id="@+id/btnReset"
@@ -84,11 +87,12 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_weight=".2"
+        android:layout_weight="0"
         android:background="#CCC"
         android:text="@string/reset"
         android:textSize="30sp"
         android:textColor="@android:color/primary_text_light"
-        android:onClick="resetUserData"/>
+        android:onClick="resetUserData"
+        android:padding="16dp"/>
     
 </LinearLayout>

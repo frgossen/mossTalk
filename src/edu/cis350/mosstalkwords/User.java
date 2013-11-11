@@ -253,9 +253,20 @@ public class User implements Serializable {
 	{
 		return (int)calculateAverageEfficiencyPercent();
 	}
-	
+
 	public int getLongestStreak()
 	{
+		int currentStreak = 0;
+		int longestStreak = 0;
+		for (int score : imageSetScore) {
+			if (score == 0) {
+				if (currentStreak > longestStreak) {
+					longestStreak = currentStreak;
+				}
+				currentStreak = 0;
+			}
+			currentStreak++;
+		}
 		return longestStreak;
 	}
 	
@@ -280,5 +291,11 @@ public class User implements Serializable {
 		
 		
 	}
-
+	
+	// for testing
+	public void setImageScores(int[] imageScores) {
+		imageSetScore = imageScores;
+	}
+	
+	
 }

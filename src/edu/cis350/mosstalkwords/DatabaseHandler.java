@@ -21,7 +21,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mossWords";
  
     // We would be getting user name here by a function call and we would be using the corresponding user table
-    private  String userName;
+    private String userName;
     
     // Table name according to user name
     private String tableName;
@@ -40,15 +40,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final String url = "url";
     
     public void getTable(String uname) {
-    	userName = uname.toLowerCase();
-    	tableName = userName + "_tableName";
-    	SQLiteDatabase db = this.getReadableDatabase();
-    	String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + tableName + "("
+            userName = uname.toLowerCase();
+            tableName = userName + "_tableName";
+            SQLiteDatabase db = this.getReadableDatabase();
+            String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + tableName + "("
                 + imageName + " TEXT PRIMARY KEY," +category + " TEXT, "+ isFavorite + " INTEGER," + attempts + " INTEGER,"
                 + correctAttempts + " INTEGER," + soundHints + " INTEGER," + playwordHints + " INTEGER," + noHint + " INTEGER,"
                 + lastSeen + " TEXT," + difficulty + " REAL," + url + " TEXT)";
-    	
-    	db.execSQL(CREATE_USER_TABLE);
+            
+            db.execSQL(CREATE_USER_TABLE);
     }
   
     public DatabaseHandler(Context context) {
@@ -56,12 +56,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
  
     public List<UserStimuli> getFavoriteStimuli()
-	{
-		SQLiteDatabase db = this.getReadableDatabase();
-		List<UserStimuli> usList = new ArrayList<UserStimuli>();
-		
-		Cursor cursor = db.query(tableName, null, isFavorite + "=?", new String[] {"1"}, null, null, null,null);
-		
+        {
+                SQLiteDatabase db = this.getReadableDatabase();
+                List<UserStimuli> usList = new ArrayList<UserStimuli>();
+                
+                Cursor cursor = db.query(tableName, null, isFavorite + "=?", new String[] {"1"}, null, null, null,null);
+                
         if (cursor != null && cursor.getCount() > 0)
             cursor.moveToFirst();
         
@@ -69,27 +69,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         do {
                 try
                 {
-            	UserStimuli us = new UserStimuli();
+                    UserStimuli us = new UserStimuli();
                 
                 us.setImageName(cursor.getString(0));
                 us.setCategory(cursor.getString(1));
                 us.setIsFavorite(Integer.parseInt(cursor.getString(2)));
                 us.setAttempts(Integer.parseInt(cursor.getString(3)));
                 us.setCorrectAttempts(Integer.parseInt(cursor.getString(4)));
-		        us.setSoundHints(Integer.parseInt(cursor.getString(5)));
-		        us.setPlaywordHints(Integer.parseInt(cursor.getString(6)));
-		        us.setNoHint(Integer.parseInt(cursor.getString(7)));
-		        	
-				Calendar cd = Calendar.getInstance();
-				cd.setTime(new Date(cursor.getString(8)));
-		        us.setLastSeen(cd);
-		        us.setDifficulty(Double.parseDouble(cursor.getString(9)));
-		        us.setUrl(cursor.getString(10));
-		        
+                 us.setSoundHints(Integer.parseInt(cursor.getString(5)));
+                 us.setPlaywordHints(Integer.parseInt(cursor.getString(6)));
+                 us.setNoHint(Integer.parseInt(cursor.getString(7)));
+                         
+                                Calendar cd = Calendar.getInstance();
+                                cd.setTime(new Date(cursor.getString(8)));
+                 us.setLastSeen(cd);
+                 us.setDifficulty(Double.parseDouble(cursor.getString(9)));
+                 us.setUrl(cursor.getString(10));
+                
                 usList.add(us);}
                 catch(Exception e)
                 {
-                	Log.d("Exception in parsing",e.toString());
+                        Log.d("Exception in parsing",e.toString());
                 }
             } while (cursor.moveToNext());
         }
@@ -97,17 +97,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         
         
-        public  void setStimuli(UserStimuli stimuli){
-    		SQLiteDatabase db = this.getWritableDatabase();
-    		
-    		
-    		Cursor cursor = db.query(tableName, null,imageName+ "=?",new String[] {stimuli.getImageName()}, null, null, null);
-    		
-    		ContentValues values = new ContentValues();
-    		
-    		values.put(imageName, stimuli.getImageName());
-    		values.put(category, stimuli.getCategory());
-            values.put(isFavorite, stimuli.getIsFavorite()); 
+        public void setStimuli(UserStimuli stimuli){
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    
+                    
+                    Cursor cursor = db.query(tableName, null,imageName+ "=?",new String[] {stimuli.getImageName()}, null, null, null);
+                    
+                    ContentValues values = new ContentValues();
+                    
+                    values.put(imageName, stimuli.getImageName());
+                    values.put(category, stimuli.getCategory());
+            values.put(isFavorite, stimuli.getIsFavorite());
             values.put(attempts, stimuli.getAttempts());
             values.put(correctAttempts, stimuli.getCorrectAttempts());
             values.put(soundHints, stimuli.getSoundHints());
@@ -119,26 +119,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
            
             Log.d("cursor rows",Integer.toString(cursor.getCount()));
           
-            if (cursor.getCount() == 0) 
+            if (cursor.getCount() == 0)
             {
-            	db.insert(tableName, null, values);
-            	Log.d("cursor null","adding ant image");
+                    db.insert(tableName, null, values);
+                    Log.d("cursor null","adding ant image");
             }
-    	
+            
             else {
-            	db.update(tableName, values, imageName+"=?", new String[] {stimuli.getImageName()});
+                    db.update(tableName, values, imageName+"=?", new String[] {stimuli.getImageName()});
             }
             db.close(); // Closing database connection
-    		
+                    
             }
 
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			// TODO Auto-generated method stub
-		}
+                @Override
+                public void onCreate(SQLiteDatabase db) {
+                        // TODO Auto-generated method stub
+                }
 
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			// TODO Auto-generated method stub
-		}
+                @Override
+                public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                        // TODO Auto-generated method stub
+                }
 }
