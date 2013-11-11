@@ -34,25 +34,23 @@ Context mContext = this; //this.getApplicationContext();
 					public void onClick(DialogInterface dialog, int id)
 					{
 						//restart set
-						Intent i=getIntent();
-						i.putExtra("Main Menu", false);
-						i.putExtra("Replay Set", true);
-						i.putExtra("Next Set", false);
-						setResult(RESULT_OK, i);
+//						Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
+//						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
+//						startActivity(activityMain);
+						
+						
 						finish();
-					}
+				}
 				})
 				.setPositiveButton(R.string.nextSet, new DialogInterface.OnClickListener()
 				{
 					public void onClick(DialogInterface dialog, int id)
 					{
-						//restart set
-						Intent i=getIntent();
-						i.putExtra("Main Menu", false);
-						i.putExtra("Replay Set", false);
-						i.putExtra("Next Set", true);
-						setResult(RESULT_OK, i);
-						finish();
+						//next set
+						Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
+						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
+						startActivity(activityMain);
+
 					}
 				})
 				.setNegativeButton(R.string.menu, new DialogInterface.OnClickListener()
@@ -60,12 +58,8 @@ Context mContext = this; //this.getApplicationContext();
 					public void onClick(DialogInterface dialog, int id)
 					{
 						//go to main menu
-						Intent i=getIntent();
-						i.putExtra("Main Menu", true);
-						i.putExtra("Replay Set", false);
-						i.putExtra("Next Set", false);
-						setResult(RESULT_OK, i);
-						finish();
+						Intent menu = new Intent(EndSetReturnActivity.this, WelcomeActivity.class);		
+						startActivity(menu);
 					}
 				});
 				

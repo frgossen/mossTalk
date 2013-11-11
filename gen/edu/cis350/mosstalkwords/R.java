@@ -54,9 +54,11 @@ public final class R {
         public static final int score=0x7f02001e;
         public static final int sentance=0x7f02001f;
         public static final int soccerball=0x7f020020;
-        public static final int tree=0x7f020021;
-        public static final int white=0x7f020022;
-        public static final int wordleicon1=0x7f020023;
+        public static final int star=0x7f020021;
+        public static final int star_selected=0x7f020022;
+        public static final int tree=0x7f020023;
+        public static final int white=0x7f020024;
+        public static final int wordleicon1=0x7f020025;
     }
     public static final class id {
         public static final int Completeness=0x7f090016;

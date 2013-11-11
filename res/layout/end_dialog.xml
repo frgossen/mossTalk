@@ -71,8 +71,9 @@
                     android:layout_gravity="center_horizontal"
                     android:numStars="3"
                     android:paddingBottom="0dp"
-                    android:paddingTop="0dp"
-                    android:rating="0" />
+                    android:paddingTop="25dp"
+                    android:rating="0"
+                     />
             </TableRow>
 
             <TableRow

@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList; 
-import java.util.Iterator;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -248,22 +247,36 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	}
 	
 	public void finishedSet(){
+		imageIndex = 0;
+
+		SetStatistics s = currentSetStatistics.deepCopy();
+		
 		Intent gotoEndOfSet = new Intent(this, EndSetActivity.class);
 		gotoEndOfSet.putExtra("categoryName", categoryName); 
-		gotoEndOfSet.putExtra("currentSetStatistics", currentSetStatistics);
+		gotoEndOfSet.putExtra("currentSetStatistics", s);
+		
+		
+		showCurrentImageFromCache();
+		updateLayoutInformation();
+
+		currentSetStatistics.reset();
+
+		
 		ArrayList<Image> currentSet1 = new ArrayList<Image>();
 		for (int i = 0; i < 20; i++) {
-			currentSet1.add(currentSet.get(i));
+		currentSet1.add(currentSet.get(i));
 		}
 		gotoEndOfSet.putParcelableArrayListExtra("currentSet", currentSet1);
-	//	gotoEndOfSet.putExtra("currentSet", currentSet);
+//			gotoEndOfSet.putExtra("currentSet", currentSet);
 		gotoEndOfSet.putExtra("mode", mode);
-		startActivity(gotoEndOfSet);
-	}
+		startActivity(gotoEndOfSet);		
+		
+		}
+
 		
 	private void nextImage() {
 		imageIndex++;
-		if(imageIndex == currentSetStatistics.getSize()) 
+		if(imageIndex == currentSetStatistics.getSize())
 			finishedSet();
 		else {
 			showCurrentImageFromCache();

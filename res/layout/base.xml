@@ -74,9 +74,7 @@
             android:layout_marginTop="16dp"
             android:onClick="login"
             android:text="@string/login"
-            android:textSize="30sp" 
-            android:background="#CCC"
-            android:padding="16dp"/>
+            android:textSize="30sp" />
         
     </RelativeLayout>
 

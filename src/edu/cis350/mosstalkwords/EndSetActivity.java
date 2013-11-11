@@ -196,6 +196,7 @@ public class EndSetActivity extends Activity {
 	}
 	
 	public void send(View v) {
+		System.out.println("Send");
 		//update database
 		
 		//generate report
@@ -206,9 +207,15 @@ public class EndSetActivity extends Activity {
 	}
 	
 	public void doNotSend(View v) {
+		System.out.println("No");
 		//update database
 
 		//select choice, replay | main | next Set
+		Intent returnOptions = new Intent(this, EndSetReturnActivity.class);
+		returnOptions.putExtra("currentSetStatistics", currentSetStatistics);
+		returnOptions.putExtra("categoryName", categoryName);
+		startActivity(returnOptions);
+		finish();
 	}
 
 }
