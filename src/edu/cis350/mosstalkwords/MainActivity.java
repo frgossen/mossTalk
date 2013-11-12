@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ViewFlipper;
@@ -55,6 +56,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	private TextToSpeech tts;
 	private ImageCache imCache;
 	private Images_SDB sdb;
+	private UserDataHandler udh;
 	private LoadSetAndImages backgroundTask;
 
 	private int mode;
@@ -76,6 +78,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		imageScoreProgBar.setMax(100 + 5);
 		
 		sdb = new Images_SDB();
+		udh  = new UserDataHandler();
 		backgroundTask = new LoadSetAndImages();
 		tts = new TextToSpeech(this, this);
 		imCache = ImageCache.getInstance();
@@ -197,19 +200,17 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 		currentSetStatistics.reset();
 
-		
 		ArrayList<Image> currentSet1 = new ArrayList<Image>();
 		for (int i = 0; i < 20; i++) {
-		currentSet1.add(currentSet.get(i));
+			currentSet1.add(currentSet.get(i));
 		}
 		gotoEndOfSet.putParcelableArrayListExtra("currentSet", currentSet1);
-//			gotoEndOfSet.putExtra("currentSet", currentSet);
+		//gotoEndOfSet.putExtra("currentSet", currentSet);
 		gotoEndOfSet.putExtra("mode", mode);
 		startActivity(gotoEndOfSet);		
 		//finish();
-		}
+	}
 
-		
 	private void nextImage() {
 		imageIndex++;
 		if(imageIndex == currentSetStatistics.getSize())
@@ -275,6 +276,12 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say what you see in the picture...");
 		startActivityForResult(intent, RESULT_SPEECH_REC);
+	}
+	
+	public void onFavouritesButtonClick(View view){
+		Image currentImage = currentSet.get(imageIndex);
+		currentImage.toggleFavourite();
+		updateLayoutInformation();
 	}
 
 	public void speechRecognitionResult(ArrayList<String> matches){
@@ -354,6 +361,13 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		
 		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
 		pbar.setProgress(1 + imageIndex);
+		
+		if(currentSet != null){
+			ImageButton btn = (ImageButton) findViewById(R.id.btnFav);
+			Image currentImage = currentSet.get(imageIndex);
+			boolean isFav = currentImage.isFavourite();
+			btn.setImageResource(isFav ? R.drawable.star_selected : R.drawable.star);
+		}
 	}
 	
 	private void speak(String words2say, float rate) {
@@ -378,7 +392,8 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 					if(mode == MODE_CATEGORY)
 						currentSet = new Set(sdb.returnImages(categoryName));
 					else if (mode == MODE_FAVOURITES)
-						currentSet = new Set(sdb.returnImages(categoryName));
+						currentSet = new Set(sdb.returnImages("Living"));
+						//currentSet = new Set(udh.getFavoriteStimulus(getApplicationContext()));
 				}
 				
 				int size = currentSet.getSize();

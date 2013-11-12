@@ -69,7 +69,8 @@
             android:background="#CCC"
             android:padding="16dp"
             android:scaleType="fitCenter"
-            android:textSize="30sp" />
+            android:textSize="30sp" 
+            android:onClick="onFavouritesButtonClick"/>
         
         <TextView
             android:id="@+id/scoBoStatistics"

@@ -38,7 +38,9 @@ public class WelcomeActivity extends UserActivity {
 	}
 	
 	public void openFavourites(View v){
-		
+		Intent activityMain= new Intent(this, MainActivity.class);
+		activityMain.putExtra("startFavourites", true);
+		startActivity(activityMain);
 	}
 	
 	public void openCategories(View v){
