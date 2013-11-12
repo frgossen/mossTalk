@@ -373,7 +373,8 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		
 		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
 		pbar.setProgress(1 + imageIndex);
-		
+
+	
 		
 		/* *hide*
 		if(currentSet != null){
