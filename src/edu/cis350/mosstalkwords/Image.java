@@ -1,12 +1,7 @@
 package edu.cis350.mosstalkwords;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import android.os.Parcel;
 import android.os.Parcelable;
-
 
 public class Image implements Parcelable {
 	
@@ -16,6 +11,7 @@ public class Image implements Parcelable {
 	private int frequency;
 	private int length;
 	private int imageability;
+	private boolean favourite;
 	
 	// BEGINNNING --- IMPLEMENT PARCELABLE INTERFACE
 	public int describeContents() {
@@ -28,6 +24,7 @@ public class Image implements Parcelable {
         out.writeInt(frequency);
         out.writeInt(length);
         out.writeInt(imageability);
+        out.writeInt(favourite ? 1 : 0);
     }
     public static final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
         public Image createFromParcel(Parcel in) {
@@ -45,16 +42,9 @@ public class Image implements Parcelable {
     	frequency = in.readInt();
     	length = in.readInt();
     	imageability = in.readInt();
+    	favourite = in.readInt() == 1;
     }
 	// END --- IMPLEMENT PARCELABLE INTERFACE
-
-    
-    
-    
-    
-    
-    
-    
     
 	public Image(String w, String c, String i, String l, String f, String u) {
 		try {
@@ -64,7 +54,9 @@ public class Image implements Parcelable {
 			this.setFrequency(Integer.parseInt(f));
 			this.setLength(Integer.parseInt(l));
 			this.setImageability(Integer.parseInt(i));
-			}
+			//TODO: add this attribute and probably more properly
+			this.setFavourite(false);
+		}
 		catch(Exception e) {
 			System.out.println(e);
 		}
@@ -117,4 +109,17 @@ public class Image implements Parcelable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
+	public boolean isFavourite(){
+		return favourite;
+	}
+	
+	public void setFavourite(boolean favourite){
+		this.favourite = favourite;
+	}
+	
+	public void toggleFavourite(){
+		favourite = !favourite;
+	}
+	
 }
