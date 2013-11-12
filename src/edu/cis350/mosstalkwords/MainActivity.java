@@ -73,12 +73,13 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		ImageSwitcher imSwitcher = (ImageSwitcher) findViewById(R.id.imgSwitcher);
 		imSwitcher.setFactory(this);
 		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
+//
 		pbar.setMax(20 + 1);
 		VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
 		imageScoreProgBar.setMax(100 + 5);
 		
 		sdb = new Images_SDB();
-		udh  = new UserDataHandler();
+		udh  = new UserDataHandler(getUserName());
 		backgroundTask = new LoadSetAndImages();
 		tts = new TextToSpeech(this, this);
 		imCache = ImageCache.getInstance();
@@ -86,6 +87,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		Intent i = getIntent();
 		if(i.hasExtra("startCategory")){
 			categoryName = getIntent().getExtras().getString("startCategory");
+//
 			currentSetStatistics = new SetStatistics(20);
 			imageIndex = 0;
 			currentSet = null;
@@ -95,6 +97,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		}
 		else if(i.hasExtra("startFavourites")){
 			categoryName = null;
+//
 			currentSetStatistics = new SetStatistics(20);
 			imageIndex = 0;
 			currentSet = null;
@@ -188,6 +191,8 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	public void finishedSet(){
 		imageIndex = 0;
 
+		setScore(getScore()+currentSetStatistics.getTotalScore());
+		
 		SetStatistics s = currentSetStatistics.deepCopy();
 		
 		Intent gotoEndOfSet = new Intent(this, EndSetActivity.class);
@@ -201,7 +206,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		currentSetStatistics.reset();
 
 		ArrayList<Image> currentSet1 = new ArrayList<Image>();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < currentSet.getSize(); i++) {
 			currentSet1.add(currentSet.get(i));
 		}
 		gotoEndOfSet.putParcelableArrayListExtra("currentSet", currentSet1);
@@ -253,9 +258,13 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 	public void onSoundHintButtonClick(View view) {
 		currentSetStatistics.incSoundHint(imageIndex);
+		
 		String word = currentSet.get(imageIndex).getWord();
+		/*
 		String hint = word.substring(0, word.length()/2);
 		speak(hint, 1);
+		*/
+		speakSound(word);
 		updateLayoutInformation();
 	}
 
@@ -278,10 +287,13 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		startActivityForResult(intent, RESULT_SPEECH_REC);
 	}
 	
+	
 	public void onFavouritesButtonClick(View view){
+		/* *hide*
 		Image currentImage = currentSet.get(imageIndex);
 		currentImage.toggleFavourite();
 		updateLayoutInformation();
+		*/
 	}
 
 	public void speechRecognitionResult(ArrayList<String> matches){
@@ -344,11 +356,11 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		int soundHints = currentSetStatistics.getSoundHints(imageIndex);
 		int wordHints = currentSetStatistics.getWordHints(imageIndex);
 		int imageScore = currentSetStatistics.getScore(imageIndex, true);
-		String scoreBoardMsg = "Attemppts: " + attempts + 
+		String scoreBoardMsg = "Attempts: " + attempts + 
 				"\nSound hints: " + soundHints + 
 				"\nWord hints: " + wordHints + 
-				"\nImage Score: " + imageScore + 
-				"\nImage Index: " + imageIndex;
+				"\nImage Score: " + imageScore;/* + 
+				"\nImage Index: " + imageIndex;*/
 		TextView scoreBoard = (TextView) findViewById(R.id.scoBoStatistics);
 		scoreBoard.setText(scoreBoardMsg);
 		
@@ -362,12 +374,16 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
 		pbar.setProgress(1 + imageIndex);
 		
+		
+		/* *hide*
 		if(currentSet != null){
 			ImageButton btn = (ImageButton) findViewById(R.id.btnFav);
 			Image currentImage = currentSet.get(imageIndex);
 			boolean isFav = currentImage.isFavourite();
 			btn.setImageResource(isFav ? R.drawable.star_selected : R.drawable.star);
 		}
+		*/
+		
 	}
 	
 	private void speak(String words2say, float rate) {
@@ -392,8 +408,8 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 					if(mode == MODE_CATEGORY)
 						currentSet = new Set(sdb.returnImages(categoryName));
 					else if (mode == MODE_FAVOURITES)
-						currentSet = new Set(sdb.returnImages("Living"));
-						//currentSet = new Set(udh.getFavoriteStimulus(getApplicationContext()));
+						//currentSet = new Set(sdb.returnImages("Living"));
+						currentSet = new Set(udh.getFavoriteStimulus(getApplicationContext()));
 				}
 				
 				int size = currentSet.getSize();
@@ -462,4 +478,18 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				showCurrentImageFromCache();
 		}	
 	}
+	
+	public void speakSound(String s1)
+    {
+    	tts.setSpeechRate((float)(0.4));
+    	tts.speak(s1, 0, null);
+    	try {
+			Thread.sleep(200+(100*(long)Math.floor((0.5*s1.length()))), 0);
+    		tts.stop();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Log.d("Error of Exception","Error");
+		}
+    }
 }

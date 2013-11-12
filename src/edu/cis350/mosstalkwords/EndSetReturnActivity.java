@@ -47,12 +47,18 @@ Context mContext = this; //this.getApplicationContext();
 						//next set
 						Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
 
-//						menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+						//menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 						//need to make main activity exit.
 
-						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
 						
+						
+						//fix this, need to close main activity.
+						
+						
+						
+						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
+	
+						activityMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(activityMain);
 						finish();
 					}
@@ -67,6 +73,14 @@ Context mContext = this; //this.getApplicationContext();
 
 						//need to make main activity exit.
 
+						
+						
+						//fix this, main activity needs to close.
+						
+						
+						menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						
+						
 						startActivity(menu);
 						finish();
 					}

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,7 +31,7 @@ public class EndSetActivity extends UserActivity {
 	ImageAdapter adapter; 
 	Context mContext = this;
 	DatabaseHandler db;
-	AddFavoriteStimuli addFavoriteStimuli;
+	ModifyFavoriteStimuli modifyFavoriteStimuli;
 	
 	private int mode;
 	private String categoryName; 
@@ -43,7 +44,7 @@ public class EndSetActivity extends UserActivity {
 		setContentView(R.layout.end_dialog);//.favorite_gridview);
 
 		db = new DatabaseHandler(this);
-		addFavoriteStimuli = new AddFavoriteStimuli(db);
+		modifyFavoriteStimuli = new ModifyFavoriteStimuli(db);
 		
 	    //LayoutInflater inflater = this.getLayoutInflater();//(LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    //View layout = inflater.inflate(R.layout.dialog_endset, null);
@@ -74,7 +75,8 @@ public class EndSetActivity extends UserActivity {
 			imageWords[j] = currentSet.get(j).getWord();
 		}
 		
-	    adapter = new ImageAdapter(this, currentSetStatistics.getScores(), imageWords);
+	    adapter = new ImageAdapter(this, currentSetStatistics.getScores(), 
+	    		imageWords,getUserName());
 		gridView.setAdapter(adapter);
 		/*
 		gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -123,7 +125,7 @@ public class EndSetActivity extends UserActivity {
 	    message.setText(msg);
 	    
 	    TextView completeness=(TextView) this.findViewById(R.id.Completeness);
-	    String completenessPercent = "" + currentSetStatistics.getCompleteness();
+	    String completenessPercent = "" + 100 * currentSetStatistics.getCompleteness();
 	    completeness.setText(completeness.getText() + completenessPercent+"%");
 	    
 	    TextView streak=(TextView) this.findViewById(R.id.streak);
@@ -134,25 +136,62 @@ public class EndSetActivity extends UserActivity {
 	    setScoreNum.setText(setScoreNum.getText().toString() + this.getIntent().getExtras().getInt("setScore")); 
 
 	    TextView totalScoreNum = (TextView) this.findViewById(R.id.endScoreTotal);
-	    totalScoreNum.setText(totalScoreNum.getText().toString() + currentSetStatistics.getTotalScore()); 
+	    totalScoreNum.setText(getScore()+""); 
 	}
 	
-	public void writeToDB()
+	private void updateDB()
 	{
 		boolean checked[] = adapter.getChecked();
 
 		//adapter checkbox
 		for(int i = 0; i < checked.length; i++)
 		{
-			//addFavoriteStimuli.addFavoriteStimuli(userName, imageName, categoryName, totalAttemptsNum, correctAttempsNum,
-			//		soundHintsNum, wordHintsNum, difficultLevel, imageURL)
+			boolean solved = currentSetStatistics.isSolved(i);
+			int correctAttempt = 0;
+			if(solved)
+			{
+				correctAttempt = 1;
+			}
+			
+			if(checked[i])
+			{
+								
+				modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getWord(),
+						currentSet.get(i).getCategory(), currentSetStatistics.getAttempts(i),
+						correctAttempt, currentSetStatistics.getSoundHints(i), 
+						currentSetStatistics.getWordHints(i), 2, currentSet.get(i).getUrl(), 1);
+			}
+			else
+			{
+				boolean[] origin = adapter.getOriginallyChecked();
+
+				//if originally checked, but now it is unchecked, set to not favorite in DB	
+				if(origin[i])
+					modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getWord(),
+							currentSet.get(i).getCategory(), currentSetStatistics.getAttempts(i),
+							correctAttempt, currentSetStatistics.getSoundHints(i), 
+							currentSetStatistics.getWordHints(i), 2, currentSet.get(i).getUrl(), 0);
+					
+				//update if it is
+				
+				//skip otherwise
+				
+				
+			}
 		}
 	}
 	
 	public void send(View v) {
 		System.out.println("Send");
 		//update database
+		updateDB();
 		
+
+		List<UserStimuli> l =  db.getFavoriteStimuli();
+		
+		System.out.println("------------------------------------------------------");
+		for(UserStimuli u : l)
+			System.out.println(u.getImageName());
 		//create and send report
 		Intent nameAndEmail = new Intent(this, NameAndEmailActivity.class);
 		startActivityForResult(nameAndEmail,2);
@@ -164,7 +203,8 @@ public class EndSetActivity extends UserActivity {
 	public void doNotSend(View v) {
 		System.out.println("No");
 		//update database
-
+		updateDB();
+		
 		//select choice, replay | main | next Set
 	displayOptions();
 	}
@@ -236,7 +276,13 @@ public class EndSetActivity extends UserActivity {
 		}
 		else if(requestCode == 2)
 		{
-			if(data.getBooleanExtra("Cancel", true))
+			boolean cancel = data.getBooleanExtra("Cancel", false);
+			System.out.println("CANCEL VALUE: "+ cancel);
+
+			cancel = data.getBooleanExtra("Cancel", true);
+			System.out.println("CANCEL VALUE: "+ cancel);
+
+			if(!cancel)
 				createAndSendReport();
 			else
 				displayOptions();
@@ -258,5 +304,6 @@ public class EndSetActivity extends UserActivity {
 		startActivity(returnOptions);
 		finish();
 	}
+	
 
 }

@@ -2,14 +2,14 @@ package edu.cis350.mosstalkwords;
 
 import java.util.Calendar;
 
-public class AddFavoriteStimuli {
+public class ModifyFavoriteStimuli {
 	private DatabaseHandler db;
 	
-	public AddFavoriteStimuli (DatabaseHandler db) {
+	public ModifyFavoriteStimuli (DatabaseHandler db) {
 		this.db = db;
 	}
 	
-	public void addFavoriteStimuli (String userName,
+	public void updateFavoriteStimuli (String userName,
 									String imageName,
 									String categoryName,
 									int totalAttemptsNum,
@@ -17,13 +17,13 @@ public class AddFavoriteStimuli {
 									int soundHintsNum,
 									int wordHintsNum,
 									int difficultLevel,
-									String imageURL) {
+									String imageURL,
+									int isFavorite) {
 		db.getTable(userName);
-		
 		UserStimuli stimuli = new UserStimuli();
 		stimuli.setImageName(imageName);
 		stimuli.setCategory(categoryName);
-		stimuli.setIsFavorite(1);
+		stimuli.setIsFavorite(isFavorite);
 		stimuli.setAttempts(totalAttemptsNum);
 		stimuli.setCorrectAttempts(correctAttempsNum);
 		stimuli.setSoundHints(soundHintsNum);

@@ -217,6 +217,7 @@ public class SetStatistics implements Parcelable {
 		int currentStreak = 0;
 		int longestStreak = 0;
 		int length = getSize();
+
 		for (int i=0; i<length; i++) {
 			if (!isSolved(i)) {
 				if (currentStreak > longestStreak) {
@@ -224,7 +225,10 @@ public class SetStatistics implements Parcelable {
 				}
 				currentStreak = 0;
 			}
-			currentStreak++;
+			else
+			{
+				currentStreak++;
+			}
 		}
 		return longestStreak;
 	}

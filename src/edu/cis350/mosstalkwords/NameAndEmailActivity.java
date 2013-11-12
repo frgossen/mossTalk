@@ -66,7 +66,7 @@ public class NameAndEmailActivity extends Activity
 				    EditText email=(EditText) layout.findViewById(R.id.email);
 
 				    Intent i=getIntent();
-					i.putExtra("Cancel",false);
+					i.putExtra("Cancel", false);
 					i.putExtra("Username", username.getText().toString());
 					i.putExtra("Email", email.getText().toString());
 					

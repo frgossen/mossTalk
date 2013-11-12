@@ -1,5 +1,9 @@
 package edu.cis350.mosstalkwords;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,36 +20,77 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ImageAdapter extends BaseAdapter {
-
 	private Context context; // context for inflater	
 	private int[] results; // scores (will be used to mark them correct/incorrect
-	private String[] imageNames; // list of names of the images
+	private ArrayList<String> imageNames; // list of names of the images
 	private boolean[] checked;
-	public boolean[] getChecked() {
-		return checked;
-	}
+	private DatabaseHandler db;
+
+	private boolean[] originallyChecked;
+	
 
 
 	private View gridView;
 //	private ImageCache imCache; // image cache.
 	
-	public ImageAdapter(Context ctx, int[] res, String[] imn) {
+	public ImageAdapter(Context ctx, int[] res, String[] imn, String userName) {
 		super();
 		context = ctx;
 		results = res;
-		imageNames = imn;
+		imageNames = new ArrayList<String>();
+		for(String i : imn)
+		{
+			imageNames.add(i);
+		}
 		checked = new boolean[res.length];
-		System.out.println(res.length +"--" + imn.length);
-		System.out.println(results[0] +"--" + imageNames[0]);
+		originallyChecked = new boolean[res.length];
+
+		db = new DatabaseHandler(context);
+		db.getTable(userName);
+		
+		setCheckBoxesFromDB();
+		
+//		System.out.println(res.length +"--" + imn.length);
+//		System.out.println(results[0] +"--" + imageNames[0]);
+	}
+	
+	public boolean[] getChecked() {
+		return checked;
+	}
+	
+	public void setCheckBoxesFromDB()
+	{
+		List<UserStimuli> list = db.getFavoriteStimuli();
+		for (UserStimuli l: list)
+		{
+			String listImageName = l.getImageName();
+			if(imageNames.contains(listImageName))
+			{
+				//need index and if it is a favorite
+				if(l.getIsFavorite() == 1)
+					originallyChecked[imageNames.indexOf(listImageName)] = true;
+			}
+		}
+	}
+	
+	public void setOriginalCheckBox(CheckBox c,  int pos)
+	{
+			c.setChecked(originallyChecked[pos]);
+			checked[pos] = originallyChecked[pos]; 
+	}
+	
+	public boolean[] getOriginallyChecked()
+	{
+		return originallyChecked;
 	}
 
 	public int getCount() {
-		return imageNames.length;
+		return imageNames.size();
 	}
 
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return imageNames[position];
+		return imageNames.get(position);
 	}
 	
 	public boolean getCheckBox(int position)
@@ -102,7 +147,9 @@ public class ImageAdapter extends BaseAdapter {
 
 			CheckBox c = (CheckBox) gridView.findViewById(R.id.item_checkbox);
 			
+			
 			final int a = position;
+			setOriginalCheckBox(c, a);
 			
 			c.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
@@ -122,7 +169,7 @@ public class ImageAdapter extends BaseAdapter {
 			});
 			
 			
-			Bitmap im = ImageCache.getInstance().getBitmapFromCache(imageNames[position]);
+			Bitmap im = ImageCache.getInstance().getBitmapFromCache(imageNames.get(position));
 
 			System.out.println("Here 3");
 			Drawable drawableBitmap = new BitmapDrawable(context.getResources(), im);
