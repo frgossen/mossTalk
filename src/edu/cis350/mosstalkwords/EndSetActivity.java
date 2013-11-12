@@ -1,5 +1,8 @@
 package edu.cis350.mosstalkwords;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -16,10 +19,12 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 
-public class EndSetActivity extends Activity {
+public class EndSetActivity extends UserActivity {
 
 	GridView gridView;
 	ImageAdapter adapter; 
@@ -130,57 +135,6 @@ public class EndSetActivity extends Activity {
 
 	    TextView totalScoreNum = (TextView) this.findViewById(R.id.endScoreTotal);
 	    totalScoreNum.setText(totalScoreNum.getText().toString() + currentSetStatistics.getTotalScore()); 
-
-	    /*
-			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			builder.setCancelable(false);
-			builder.setTitle("Congratulations!")//hackish extra spaces to center the title since not an option
-				.setView(layout)
-				.setPositiveButton(R.string.send, new DialogInterface.OnClickListener()
-				{
-					boolean checked[] = adapter.getChecked();
-
-					public void onClick(DialogInterface dialog, int id)
-					{
-						//adapter checkbox
-						for(int i = 0; i < 20; i++)
-						{
-							System.out.println(adapter.getItem(i));
-						}
-						//restart set
-						Intent i=getIntent();
-						i.putExtra("Send", true);
-						i.putExtra("No", false);
-						setResult(RESULT_OK, i);
-						finish();
-					}
-				})
-				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int id)
-					{
-						boolean checked[] = adapter.getChecked();
-
-						//adapter checkbox
-						for(int i = 0; i < checked.length; i++)
-						{
-							
-						}
-	
-						//go to main menu
-						Intent i=getIntent();
-						i.putExtra("Send", false);
-						i.putExtra("No", true);
-						setResult(RESULT_OK, i);
-						finish();
-					}
-				});
-					
-			
-				AlertDialog alert= builder.create();//create the AlertDialog object and return it
-				//alert.setContentView(R.gridView.dialog_endset);
-				alert.show();
-*/		
 	}
 	
 	public void writeToDB()
@@ -199,9 +153,10 @@ public class EndSetActivity extends Activity {
 		System.out.println("Send");
 		//update database
 		
-		//generate report
-		
-		//send report
+		//create and send report
+		Intent nameAndEmail = new Intent(this, NameAndEmailActivity.class);
+		startActivityForResult(nameAndEmail,2);
+		//wait
 		
 		//select choice, replay | main | next Set
 	}
@@ -211,6 +166,92 @@ public class EndSetActivity extends Activity {
 		//update database
 
 		//select choice, replay | main | next Set
+	displayOptions();
+	}
+	
+	public File createReport() throws IOException
+	{
+		File path = Environment.getExternalStorageDirectory();
+		File dir = new File(path.getAbsolutePath() + "/textfiles");
+		dir.mkdirs();
+		
+		File reportFile = new File(dir,("Report.txt"));
+		//OutputStreamWriter reportOut = new OutputStreamWriter(openFileOutput(currentSet.getName()+"Report.txt", this.MODE_PRIVATE));
+		String[] imgNames = new String[SetStatistics.DEFAULT_SET_SIZE];
+		int i = 0;
+		
+		String reportString = currentSetStatistics.generateSetReport(imgNames, getUserName());
+		FileWriter report=new FileWriter(reportFile);
+		report.write(reportString);
+		//reportOut.write(reportString);
+		//reportOut.close();
+		report.close();
+		//reportOut.println("User: "+currentUser.name);
+		//reportOut.close();
+		return reportFile;
+	}
+
+	
+	public void sendReportViaEmail(File fileName)
+	{
+		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+		emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
+				new String[]{getEmail()});
+		String subject="Wordle "/*+currentSet.getName()*/ +" Report";
+		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+		String body= "Your report is attached below. Good Work!";
+		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+
+		//String rawFolderPath = "android.resource://" + getPackageName() 
+		//                       + "/" + R.raw.shortcuts;
+
+		// Here my file name is shortcuts.pdf which i have stored in /res/raw folder
+		//Uri emailUri = Uri.parse(rawFolderPath );
+		emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileName));
+		emailIntent.setType("vnd.android.cursor.dir/vnd.google.note");
+		System.out.println("Email Send");
+		startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), 1);
+	}
+	
+	public void createAndSendReport()
+	{
+
+		File fileMade=new File("");
+		try {
+			fileMade = createReport();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		sendReportViaEmail(fileMade);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if(requestCode == 1)
+		{
+			displayOptions();
+		}
+		else if(requestCode == 2)
+		{
+			if(data.getBooleanExtra("Cancel", true))
+				createAndSendReport();
+			else
+				displayOptions();
+		}
+	}
+	
+	public void enterNameAndEmail()
+	{
+		Intent userEntry = new Intent(this, NameAndEmailActivity.class);
+		userEntry.putExtra("User", currentSetStatistics);
+		startActivityForResult(userEntry,2);
+	}
+	
+	private void displayOptions()
+	{
 		Intent returnOptions = new Intent(this, EndSetReturnActivity.class);
 		returnOptions.putExtra("currentSetStatistics", currentSetStatistics);
 		returnOptions.putExtra("categoryName", categoryName);

@@ -60,6 +60,7 @@ public class CategoryList extends Activity {
 	  		  //setResult(RESULT_OK, i);
 	  		  //finish();
 	          startMain(categoryList.get(position).getName());
+	          finish();
 	  	    }
 
 	      });

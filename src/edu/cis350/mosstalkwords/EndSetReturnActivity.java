@@ -34,11 +34,9 @@ Context mContext = this; //this.getApplicationContext();
 					public void onClick(DialogInterface dialog, int id)
 					{
 						//restart set
-//						Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
-//						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
-//						startActivity(activityMain);
-						
-						
+				//		Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
+				//		activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
+				//		startActivity(activityMain);
 						finish();
 				}
 				})
@@ -48,9 +46,15 @@ Context mContext = this; //this.getApplicationContext();
 					{
 						//next set
 						Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
-						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
-						startActivity(activityMain);
 
+//						menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+						//need to make main activity exit.
+
+						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
+						
+						startActivity(activityMain);
+						finish();
 					}
 				})
 				.setNegativeButton(R.string.menu, new DialogInterface.OnClickListener()
@@ -59,7 +63,12 @@ Context mContext = this; //this.getApplicationContext();
 					{
 						//go to main menu
 						Intent menu = new Intent(EndSetReturnActivity.this, WelcomeActivity.class);		
+//						menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+						//need to make main activity exit.
+
 						startActivity(menu);
+						finish();
 					}
 				});
 				

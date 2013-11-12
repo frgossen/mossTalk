@@ -179,72 +179,8 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		return iv;
 	}
 
-	public File createReport() throws IOException
-	{
-		//PrintWriter reportOut=new PrintWriter(currentSet.getName()+"Report.txt");
-		//BufferedOutputStream reportOut = new BufferedOutputStream(new FileOutputStream(currentSet.getName()+"Report.txt"));
-		//reportOut.write(("User: "+currentUser.name).getBytes());
-		//General set stats
-		File path = Environment.getExternalStorageDirectory();
-		File dir = new File(path.getAbsolutePath() + "/textfiles");
-		dir.mkdirs();
 		
-		File reportFile = new File(dir,("Report.txt"));
-		//OutputStreamWriter reportOut = new OutputStreamWriter(openFileOutput(currentSet.getName()+"Report.txt", this.MODE_PRIVATE));
-		String[] imgNames = new String[SetStatistics.DEFAULT_SET_SIZE];
-		int i = 0;
-		
-		/*
-		for(Image currImage : currentSet) {
-			imgNames[i++] = currImage.getWord();
-		}
-		*/
-		
-		String reportString = currentSetStatistics.generateSetReport(imgNames, getUserName());
-		FileWriter report=new FileWriter(reportFile);
-		report.write(reportString);
-		//reportOut.write(reportString);
-		//reportOut.close();
-		report.close();
-		//reportOut.println("User: "+currentUser.name);
-		//reportOut.close();
-		return reportFile;
-	}
-	
-	public void sendReportViaEmail(File fileName)
-	{
-		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-		emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
-				new String[]{getEmail()});
-		String subject="Wordle "/*+currentSet.getName()*/ +" Report";
-		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-		String body= "Your report is attached below. Good Work!";
-		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
 
-		//String rawFolderPath = "android.resource://" + getPackageName() 
-		//                       + "/" + R.raw.shortcuts;
-
-		// Here my file name is shortcuts.pdf which i have stored in /res/raw folder
-		//Uri emailUri = Uri.parse(rawFolderPath );
-		emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileName));
-		emailIntent.setType("vnd.android.cursor.dir/vnd.google.note");
-		startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."),5);
-	}
-	
-	public void createAndSendReport()
-	{
-
-		File fileMade=new File("");
-		try {
-			fileMade = createReport();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		sendReportViaEmail(fileMade);
-
-	}
 	
 	public void finishedSet(){
 		imageIndex = 0;
@@ -270,7 +206,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 //			gotoEndOfSet.putExtra("currentSet", currentSet);
 		gotoEndOfSet.putExtra("mode", mode);
 		startActivity(gotoEndOfSet);		
-		
+		//finish();
 		}
 
 		

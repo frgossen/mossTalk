@@ -43,7 +43,8 @@ public class WelcomeActivity extends UserActivity {
 	
 	public void openCategories(View v){
 		Intent i = new Intent(this, CategoryList.class);	
-		startActivity(i);				
+		startActivity(i);
+		finish();
 	}
 	
 	public void resetUserData(View v) {
