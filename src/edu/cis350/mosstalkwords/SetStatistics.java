@@ -46,65 +46,14 @@ public class SetStatistics implements Parcelable {
     	solved = in.createBooleanArray();
     }
     
-    
-	// END --- IMPLEMENT PARCELABLE INTERFACE
-	
-	
-	
-	
-	
-	
-	/*
-	public int getSetNumber() {
-		return SET_NUMBER;
-	}
-	*/
-
-	//score, speed, efficiency, streaks
-	//int longestStreak=0;
-	//public static final int NUMSTARS = 3; 
-	//private int totalScore=0;
-	//private int currentStreak;
-	//int maxAttemptsAllowed=3;//number of attempts considered for efficiency calculations, anything over this is considered 0 efficiency
-	//public HashMap<String, Integer> starsForSets;
-	//public HashMap<String, int []> stimulusSetScores;
-	
-	//private int[] imageSetScore;
-	
-//	private int currentStreak = 0;
-//	private int longestStreak = 0;
-//	private int totalSetScore = 0;
-//	private int currentScore = 0;
-//	private int completeness = 0;
-	
-	//public HashMap<String, Integer> longestStreakForSets;
-	//public HashMap<String, int [][]> stimulusSetEfficiencies;
-	//public HashMap<String, Integer> percentEfficiencyForSets;
-	//public HashMap<String, Integer> bestStreaksForSets;
-	//public HashMap<String, Integer> bestCompletenessForSets;//can't make BestReport object or serializable passing into intent breaks
-	//public HashMap<String, Integer> bestScoresForSets;
-	//public String name;
-	//public String email;
-	
+ 	
 	public SetStatistics() {
 		this(DEFAULT_SET_SIZE);
 	}
 
 	public SetStatistics(int size) {
-		//totalScore = 0;
-		//currentStreak = 0;
-		//name = null;
-		//email=null;
 		reset(size);
 	}
-	
-	/*
-	public void initSet(String setName, int setSize) {
-		int[] scores = new int[setSize];
-		int[][] eff = new int[setSize][2];
-		stimulusSetScores.put(setName,scores);
-		stimulusSetEfficiencies.put(setName,eff);
-	}*/
 	
 	public void reset(){
 		reset(DEFAULT_SET_SIZE);
@@ -121,30 +70,6 @@ public class SetStatistics implements Parcelable {
 	public int getSize(){
 		return attempts.length;
 	}
-	/*
-	public void setImageScore(int imageIdx, int score) {
-		imageSetScore[imageIdx] = score;
-		//totalSetScore += score;
-		//currentScore += score;
-		//stimulusSetScores.get(setName)[imageIdx] = score;
-		//this.totalScore += score;
-		
-	}
-	*/
-	/*
-	public void updateImageUserPerformance(int imageIdx, int wordHintUsed, int syllableHintUsed, int attempts) {
-		imageSetAttempts[imageIdx] = attempts;
-		imageSetHintsWord[imageIdx] = wordHintUsed;
-		imageSetHintsSyllable[imageIdx] = syllableHintUsed;
-		
-//		System.out.printf("updating efficiency hints: %d attempts %d \n", hints, attempts);
-	}
-	*/
-	/*
-	public int getTotalScore() {
-		return this.totalSetScore;
-	}
-	*/
 	
 	public int getAttempts(int imageIdx){
 		return attempts[imageIdx];
@@ -188,31 +113,6 @@ public class SetStatistics implements Parcelable {
 			sum += getScore(i);
 		return sum;
 	}
-	/*
-	public void increaseStreak() {
-		currentStreak++;
-	}
-	*/
-	/*
-	public void setTotalScore(int totscore){
-		totalSetScore=totscore;
-	}
-	
-	public void setCurrentScore(int cScore)
-	{
-		currentScore=cScore;
-	}
-	*/
-	/*
-	public void endedSet() {
-		//this.getStarScore();
-		this.calculateAverageEfficiencyPercent();//calculate the percentage for this set
-		this.streakEnded();
-//		updateBestReport(getLongestStreak(setName),getAverageEfficiencyPercent(setName),getStarScore(setName),setName);
-		//nextSet();
-	}
-	 */
-	
 	public int getLongestStreak(){
 		int currentStreak = 0;
 		int longestStreak = 0;
@@ -233,24 +133,6 @@ public class SetStatistics implements Parcelable {
 		return longestStreak;
 	}
 	
-	/*
-	public boolean hasPlayedSet(String setName) {
-		return this.stimulusSetScores.containsKey(setName);
-	}
-	*/
-	
-	/*
-	public HashSet<String> getSetScoresInMapOfStrings()
-	{
-		HashSet<String> scoreStrings=new HashSet<String>();
-		for(int i:starsForSets.values())
-		{
-			scoreStrings.add(Integer.toString(i));
-		}
-		return scoreStrings;
-	}
-	
-	*/
 	
 	public String generateSetReport(String[] images, String userName)
 	{
@@ -278,27 +160,10 @@ public class SetStatistics implements Parcelable {
 		imageReport += "Attempts: " + attempts[index];
 		imageReport += "\n";
 		
-		/*
-		imageReport+="Score: "+Integer.valueOf(stimulusSetScores.get(currentSet.getName())[index]).toString()+"\n";
-		imageReport+="Number Of Hints Used: "+Integer.valueOf((stimulusSetEfficiencies.get(currentSet.getName()))[index][0]).toString()+"\n";
-		imageReport+="Number of Attempts: "+Integer.valueOf((stimulusSetEfficiencies.get(currentSet.getName()))[index][1])+"\n";
-		imageReport+="\n";
-		 */
 		
 		return imageReport;
 	}
 	
-	/*
-	public void streakEnded()
-	{
-		if (longestStreak < currentStreak)
-			longestStreak = currentStreak;
-		
-		//reset streak counter
-		currentStreak=0;
-		
-	}
-	*/
 	
 	
 	public int getStarScore(){
@@ -307,63 +172,6 @@ public class SetStatistics implements Parcelable {
 		int starScore = (int) (completeness / rangePerStar);
 		return starScore;
 	}
-	/*
-	public boolean containsBestStarScore(String stimulusSetName)
-	{
-		return bestScoresForSets.containsKey(stimulusSetName);
-	}
-	public void calculateStarScore(String stimulusSetName)
-	{
-		int temp[]=stimulusSetScores.get(stimulusSetName);
-		int totalScore= temp.length*300;
-		int interval = totalScore/NUMSTARS;
-		int setScore=0;
-		for(int i: temp)
-		{
-			setScore+=i;
-		}
-		if(setScore>2*interval) {
-			starsForSets.put(stimulusSetName, Integer.valueOf(3));
-		}
-		else if(setScore>1*interval) {
-			starsForSets.put(stimulusSetName, Integer.valueOf(2));
-		} else {
-			starsForSets.put(stimulusSetName, Integer.valueOf(1));
-		}
-	}
-	*/
-	/*
-	public void updateBestReport(int streak, int complete, int score, String setName)
-	{
-		if(bestScoresForSets.containsKey(setName))
-		{
-			if(bestScoresForSets.get(setName)<score)
-				bestScoresForSets.put(setName,score);
-			if(bestStreaksForSets.get(setName)<streak)
-				bestStreaksForSets.put(setName,streak);
-			if(bestCompletenessForSets.get(setName)<complete)
-				bestCompletenessForSets.put(setName, complete);
-		}
-		else
-		{
-			bestScoresForSets.put(setName,score);
-			bestStreaksForSets.put(setName,streak);
-			bestCompletenessForSets.put(setName, complete);
-		}
-	}
-	*/
-	
-	/*
-	public int getLongestStreak()
-	{
-		return longestStreak;
-	}
-	
-	public void resetLongestStreak()
-	{
-		longestStreak = 0;
-	}
-	*/
 	public double getCompleteness(){
 		int score = getTotalScore();
 		int maxScore = getSize() * 100;
