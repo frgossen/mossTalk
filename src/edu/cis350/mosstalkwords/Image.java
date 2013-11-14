@@ -122,4 +122,28 @@ public class Image implements Parcelable {
 		favourite = !favourite;
 	}
 	
+	public boolean equals(Object obj){
+		if(obj instanceof Image) {
+			Image other = (Image) obj;
+			return     category.equals(other.category) 
+					&& word.equals(other.word)
+					&& url.equals(other.url)
+					&& frequency == other.frequency
+					&& length == other.length
+					&& imageability == other.imageability
+					&& favourite == other.favourite;
+		}
+		else
+			return false;
+	}
+	
+	public String toString(){
+		return    category + " / " 
+				+ word + " / "
+				+ url + " / "
+				+ frequency + " / "
+				+ length + " / "
+				+ imageability + " / "
+				+ favourite;
+	}
 }
