@@ -130,6 +130,9 @@ public class SetStatistics implements Parcelable {
 				currentStreak++;
 			}
 		}
+		if (longestStreak < currentStreak) {
+			longestStreak = currentStreak;
+		}
 		return longestStreak;
 	}
 	
