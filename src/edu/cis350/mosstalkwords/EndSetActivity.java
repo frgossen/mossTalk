@@ -26,7 +26,6 @@ import android.os.Environment;
 import android.os.Parcelable;
 
 public class EndSetActivity extends UserActivity {
-
 	GridView gridView;
 	ImageAdapter adapter; 
 	Context mContext = this;
@@ -125,7 +124,7 @@ public class EndSetActivity extends UserActivity {
 	    message.setText(msg);
 	    
 	    TextView completeness=(TextView) this.findViewById(R.id.Completeness);
-	    String completenessPercent = "" + 100 * currentSetStatistics.getCompleteness();
+	    String completenessPercent = "" + currentSetStatistics.getCompletenessPercent();
 	    completeness.setText(completeness.getText() + completenessPercent+"%");
 	    
 	    TextView streak=(TextView) this.findViewById(R.id.streak);
@@ -136,7 +135,7 @@ public class EndSetActivity extends UserActivity {
 	    setScoreNum.setText(setScoreNum.getText().toString() + this.getIntent().getExtras().getInt("setScore")); 
 
 	    TextView totalScoreNum = (TextView) this.findViewById(R.id.endScoreTotal);
-	    totalScoreNum.setText(getScore()+""); 
+	    totalScoreNum.setText(totalScoreNum.getText().toString() + getScore()); 
 	}
 	
 	private void updateDB()
@@ -187,14 +186,15 @@ public class EndSetActivity extends UserActivity {
 		updateDB();
 		
 
-		List<UserStimuli> l =  db.getFavoriteStimuli();
+		/*List<UserStimuli> l =  db.getFavoriteStimuli();
 		
 		System.out.println("------------------------------------------------------");
 		for(UserStimuli u : l)
 			System.out.println(u.getImageName());
+			*/
 		//create and send report
 		Intent nameAndEmail = new Intent(this, NameAndEmailActivity.class);
-		startActivityForResult(nameAndEmail,2);
+		startActivityForResult(nameAndEmail, 2);
 		//wait
 		
 		//select choice, replay | main | next Set
@@ -209,7 +209,7 @@ public class EndSetActivity extends UserActivity {
 	displayOptions();
 	}
 	
-	public File createReport() throws IOException
+	public File createReport(String name) throws IOException
 	{
 		File path = Environment.getExternalStorageDirectory();
 		File dir = new File(path.getAbsolutePath() + "/textfiles");
@@ -217,10 +217,17 @@ public class EndSetActivity extends UserActivity {
 		
 		File reportFile = new File(dir,("Report.txt"));
 		//OutputStreamWriter reportOut = new OutputStreamWriter(openFileOutput(currentSet.getName()+"Report.txt", this.MODE_PRIVATE));
-		String[] imgNames = new String[SetStatistics.DEFAULT_SET_SIZE];
-		int i = 0;
 		
-		String reportString = currentSetStatistics.generateSetReport(imgNames, getUserName());
+		String[] imgNames = new String[currentSet.size()];
+		
+		int count = 0;
+		for(Image i : currentSet)
+		{
+			imgNames[count] = i.getWord();
+			count++;
+		}
+		
+		String reportString = currentSetStatistics.generateSetReport(imgNames, name);
 		FileWriter report=new FileWriter(reportFile);
 		report.write(reportString);
 		//reportOut.write(reportString);
@@ -232,12 +239,12 @@ public class EndSetActivity extends UserActivity {
 	}
 
 	
-	public void sendReportViaEmail(File fileName)
+	public void sendReportViaEmail(File fileName, String email)
 	{
 		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 		emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
-				new String[]{getEmail()});
+				new String[]{email});
 		String subject="Wordle "/*+currentSet.getName()*/ +" Report";
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 		String body= "Your report is attached below. Good Work!";
@@ -254,17 +261,16 @@ public class EndSetActivity extends UserActivity {
 		startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), 1);
 	}
 	
-	public void createAndSendReport()
+	public void createAndSendReport(String name, String email)
 	{
-
 		File fileMade=new File("");
 		try {
-			fileMade = createReport();
+			fileMade = createReport(name);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		sendReportViaEmail(fileMade);
+		sendReportViaEmail(fileMade, email);
 	}
 	
 	@Override
@@ -283,7 +289,7 @@ public class EndSetActivity extends UserActivity {
 			System.out.println("CANCEL VALUE: "+ cancel);
 
 			if(!cancel)
-				createAndSendReport();
+				createAndSendReport(data.getStringExtra("Username"), data.getStringExtra("Email"));
 			else
 				displayOptions();
 		}

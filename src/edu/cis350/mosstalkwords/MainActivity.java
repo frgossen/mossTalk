@@ -49,7 +49,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			"Outstanding!", 
 			"Very good!", 
 			"Remarkable!", 
-			"What a genius!"};
+	"What a genius!"};
 	private final int MODE_CATEGORY = 35675;
 	private final int MODE_FAVOURITES = 62230;
 
@@ -65,19 +65,12 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	private int imageIndex;
 	private Set currentSet;
 
+	private int numImages = 20;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main);
-		ImageSwitcher imSwitcher = (ImageSwitcher) findViewById(R.id.imgSwitcher);
-		imSwitcher.setFactory(this);
-		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
-//
-		pbar.setMax(20 + 1);
-		VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
-		imageScoreProgBar.setMax(100 + 5);
-		
 		sdb = new Images_SDB();
 		udh  = new UserDataHandler(getUserName());
 		backgroundTask = new LoadSetAndImages();
@@ -87,8 +80,8 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		Intent i = getIntent();
 		if(i.hasExtra("startCategory")){
 			categoryName = getIntent().getExtras().getString("startCategory");
-//
-			currentSetStatistics = new SetStatistics(20);
+
+			currentSetStatistics = new SetStatistics(numImages);
 			imageIndex = 0;
 			currentSet = null;
 			mode = MODE_CATEGORY;
@@ -97,20 +90,55 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		}
 		else if(i.hasExtra("startFavourites")){
 			categoryName = null;
-//
-			currentSetStatistics = new SetStatistics(20);
-			imageIndex = 0;
-			currentSet = null;
-			mode = MODE_FAVOURITES;
-			i.removeExtra("startFavourites");
-			backgroundTask.execute(true);
+			//
+			numImages = udh.getFavoriteStimulus(getApplicationContext()).size();
+			if(numImages == 0)
+			{
+				new AlertDialog.Builder(this).setTitle("There are no images yet.")
+				.setMessage("There are no images according to your choices. Try to select another category.")
+				.setNeutralButton("OK", new DialogInterface.OnClickListener() 
+				{ 
+					public void onClick(DialogInterface dialog,int id) 
+					{ 
+						dialog.cancel(); 
+						Intent gotoMainMenu = new Intent(MainActivity.this, 
+								WelcomeActivity.class); 
+						startActivity(gotoMainMenu); 
+					} 
+				}).setCancelable(false).show(); return;
+				
+			}
+			
+			if(numImages != 0)
+			{
+				currentSetStatistics = new SetStatistics(numImages);
+				imageIndex = 0;
+				currentSet = null;
+				mode = MODE_FAVOURITES;
+				i.removeExtra("startFavourites");			
+				backgroundTask.execute(true);
+			}
+			else
+			{
+				finish();
+			}
 		}
 		else{
 			restoreState(savedInstanceState);
 			backgroundTask.execute(false);
 		}
+
+		setContentView(R.layout.activity_main);
+		ImageSwitcher imSwitcher = (ImageSwitcher) findViewById(R.id.imgSwitcher);
+		imSwitcher.setFactory(this);
+		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
+		//
+		pbar.setMax(numImages + 1);
+		VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
+		imageScoreProgBar.setMax(100 + 5);
+
 	}
-	
+
 	public void onSaveInstanceState(Bundle bundle){
 		super.onSaveInstanceState(bundle);
 		bundle.putString("categoryName", categoryName); 
@@ -118,13 +146,14 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		bundle.putInt("imageIndex", imageIndex);
 		bundle.putParcelable("currentSet", currentSet);
 		bundle.putInt("mode", mode);
+		bundle.putInt("numImages", numImages);
 	}
-	
+
 	public void onRestoreInstanceState(Bundle bundle){
 		super.onRestoreInstanceState(bundle);
 		restoreState(bundle);
 	}
-	
+
 	private void restoreState(Bundle bundle){
 		if(bundle != null){
 			categoryName = bundle.getString("categoryName"); 
@@ -132,20 +161,21 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			imageIndex = bundle.getInt("imageIndex");
 			currentSet = bundle.getParcelable("currentSet");
 			mode = bundle.getInt("mode");
+			numImages = bundle.getInt("numImages");
 		}
 	}
-	
+
 	public void onResume(){
 		super.onResume();
 		updateLayoutInformation();
 	}
-	
+
 	public void onDestroy(){
 		super.onDestroy();
 		tts.shutdown();
 		backgroundTask.cancel(true);
 	}
-	
+
 	/*
 	public void enterNameAndEmail()
 	{
@@ -153,7 +183,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		userEntry.putExtra("User", currentSetStatistics);
 		startActivityForResult(userEntry,2);
 	}
-	
+
 	private void openWelcomePage() {
 		Intent welcome = new Intent(this, WelcomeActivity.class);
 		welcome.putExtra("User", currentSetStatistics);
@@ -167,7 +197,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		returnOptions.putExtra("User", currentSetStatistics);
 		startActivityForResult(returnOptions,1);
 	}
-	*/
+	 */
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,25 +215,25 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		return iv;
 	}
 
-		
 
-	
+
+
 	public void finishedSet(){
 		imageIndex = 0;
 
 		setScore(getScore()+currentSetStatistics.getTotalScore());
-		
+
 		SetStatistics s = currentSetStatistics.deepCopy();
-		
+
 		Intent gotoEndOfSet = new Intent(this, EndSetActivity.class);
 		gotoEndOfSet.putExtra("categoryName", categoryName); 
 		gotoEndOfSet.putExtra("currentSetStatistics", s);
-		
-		
+
+
 		showCurrentImageFromCache();
 		updateLayoutInformation();
 
-		currentSetStatistics.reset();
+		currentSetStatistics.reset(numImages);
 
 		ArrayList<Image> currentSet1 = new ArrayList<Image>();
 		for (int i = 0; i < currentSet.getSize(); i++) {
@@ -225,7 +255,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			updateLayoutInformation();
 		}
 	}
-	
+
 	private synchronized void showCurrentImageFromCache(){
 		try{
 			String word = currentSet.getWord(imageIndex);
@@ -258,12 +288,12 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 	public void onSoundHintButtonClick(View view) {
 		currentSetStatistics.incSoundHint(imageIndex);
-		
+
 		String word = currentSet.get(imageIndex).getWord();
 		/*
 		String hint = word.substring(0, word.length()/2);
 		speak(hint, 1);
-		*/
+		 */
 		speakSound(word);
 		updateLayoutInformation();
 	}
@@ -286,14 +316,14 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say what you see in the picture...");
 		startActivityForResult(intent, RESULT_SPEECH_REC);
 	}
-	
-	
+
+
 	public void onFavouritesButtonClick(View view){
 		/* *hide*
 		Image currentImage = currentSet.get(imageIndex);
 		currentImage.toggleFavourite();
 		updateLayoutInformation();
-		*/
+		 */
 	}
 
 	public void speechRecognitionResult(ArrayList<String> matches){
@@ -320,15 +350,15 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				message = message + "\n" + matches.get(i);
 
 			new AlertDialog.Builder(this)
-					.setMessage(message)
-					.setTitle("Incorrect")
-					.setCancelable(true)
-					.setPositiveButton(android.R.string.ok,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int whichButton) {
-									tts.stop();
-								}
-							}).show();
+			.setMessage(message)
+			.setTitle("Incorrect")
+			.setCancelable(true)
+			.setPositiveButton(android.R.string.ok,
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					tts.stop();
+				}
+			}).show();
 
 			String messageForTts = message
 					.replaceFirst("\\n", "")
@@ -336,22 +366,24 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			speak(messageForTts, 1);
 		}
 	}
-	
+
 	private void praiseUser(){
 		int n = (int)(Math.random() * praisePhrases.length);
 		String phrase = praisePhrases[n];
 		speak(phrase, 1);
-		
+
 		MediaPlayer mp = MediaPlayer.create(MainActivity.this,R.raw.ding);
 		mp.start(); 
-		
+
 		ViewFlipper scoreFlipper = (ViewFlipper)findViewById(R.id.ViewFlipper);
 		ViewPropertyAnimator animate = scoreFlipper.animate();
 		animate.rotationBy(360);
 	}
-	
+
 	private void updateLayoutInformation(){
 		Log.d("SCORE_BOARD", "updateScoreBoard called");
+		if(numImages != 0)
+		{
 		int attempts = currentSetStatistics.getAttempts(imageIndex);
 		int soundHints = currentSetStatistics.getSoundHints(imageIndex);
 		int wordHints = currentSetStatistics.getWordHints(imageIndex);
@@ -363,19 +395,19 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				"\nImage Index: " + imageIndex;*/
 		TextView scoreBoard = (TextView) findViewById(R.id.scoBoStatistics);
 		scoreBoard.setText(scoreBoardMsg);
-		
+
 		VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
 		imageScoreProgBar.setProgress(imageScore);
-		
+
 		int setScore = currentSetStatistics.getTotalScore(imageIndex);
 		TextView txtScore = (TextView) findViewById(R.id.txtScore);
 		txtScore.setText(setScore + " Points");
-		
+
 		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
 		pbar.setProgress(1 + imageIndex);
+		}
 
-	
-		
+
 		/* *hide*
 		if(currentSet != null){
 			ImageButton btn = (ImageButton) findViewById(R.id.btnFav);
@@ -383,10 +415,10 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			boolean isFav = currentImage.isFavourite();
 			btn.setImageResource(isFav ? R.drawable.star_selected : R.drawable.star);
 		}
-		*/
-		
+		 */
+
 	}
-	
+
 	private void speak(String words2say, float rate) {
 		Log.d("SPEAK", words2say);
 		tts.setSpeechRate(rate);
@@ -412,16 +444,17 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 						//currentSet = new Set(sdb.returnImages("Living"));
 						currentSet = new Set(udh.getFavoriteStimulus(getApplicationContext()));
 				}
-				
+
+				System.out.println(loadNewSet + "Right here" + currentSet);
 				int size = currentSet.getSize();
 				for(int i=0; i<size; i++) {
 					// Skip passed images 
 					while(i < imageIndex)
 						i++;
-					
+
 					if(isCancelled())
 						break;
-					
+
 					// Connect 
 					URL aURL = new URL(currentSet.get(i).getUrl());				
 					URLConnection conn = aURL.openConnection();
@@ -434,7 +467,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 					if(isCancelled())
 						break;
-					
+
 					// Try to decode bitmap without running out of memory
 					BitmapFactory.Options options = new BitmapFactory.Options();
 					options.inJustDecodeBounds = true;
@@ -447,7 +480,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 					if(isCancelled())
 						break;
-					
+
 					// Decode bitmap with inSampleSize set
 					options.inJustDecodeBounds = false;
 					conn = aURL.openConnection(); //reopen connection
@@ -457,7 +490,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 					if(isCancelled())
 						break;
-					
+
 					imCache.addBitmapToCache( currentSet.get(i).getWord(), bitmap);
 
 					publishProgress(i);
@@ -479,18 +512,18 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				showCurrentImageFromCache();
 		}	
 	}
-	
+
 	public void speakSound(String s1)
-    {
-    	tts.setSpeechRate((float)(0.4));
-    	tts.speak(s1, 0, null);
-    	try {
+	{
+		tts.setSpeechRate((float)(0.4));
+		tts.speak(s1, 0, null);
+		try {
 			Thread.sleep(200+(100*(long)Math.floor((0.5*s1.length()))), 0);
-    		tts.stop();
+			tts.stop();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Log.d("Error of Exception","Error");
 		}
-    }
+	}
 }

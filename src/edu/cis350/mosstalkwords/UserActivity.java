@@ -21,7 +21,7 @@ public class UserActivity extends Activity {
 		userData = getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
 	}
 	
-	protected boolean setUserName(String name){
+	public boolean setUserName(String name){
 		if(!validName(name))
 			return false;
 		
@@ -31,7 +31,7 @@ public class UserActivity extends Activity {
 		return true;
 	}
 	
-	protected boolean setEmail(String email){
+	public boolean setEmail(String email){
 		if(!validEmailAddress(email))
 			return false;
 			
@@ -41,7 +41,7 @@ public class UserActivity extends Activity {
 		return true;
 	}
 	
-	protected boolean setScore(int score){
+	public boolean setScore(int score){
 		Editor editor = userData.edit();
 		editor.putInt(SCORE_KEY, score);
 		editor.commit();

@@ -45,6 +45,8 @@ Context mContext = this; //this.getApplicationContext();
 					public void onClick(DialogInterface dialog, int id)
 					{
 						//next set
+						
+						
 						Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
 
 						//menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -56,8 +58,14 @@ Context mContext = this; //this.getApplicationContext();
 						
 						
 						
-						activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
-	
+						if(EndSetReturnActivity.this.getIntent().getStringExtra("categoryName") != null)
+						{
+							activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
+						}
+						else
+						{
+							activityMain.putExtra("startFavourites", true);
+						}
 						activityMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(activityMain);
 						finish();

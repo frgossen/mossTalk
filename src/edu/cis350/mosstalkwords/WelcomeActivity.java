@@ -66,10 +66,13 @@ public class WelcomeActivity extends UserActivity {
 										startActivity(gotoBaseMenu);
 									}
 								})
+								.setCancelable(false)
 								.show();
 					}
 				})
 				.setNegativeButton("No", null)
 				.show();
 	}
+	
+	
 }

@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class SetStatistics implements Parcelable {
 	
-	public final static int DEFAULT_SET_SIZE = 20;
+	public static int DEFAULT_SET_SIZE = 20;
 	public final static int NUM_STARS = 5;
 	
 	private int[] attempts;
@@ -60,6 +60,7 @@ public class SetStatistics implements Parcelable {
 	}
 	
 	public void reset(int size){
+		
 		//imageSetScore = new int[SET_SIZE];
 		attempts = new int[size];
 		wordHints = new int[size];
@@ -139,7 +140,7 @@ public class SetStatistics implements Parcelable {
 		String fullReport = "";
 		fullReport += ("User: " + userName + "\n");
 		//fullReport+=("CurrentSet: "+currentSet.getName()+"\n");
-		String efficiencyPercent = "" + getCompleteness();
+		String efficiencyPercent = "" + getCompletenessPercent();
 		fullReport += ("Completeness: " + efficiencyPercent+"%\n");
 		//String longestStreak=Integer.valueOf(getLongestStreak(currentSet.getName())).toString();
 		fullReport += ("Longest Streak: " + getLongestStreak() + "\n");

@@ -25,8 +25,8 @@ public class UserDataHandler {
 
 
 		Collections.shuffle(usList);
-		System.out.println(usList.size());
-		System.out.println(usList.get(0).getImageName());
+		//System.out.println(usList.size());
+		//System.out.println(usList.get(0).getImageName());
 		/*if(usList.size() < 20)
 	                {
 	                        return usList;
@@ -38,7 +38,7 @@ public class UserDataHandler {
 	                //	List<UserStimuli> usListFinal = new ArrayList<UserStimuli>();*/
 
 
-		for(int i=0;i < 20;i++)
+		for(int i=0;i < usList.size();i++)
 		{
 			Image img = new Image(usList.get(i).getImageName(), usList.get(i).getCategory(), 
 					"0", "0", "0", usList.get(i).getUrl());

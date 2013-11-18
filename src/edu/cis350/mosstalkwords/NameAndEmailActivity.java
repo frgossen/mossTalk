@@ -67,6 +67,9 @@ public class NameAndEmailActivity extends Activity
 
 				    Intent i=getIntent();
 					i.putExtra("Cancel", false);
+					System.out.println(username.getText().toString());
+
+					System.out.println(email.getText().toString());
 					i.putExtra("Username", username.getText().toString());
 					i.putExtra("Email", email.getText().toString());
 					

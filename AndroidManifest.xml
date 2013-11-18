@@ -74,6 +74,15 @@
         
         </activity>
         
+        <activity android:name="UserActivity" >
+        
+        </activity>
+        
+        <activity android:name="InnerUserActivity" >
+        
+        </activity>
+        
+        
     </application>
     
 	<instrumentation 
