@@ -77,30 +77,26 @@ public class BackEndTest extends AndroidTestCase {
 		
 		Assert.assertEquals(20, listOfReturnedImages.size());
 	}
-	
-	//Case when we get 5 favorite images using getFavoriteStimuli() and check for the size of returned list
-	public void testGet5FavoriteImages()
-	{
-		 DatabaseHandler dbHandler = new DatabaseHandler(getContext()){
-			 public void getTable(String abc){
-				// To override default method
-			}
-			public List<UserStimuli> getFavoriteStimuli()
+	//Case when we get 0 favorite images using getFavoriteStimuli() and check for the size of returned list
+			public void testGet0FavoriteImages()
 			{
-				List<UserStimuli> sampleFavoriteImages = new ArrayList<UserStimuli>();
-				Calendar cd = Calendar.getInstance();
-				for(int i=0;i<5;i++)
-				sampleFavoriteImages.add(new UserStimuli("Ant"+i,"insect",1,0,0,0,0,0,cd,0,"testURL"));
-				return sampleFavoriteImages;
+				 DatabaseHandler dbHandler = new DatabaseHandler(getContext()){
+					 public void getTable(String abc){
+						// To override default method
+					}
+					public List<UserStimuli> getFavoriteStimuli()
+					{
+						List<UserStimuli> sampleFavoriteImages = new ArrayList<UserStimuli>();
+						return sampleFavoriteImages;
+					}
+				};
+				
+				List<UserStimuli> listOfReturnedImages = new ArrayList<UserStimuli>();
+				
+				listOfReturnedImages = dbHandler.getFavoriteStimuli();
+				
+				Assert.assertEquals(0, listOfReturnedImages.size());
 			}
-		};
-		
-		List<UserStimuli> listOfReturnedImages = new ArrayList<UserStimuli>();
-		
-		listOfReturnedImages = dbHandler.getFavoriteStimuli();
-		
-		Assert.assertEquals(5, listOfReturnedImages.size());
-	}
 	
 	//Case when we get 5 favorite images using getFavoriteStimulus() and check for the size of returned list
 	public void testgetFavoriteStimulusForFiveImages()
