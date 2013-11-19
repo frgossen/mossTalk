@@ -15,6 +15,28 @@ public class UserStimuli {
     private double difficulty;
     private String url;
     
+    public UserStimuli(){
+    	
+    }
+    
+    public UserStimuli(String imageName, String category, int isFavorite,
+			int attempts, int correctAttempts, int soundHints,
+			int playwordHints, int noHint, Calendar lastSeen,
+			double difficulty, String url) {
+		super();
+		this.imageName = imageName;
+		Category = category;
+		this.isFavorite = isFavorite;
+		this.attempts = attempts;
+		this.correctAttempts = correctAttempts;
+		this.soundHints = soundHints;
+		this.playwordHints = playwordHints;
+		this.noHint = noHint;
+		this.lastSeen = lastSeen;
+		this.difficulty = difficulty;
+		this.url = url;
+	}
+        
         public String getImageName() {
                 return imageName;
         }

@@ -51,6 +51,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_TABLE);
     }
   
+    public void deleteTable(String uname){
+ 	   userName = uname.toLowerCase();
+ 	   tableName = userName + "_tableName";
+ 	   SQLiteDatabase db = this.getWritableDatabase();
+       
+        String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + tableName;
+        db.execSQL(DROP_USER_TABLE);
+    }
+    
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }

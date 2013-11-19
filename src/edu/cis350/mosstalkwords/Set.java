@@ -15,7 +15,7 @@ public class Set implements Parcelable {
         return 0;
     }
     public void writeToParcel(Parcel out, int flags) {
-    	out.writeList(images);
+    	out.writeTypedList(images);
     }
     public static final Parcelable.Creator<Set> CREATOR = new Parcelable.Creator<Set>() {
         public Set createFromParcel(Parcel in) {
@@ -28,7 +28,7 @@ public class Set implements Parcelable {
     };
     private Set(Parcel in) {
     	images = new ArrayList<Image>();
-    	in.readList(images, null);
+        in.readTypedList(images, Image.CREATOR);
     }
 	// END --- IMPLEMENT PARCELABLE INTERFACE
 	
@@ -54,4 +54,23 @@ public class Set implements Parcelable {
 	public int getSize(){
 		return images.size();
 	}
+	
+	public boolean equals(Object obj){
+		if(obj instanceof Set) {
+			Set other = (Set) obj;
+			return images.equals(other.images);
+		}
+		else
+			return false;
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for(Image img : images)
+			sb.append(img).append(", ");
+		sb.append("]");
+		return sb.toString();
+	}
+	
 }
