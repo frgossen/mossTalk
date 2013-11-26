@@ -48,20 +48,17 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			"Well done!", 
 			"Outstanding!", 
 			"Very good!", 
-			"Remarkable!", 
-	"What a genius!"};
+			"Remarkable!"};
 	private final int MODE_CATEGORY = 35675;
 	private final int MODE_FAVOURITES = 62230;
 
 	private TextToSpeech tts;
 	private ImageCache imCache;
-	private Images_SDB sdb;
-	private UserDataHandler udh;
+	private ImageManager im;
 	private LoadSetAndImages backgroundTask;
 
 	private int mode;
 	private String categoryName; 
-	private SetStatistics currentSetStatistics;
 	private int imageIndex;
 	private Set currentSet;
 
@@ -71,8 +68,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		sdb = new Images_SDB();
-		udh  = new UserDataHandler(getUserName());
+		im  = new ImageManager(getUserName(), getApplicationContext());
 		backgroundTask = new LoadSetAndImages();
 		tts = new TextToSpeech(this, this);
 		imCache = ImageCache.getInstance();
@@ -81,7 +77,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		if(i.hasExtra("startCategory")){
 			categoryName = getIntent().getExtras().getString("startCategory");
 
-			currentSetStatistics = new SetStatistics(numImages);
 			imageIndex = 0;
 			currentSet = null;
 			mode = MODE_CATEGORY;
@@ -91,7 +86,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		else if(i.hasExtra("startFavourites")){
 			categoryName = null;
 			//
-			numImages = udh.getFavoriteStimulus(getApplicationContext()).size();
+			numImages = im.getImagesForFavorites().size();
 			if(numImages == 0)
 			{
 				new AlertDialog.Builder(this).setTitle("There are no images yet.")
@@ -111,7 +106,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			
 			if(numImages != 0)
 			{
-				currentSetStatistics = new SetStatistics(numImages);
 				imageIndex = 0;
 				currentSet = null;
 				mode = MODE_FAVOURITES;
@@ -142,7 +136,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	public void onSaveInstanceState(Bundle bundle){
 		super.onSaveInstanceState(bundle);
 		bundle.putString("categoryName", categoryName); 
-		bundle.putParcelable("currentSetStatistics", currentSetStatistics);
 		bundle.putInt("imageIndex", imageIndex);
 		bundle.putParcelable("currentSet", currentSet);
 		bundle.putInt("mode", mode);
@@ -157,7 +150,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	private void restoreState(Bundle bundle){
 		if(bundle != null){
 			categoryName = bundle.getString("categoryName"); 
-			currentSetStatistics = bundle.getParcelable("currentSetStatistics");
 			imageIndex = bundle.getInt("imageIndex");
 			currentSet = bundle.getParcelable("currentSet");
 			mode = bundle.getInt("mode");
@@ -221,25 +213,16 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	public void finishedSet(){
 		imageIndex = 0;
 
-		setScore(getScore()+currentSetStatistics.getTotalScore());
-
-		SetStatistics s = currentSetStatistics.deepCopy();
+		setScore(getScore() + currentSet.getTotalScore());
 
 		Intent gotoEndOfSet = new Intent(this, EndSetActivity.class);
 		gotoEndOfSet.putExtra("categoryName", categoryName); 
-		gotoEndOfSet.putExtra("currentSetStatistics", s);
 
 
 		showCurrentImageFromCache();
 		updateLayoutInformation();
 
-		currentSetStatistics.reset(numImages);
-
-		ArrayList<Image> currentSet1 = new ArrayList<Image>();
-		for (int i = 0; i < currentSet.getSize(); i++) {
-			currentSet1.add(currentSet.get(i));
-		}
-		gotoEndOfSet.putParcelableArrayListExtra("currentSet", currentSet1);
+		gotoEndOfSet.putExtra("currentSet", currentSet);
 		//gotoEndOfSet.putExtra("currentSet", currentSet);
 		gotoEndOfSet.putExtra("mode", mode);
 		startActivity(gotoEndOfSet);		
@@ -248,7 +231,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 	private void nextImage() {
 		imageIndex++;
-		if(imageIndex == currentSetStatistics.getSize())
+		if(imageIndex == currentSet.getSize())
 			finishedSet();
 		else {
 			showCurrentImageFromCache();
@@ -279,7 +262,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				speechRecognitionResult(matches);
 			}
 			else {
-				currentSetStatistics.incAttempts(imageIndex);
+				currentSet.incAttempts(imageIndex);
 				updateLayoutInformation();
 			}
 		}
@@ -287,9 +270,9 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	}
 
 	public void onSoundHintButtonClick(View view) {
-		currentSetStatistics.incSoundHint(imageIndex);
+		currentSet.incSoundHint(imageIndex);
 
-		String word = currentSet.get(imageIndex).getWord();
+		String word = currentSet.get(imageIndex).getImageName();
 		/*
 		String hint = word.substring(0, word.length()/2);
 		speak(hint, 1);
@@ -299,14 +282,14 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	}
 
 	public void onWordHintButtonClick(View view) {
-		String word = currentSet.get(imageIndex).getWord();
+		String word = currentSet.get(imageIndex).getImageName();
 		speak(word, 1);
-		currentSetStatistics.incWordHint(imageIndex);
+		currentSet.incWordHint(imageIndex);
 		updateLayoutInformation();
 	}
 
 	public void onNextButtonClick(View view) {
-		currentSetStatistics.setSolved(imageIndex, false);
+		currentSet.setSolved(imageIndex, false);
 		nextImage();
 	}
 
@@ -329,19 +312,19 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	public void speechRecognitionResult(ArrayList<String> matches){
 		//if (matches.isEmpty()) { Log.d("voice rec","NO MATCHES");}
 		boolean matchFound = false;
-		String correctWord = currentSet.get(imageIndex).getWord();
+		String correctWord = currentSet.get(imageIndex).getImageName();
 		for (String s: matches) {
 			if (s.toLowerCase().contains(correctWord.toLowerCase())) {
 				updateLayoutInformation();
 				praiseUser();
-				currentSetStatistics.setSolved(imageIndex, true);
+				currentSet.setSolved(imageIndex, true);
 				nextImage();
 				matchFound = true;
 				break;
 			}
 		}
 		if (!matchFound) {
-			currentSetStatistics.incAttempts(imageIndex);
+			currentSet.incAttempts(imageIndex);
 			updateLayoutInformation();
 
 			String message = "Incorrect. You said:";
@@ -384,10 +367,10 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		Log.d("SCORE_BOARD", "updateScoreBoard called");
 		if(numImages != 0)
 		{
-		int attempts = currentSetStatistics.getAttempts(imageIndex);
-		int soundHints = currentSetStatistics.getSoundHints(imageIndex);
-		int wordHints = currentSetStatistics.getWordHints(imageIndex);
-		int imageScore = currentSetStatistics.getScore(imageIndex, true);
+		int attempts = currentSet.get(imageIndex).getAttempts();
+		int soundHints = currentSet.get(imageIndex).getSoundHints();
+		int wordHints = currentSet.get(imageIndex).getWordHints();
+		int imageScore = currentSet.getScore(imageIndex, true);
 		String scoreBoardMsg = "Attempts: " + attempts + 
 				"\nSound hints: " + soundHints + 
 				"\nWord hints: " + wordHints + 
@@ -399,7 +382,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
 		imageScoreProgBar.setProgress(imageScore);
 
-		int setScore = currentSetStatistics.getTotalScore(imageIndex);
+		int setScore = currentSet.getTotalScore(imageIndex);
 		TextView txtScore = (TextView) findViewById(R.id.txtScore);
 		txtScore.setText(setScore + " Points");
 
@@ -439,10 +422,10 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				Log.d("ASYNC", "started, loadNewSet = " + loadNewSet);
 				if(loadNewSet){
 					if(mode == MODE_CATEGORY)
-						currentSet = new Set(sdb.returnImages(categoryName));
+						currentSet = new Set(im.getImagesForCategory(categoryName));
 					else if (mode == MODE_FAVOURITES)
 						//currentSet = new Set(sdb.returnImages("Living"));
-						currentSet = new Set(udh.getFavoriteStimulus(getApplicationContext()));
+						currentSet = new Set(im.getImagesForFavorites());
 				}
 
 				System.out.println(loadNewSet + "Right here" + currentSet);
@@ -491,7 +474,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 					if(isCancelled())
 						break;
 
-					imCache.addBitmapToCache( currentSet.get(i).getWord(), bitmap);
+					imCache.addBitmapToCache( currentSet.get(i).getImageName(), bitmap);
 
 					publishProgress(i);
 				}
