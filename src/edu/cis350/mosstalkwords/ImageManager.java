@@ -58,7 +58,7 @@ public class ImageManager {
 		
 	}
 	
-public List<ImageStatistics> getImagesForFavorites(Context context){
+public List<ImageStatistics> getImagesForFavorites(){
 		
 		List<ImageStatistics> imageStatisticsList = new ArrayList<ImageStatistics>();
 		ImageStatistics imageStatistics = new ImageStatistics();
