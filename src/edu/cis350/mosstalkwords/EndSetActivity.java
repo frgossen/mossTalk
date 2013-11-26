@@ -34,7 +34,6 @@ public class EndSetActivity extends UserActivity {
 	
 	private int mode;
 	private String categoryName; 
-	private SetStatistics currentSetStatistics;
 	private Set currentSet;
 	
 	@Override
@@ -76,7 +75,7 @@ public class EndSetActivity extends UserActivity {
 			imageWords[j] = currentSet.get(j).getImageName();
 		}
 		
-	    adapter = new ImageAdapter(this, currentSetStatistics.getScores(), 
+	    adapter = new ImageAdapter(this, currentSet.getScores(), 
 	    		imageWords,getUserName());
 		gridView.setAdapter(adapter);
 		/*
@@ -108,7 +107,7 @@ public class EndSetActivity extends UserActivity {
 		 */
 		
 		RatingBar score = (RatingBar) this.findViewById(R.id.scoreBar);
-	    int starScore = currentSetStatistics.getStarScore();
+	    int starScore = currentSet.getStarScore();
 	    //System.out.println("scNull:"+score);
 	    score.setNumStars(SetStatistics.NUM_STARS);
 	    score.setRating(starScore);
@@ -126,11 +125,11 @@ public class EndSetActivity extends UserActivity {
 	    message.setText(msg);
 	    
 	    TextView completeness=(TextView) this.findViewById(R.id.Completeness);
-	    String completenessPercent = "" + currentSetStatistics.getCompletenessPercent();
+	    String completenessPercent = "" + currentSet.getCompletenessPercent();
 	    completeness.setText(completeness.getText() + completenessPercent+"%");
 	    
 	    TextView streak=(TextView) this.findViewById(R.id.streak);
-	    String longestStreak= new Integer(currentSetStatistics.getLongestStreak()).toString();
+	    String longestStreak= new Integer(currentSet.getLongestStreak()).toString();
 	    streak.setText(streak.getText()+longestStreak);
 	    
 	    TextView setScoreNum = (TextView) this.findViewById(R.id.endScore);
@@ -147,7 +146,7 @@ public class EndSetActivity extends UserActivity {
 		//adapter checkbox
 		for(int i = 0; i < checked.length; i++)
 		{
-			boolean solved = currentSetStatistics.isSolved(i);
+			boolean solved = currentSet.get(i).isSolved();
 			int correctAttempt = 0;
 			if(solved)
 			{
@@ -158,9 +157,9 @@ public class EndSetActivity extends UserActivity {
 			{
 								
 				modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getImageName(),
-						currentSet.get(i).getCategory(), currentSetStatistics.getAttempts(i),
-						correctAttempt, currentSetStatistics.getSoundHints(i), 
-						currentSetStatistics.getWordHints(i), 2, currentSet.get(i).getUrl(), 1);
+						currentSet.get(i).getCategory(), currentSet.get(i).getAttempts(),
+						correctAttempt, currentSet.get(i).getSoundHints(), 
+						currentSet.get(i).getWordHints(), 2, currentSet.get(i).getUrl(), 1);
 			}
 			else
 			{
@@ -169,9 +168,9 @@ public class EndSetActivity extends UserActivity {
 				//if originally checked, but now it is unchecked, set to not favorite in DB	
 				if(origin[i])
 					modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getImageName(),
-							currentSet.get(i).getCategory(), currentSetStatistics.getAttempts(i),
-							correctAttempt, currentSetStatistics.getSoundHints(i), 
-							currentSetStatistics.getWordHints(i), 2, currentSet.get(i).getUrl(), 0);
+							currentSet.get(i).getCategory(), currentSet.get(i).getAttempts(),
+							correctAttempt, currentSet.get(i).getSoundHints(), 
+							currentSet.get(i).getWordHints(), 2, currentSet.get(i).getUrl(), 0);
 					
 				//update if it is
 				
@@ -227,7 +226,7 @@ public class EndSetActivity extends UserActivity {
 			imgNames[i] = currentSet.get(i).getImageName();
 		}
 		
-		String reportString = currentSetStatistics.generateSetReport(imgNames, name);
+		String reportString = currentSet.generateSetReport(imgNames, name);
 		FileWriter report=new FileWriter(reportFile);
 		report.write(reportString);
 		//reportOut.write(reportString);
@@ -298,14 +297,14 @@ public class EndSetActivity extends UserActivity {
 	public void enterNameAndEmail()
 	{
 		Intent userEntry = new Intent(this, NameAndEmailActivity.class);
-		userEntry.putExtra("User", currentSetStatistics);
+		userEntry.putExtra("User", currentSet);
 		startActivityForResult(userEntry,2);
 	}
 	
 	private void displayOptions()
 	{
 		Intent returnOptions = new Intent(this, EndSetReturnActivity.class);
-		returnOptions.putExtra("currentSetStatistics", currentSetStatistics);
+		returnOptions.putExtra("currentSetStatistics", currentSet);
 		returnOptions.putExtra("categoryName", categoryName);
 		startActivity(returnOptions);
 		finish();

@@ -61,7 +61,6 @@ public class ImageManager {
 public List<ImageStatistics> getImagesForFavorites(){
 		
 		List<ImageStatistics> imageStatisticsList = new ArrayList<ImageStatistics>();
-		ImageStatistics imageStatistics = new ImageStatistics();
 		
 		
 		/* Code to Fetch Favorite Images from database table and create a list of 20 favorite images */
@@ -76,11 +75,13 @@ public List<ImageStatistics> getImagesForFavorites(){
 		usList = dbHandler.getFavoriteStimuli();
 
 		Collections.shuffle(usList);
-		//System.out.println(usList.size());
+		System.out.println("ASDASDSDAS:"+usList.size());
 		if(usList.size() > 0)
 		{
 			for(int i=0;i < 20;i++)
 			{
+				ImageStatistics imageStatistics = new ImageStatistics();
+				
 				imageStatistics.setImageName(usList.get(i).getImageName());
 				imageStatistics.setUrl(usList.get(i).getUrl());
 				imageStatistics.setCategory(usList.get(i).getCategory());

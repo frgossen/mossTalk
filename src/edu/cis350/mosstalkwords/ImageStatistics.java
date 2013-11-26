@@ -34,7 +34,7 @@ public class ImageStatistics implements Parcelable {
 		out.writeInt(attempts);
 		out.writeInt(isSolved ? 1 : 0);
 		out.writeInt(isSeenToday ? 1 : 0);
-		out.writeLong(lastSeen.getTimeInMillis());
+		out.writeLong(lastSeen == null ? 0 : lastSeen.getTimeInMillis());
 	}
 
 	public static final Parcelable.Creator<ImageStatistics> CREATOR = new Parcelable.Creator<ImageStatistics>() {

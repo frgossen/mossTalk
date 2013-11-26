@@ -9,6 +9,8 @@ import android.os.Parcelable;
 public class Set implements Parcelable {
 	
 	private ArrayList<ImageStatistics> images;
+	public final static int NUM_STARS = 5;
+
 
 	// BEGINNNING --- IMPLEMENT PARCELABLE INTERFACE
 	public int describeContents() {
@@ -33,7 +35,13 @@ public class Set implements Parcelable {
 	// END --- IMPLEMENT PARCELABLE INTERFACE
 	
 	public Set(List<ImageStatistics> imageList){
-		images = new ArrayList<ImageStatistics>(imageList);
+		images = new ArrayList<ImageStatistics>();
+
+		for(ImageStatistics i : imageList)
+		{
+			System.out.println("NAME:"+i.getImageName());
+			images.add(i);
+		}
 	}
 	
 	public String[] getWords(){
@@ -61,6 +69,24 @@ public class Set implements Parcelable {
 
 	public int getScore(int imageIdx){
 		return getScore(imageIdx, false);
+	}
+	public int[] getScores(){
+		int[] scores = new int[getSize()];
+		for(int i=0; i<scores.length; i++)
+			scores[i] = getScore(i);
+		return scores;
+	}
+	public int getStarScore(){
+		double completeness = getCompleteness();
+		double rangePerStar = 1.0 / (NUM_STARS + 1);
+		int starScore = (int) (completeness / rangePerStar);
+		return starScore;
+	}
+	public double getCompleteness(){
+		int score = getTotalScore();
+		int maxScore = getSize() * 100;
+		double completeness = 1.0 * score / maxScore;
+		return completeness;
 	}
 	
 	public void incWordHint(int imageIdx){
@@ -101,6 +127,33 @@ public class Set implements Parcelable {
 			sum += getScore(i);
 		return sum;
 	}
+	
+	public int getLongestStreak(){
+		int currentStreak = 0;
+		int longestStreak = 0;
+		int length = getSize();
+
+		for (int i=0; i<length; i++) {
+			if (!images.get(i).isSolved()) {
+				if (currentStreak > longestStreak) {
+					longestStreak = currentStreak;
+				}
+				currentStreak = 0;
+			}
+			else
+			{
+				currentStreak++;
+			}
+		}
+		if (longestStreak < currentStreak) {
+			longestStreak = currentStreak;
+		}
+		return longestStreak;
+	}
+	
+	public double getCompletenessPercent(){
+		return Math.round(getCompleteness() * 1000) / 10;
+	}
 
 	public boolean equals(Object obj){
 		if(obj instanceof Set) {
@@ -109,6 +162,36 @@ public class Set implements Parcelable {
 		}
 		else
 			return false;
+	}
+	
+	public String generateSetReport(String[] images, String userName)
+	{
+		String fullReport = "";
+		fullReport += ("User: " + userName + "\n");
+		//fullReport+=("CurrentSet: "+currentSet.getName()+"\n");
+		String efficiencyPercent = "" + getCompletenessPercent();
+		fullReport += ("Completeness: " + efficiencyPercent+"%\n");
+		//String longestStreak=Integer.valueOf(getLongestStreak(currentSet.getName())).toString();
+		fullReport += ("Longest Streak: " + getLongestStreak() + "\n");
+		fullReport += ("\nImage By Image Statistics:\n\n");
+		for(int i=0; i<images.length; i++) 
+			fullReport += generateImageReport(images[i], i);
+		
+		return fullReport;
+	}
+	
+	private String generateImageReport(String imageName, int index)
+	{
+		String imageReport = "";
+		imageReport += imageName + ":\n";
+		imageReport += "Score: " + getScore(index) + " ";
+		imageReport += "Word Hint Used: " + images.get(index).getWordHints() + " ";
+		imageReport += "Syllable Hint Used: " + images.get(index).getSoundHints() + " ";
+		imageReport += "Attempts: " + images.get(index).getAttempts();
+		imageReport += "\n";
+		
+		
+		return imageReport;
 	}
 	
 	public String toString() {

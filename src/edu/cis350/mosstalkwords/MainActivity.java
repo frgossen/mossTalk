@@ -364,9 +364,9 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	}
 
 	private void updateLayoutInformation(){
-		/*
+		
 		Log.d("SCORE_BOARD", "updateScoreBoard called");
-		if(numImages != 0)
+		if(numImages != 0 && currentSet != null)
 		{
 		int attempts = currentSet.get(imageIndex).getAttempts();
 		int soundHints = currentSet.get(imageIndex).getSoundHints();
@@ -493,6 +493,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			Log.d("ASYNC", "progress = " + recentlyLoaded);
 			if (recentlyLoaded == imageIndex) 
 				showCurrentImageFromCache();
+			updateLayoutInformation();
 		}	
 	}
 
