@@ -68,7 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getReadableDatabase();
         UserStimuli userStimuli = new UserStimuli();
         
-        Cursor cursor = db.query(tableName, null, imageName + "=?", new String[] {imageName}, null, null, null,null);
+        Cursor cursor = db.query(tableName, null, this.imageName + "=?", new String[] {imageName}, null, null, null,null);
         
         if(cursor == null)
         	return null;

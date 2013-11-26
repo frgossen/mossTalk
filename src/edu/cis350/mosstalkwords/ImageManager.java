@@ -105,6 +105,11 @@ public List<ImageStatistics> getImagesForFavorites(){
 	}
 
 	public boolean checkIfSeenToday (Calendar lastSeen) {
+		if(lastSeen == null)
+		{
+			return false;
+		}
+		System.out.println("l:"+lastSeen);
 		double hours = (System.currentTimeMillis() - lastSeen.getTimeInMillis()) / 1000 / 60 / 60;			
 		if(hours<=24)
 			return true;

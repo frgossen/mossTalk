@@ -364,6 +364,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	}
 
 	private void updateLayoutInformation(){
+		/*
 		Log.d("SCORE_BOARD", "updateScoreBoard called");
 		if(numImages != 0)
 		{
@@ -374,8 +375,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		String scoreBoardMsg = "Attempts: " + attempts + 
 				"\nSound hints: " + soundHints + 
 				"\nWord hints: " + wordHints + 
-				"\nImage Score: " + imageScore;/* + 
-				"\nImage Index: " + imageIndex;*/
+				"\nImage Score: " + imageScore;
 		TextView scoreBoard = (TextView) findViewById(R.id.scoBoStatistics);
 		scoreBoard.setText(scoreBoardMsg);
 

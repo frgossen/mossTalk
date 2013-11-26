@@ -35,7 +35,7 @@ public class EndSetActivity extends UserActivity {
 	private int mode;
 	private String categoryName; 
 	private SetStatistics currentSetStatistics;
-	private ArrayList<Image> currentSet;
+	private Set currentSet;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,11 +55,13 @@ public class EndSetActivity extends UserActivity {
 	    //list of string names, results
 	    Intent i = getIntent();
 	    categoryName = i.getStringExtra("categoryName"); 
-		currentSetStatistics = (SetStatistics) i.getParcelableExtra("currentSetStatistics");
+		//currentSetStatistics = (SetStatistics) i.getParcelableExtra("currentSetStatistics");
 		
+	    
 		
-		currentSet = i.<Image>getParcelableArrayListExtra("currentSet");
-		System.out.println("size is here " + currentSet.size());
+		currentSet = (Set)i.getParcelableExtra("currentSet");
+		
+	    //System.out.println("size is here " + currentSet.size());
 		
 		
 	//	currentSet = (Set) i.getParcelableExtra("currentSet");
@@ -68,10 +70,10 @@ public class EndSetActivity extends UserActivity {
 	    //int[] results = currentSetStatistics.getImageSetScore();
 	    //Context ctx, String[] res, String[] imn
 	    
-		String[] imageWords = new String[currentSet.size()];
+		String[] imageWords = new String[currentSet.getSize()];
 		
-		for (int j = 0; j < currentSet.size(); j++) {
-			imageWords[j] = currentSet.get(j).getWord();
+		for (int j = 0; j < currentSet.getSize(); j++) {
+			imageWords[j] = currentSet.get(j).getImageName();
 		}
 		
 	    adapter = new ImageAdapter(this, currentSetStatistics.getScores(), 
@@ -155,7 +157,7 @@ public class EndSetActivity extends UserActivity {
 			if(checked[i])
 			{
 								
-				modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getWord(),
+				modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getImageName(),
 						currentSet.get(i).getCategory(), currentSetStatistics.getAttempts(i),
 						correctAttempt, currentSetStatistics.getSoundHints(i), 
 						currentSetStatistics.getWordHints(i), 2, currentSet.get(i).getUrl(), 1);
@@ -166,7 +168,7 @@ public class EndSetActivity extends UserActivity {
 
 				//if originally checked, but now it is unchecked, set to not favorite in DB	
 				if(origin[i])
-					modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getWord(),
+					modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getImageName(),
 							currentSet.get(i).getCategory(), currentSetStatistics.getAttempts(i),
 							correctAttempt, currentSetStatistics.getSoundHints(i), 
 							currentSetStatistics.getWordHints(i), 2, currentSet.get(i).getUrl(), 0);
@@ -218,13 +220,11 @@ public class EndSetActivity extends UserActivity {
 		File reportFile = new File(dir,("Report.txt"));
 		//OutputStreamWriter reportOut = new OutputStreamWriter(openFileOutput(currentSet.getName()+"Report.txt", this.MODE_PRIVATE));
 		
-		String[] imgNames = new String[currentSet.size()];
+		String[] imgNames = new String[currentSet.getSize()];
 		
-		int count = 0;
-		for(Image i : currentSet)
+		for(int i = 0; i < currentSet.getSize(); i++)
 		{
-			imgNames[count] = i.getWord();
-			count++;
+			imgNames[i] = currentSet.get(i).getImageName();
 		}
 		
 		String reportString = currentSetStatistics.generateSetReport(imgNames, name);
