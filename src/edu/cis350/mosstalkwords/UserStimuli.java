@@ -3,7 +3,7 @@ package edu.cis350.mosstalkwords;
 import java.util.Calendar;
 
 public class UserStimuli {
-        private String imageName;
+    private String imageName;
     private String Category;
     private int isFavorite;
     private int attempts;

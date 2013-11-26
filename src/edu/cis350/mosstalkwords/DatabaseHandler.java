@@ -63,6 +63,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+    
+    public UserStimuli getUserStimuli(String imageName) {
+    	SQLiteDatabase db = this.getReadableDatabase();
+        UserStimuli userStimuli = new UserStimuli();
+        
+        Cursor cursor = db.query(tableName, null, imageName + "=?", new String[] {imageName}, null, null, null,null);
+        
+        if(cursor == null)
+        	return null;
+        
+		if (cursor != null && cursor.getCount() > 0)
+		    cursor.moveToFirst();
+		
+		if (cursor.moveToFirst()) {
+//		do {
+	        try
+	        {
+	        UserStimuli us = new UserStimuli();
+	        
+	        us.setImageName(cursor.getString(0));
+	        us.setCategory(cursor.getString(1));
+	        us.setIsFavorite(Integer.parseInt(cursor.getString(2)));
+	        us.setAttempts(Integer.parseInt(cursor.getString(3)));
+	        us.setCorrectAttempts(Integer.parseInt(cursor.getString(4)));
+	        us.setSoundHints(Integer.parseInt(cursor.getString(5)));
+	        us.setPlaywordHints(Integer.parseInt(cursor.getString(6)));
+	        us.setNoHint(Integer.parseInt(cursor.getString(7)));
+	                 
+	                        Calendar cd = Calendar.getInstance();
+	                        cd.setTime(new Date(cursor.getString(8)));
+	        us.setLastSeen(cd);
+	        us.setDifficulty(Double.parseDouble(cursor.getString(9)));
+	        us.setUrl(cursor.getString(10));
+	        
+	        }
+	        catch(Exception e)
+	        {
+	                Log.d("Exception in parsing",e.toString());
+	        }
+		//	} while (cursor.moveToNext());
+		}
+		return userStimuli;
+    }
  
     public List<UserStimuli> getFavoriteStimuli()
         {
@@ -78,22 +121,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         do {
                 try
                 {
-                    UserStimuli us = new UserStimuli();
+                UserStimuli us = new UserStimuli();
                 
                 us.setImageName(cursor.getString(0));
                 us.setCategory(cursor.getString(1));
                 us.setIsFavorite(Integer.parseInt(cursor.getString(2)));
                 us.setAttempts(Integer.parseInt(cursor.getString(3)));
                 us.setCorrectAttempts(Integer.parseInt(cursor.getString(4)));
-                 us.setSoundHints(Integer.parseInt(cursor.getString(5)));
-                 us.setPlaywordHints(Integer.parseInt(cursor.getString(6)));
-                 us.setNoHint(Integer.parseInt(cursor.getString(7)));
+                us.setSoundHints(Integer.parseInt(cursor.getString(5)));
+                us.setPlaywordHints(Integer.parseInt(cursor.getString(6)));
+                us.setNoHint(Integer.parseInt(cursor.getString(7)));
                          
                                 Calendar cd = Calendar.getInstance();
                                 cd.setTime(new Date(cursor.getString(8)));
-                 us.setLastSeen(cd);
-                 us.setDifficulty(Double.parseDouble(cursor.getString(9)));
-                 us.setUrl(cursor.getString(10));
+                us.setLastSeen(cd);
+                us.setDifficulty(Double.parseDouble(cursor.getString(9)));
+                us.setUrl(cursor.getString(10));
                 
                 usList.add(us);}
                 catch(Exception e)
@@ -107,15 +150,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         
         
         public void setStimuli(UserStimuli stimuli){
-                    SQLiteDatabase db = this.getWritableDatabase();
+        	SQLiteDatabase db = this.getWritableDatabase();
+        	Cursor cursor = db.query(tableName, null,imageName+ "=?",new String[] {stimuli.getImageName()}, null, null, null);
                     
+        	ContentValues values = new ContentValues();
                     
-                    Cursor cursor = db.query(tableName, null,imageName+ "=?",new String[] {stimuli.getImageName()}, null, null, null);
-                    
-                    ContentValues values = new ContentValues();
-                    
-                    values.put(imageName, stimuli.getImageName());
-                    values.put(category, stimuli.getCategory());
+        	values.put(imageName, stimuli.getImageName());
+        	values.put(category, stimuli.getCategory());
             values.put(isFavorite, stimuli.getIsFavorite());
             values.put(attempts, stimuli.getAttempts());
             values.put(correctAttempts, stimuli.getCorrectAttempts());
@@ -141,13 +182,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     
             }
 
-                @Override
-                public void onCreate(SQLiteDatabase db) {
+        	@Override
+        	public void onCreate(SQLiteDatabase db) {
                         // TODO Auto-generated method stub
-                }
+        	}
 
-                @Override
-                public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        	@Override
+        	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
                         // TODO Auto-generated method stub
-                }
+        	}
 }

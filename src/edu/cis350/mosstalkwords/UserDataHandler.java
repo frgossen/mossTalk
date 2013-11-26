@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.content.Context;
 
-
 public class UserDataHandler {
 	String userName;
 	public UserDataHandler(String name)
