@@ -34,9 +34,13 @@ Context mContext = this; //this.getApplicationContext();
 					public void onClick(DialogInterface dialog, int id)
 					{
 						//restart set
-				//		Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
-				//		activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
-				//		startActivity(activityMain);
+						Intent activityMain = new Intent(EndSetReturnActivity.this, MainActivity.class);
+						//activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
+						Set s = EndSetReturnActivity.this.getIntent().getExtras().getParcelable("currentSet");
+						s.resetImagesStatistics();
+						activityMain.putExtra("currentSet", s);
+						
+						startActivity(activityMain);
 						finish();
 				}
 				})
@@ -66,7 +70,7 @@ Context mContext = this; //this.getApplicationContext();
 						{
 							activityMain.putExtra("startFavourites", true);
 						}
-						activityMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						//activityMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(activityMain);
 						finish();
 					}

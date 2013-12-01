@@ -93,7 +93,6 @@ public final class R {
         public static final int difficultGridview=0x7f090022;
         public static final int divider=0x7f090019;
         public static final int divider2=0x7f09001e;
-        public static final int do_not_send_button=0x7f090032;
         public static final int email=0x7f090021;
         public static final int endRow1=0x7f090025;
         public static final int endRow11=0x7f09002f;
@@ -135,6 +134,7 @@ public final class R {
         public static final int profileName=0x7f09003f;
         public static final int profileScore=0x7f090041;
         public static final int progBar=0x7f090002;
+        public static final int save_button=0x7f090032;
         public static final int scoBoStatistics=0x7f090005;
         public static final int scoreBar=0x7f090014;
         public static final int scoreBar1=0x7f090057;

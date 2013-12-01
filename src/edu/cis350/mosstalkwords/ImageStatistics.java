@@ -19,6 +19,16 @@ public class ImageStatistics implements Parcelable {
 	private boolean isSeenToday;
 	private Calendar lastSeen;
 
+	
+	public void resetImageStatistics()
+	{
+		wordHints = 0;
+		soundHints = 0;
+		attempts = 0;
+		isSolved = false;
+		isSeenToday = true;
+	}
+	
 	// BEGINNNING --- IMPLEMENT PARCELABLE INTERFACE
 	public int describeContents() {
 		return 0;

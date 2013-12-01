@@ -29,11 +29,11 @@ public class EndSetActivity extends UserActivity {
 	GridView gridView;
 	ImageAdapter adapter; 
 	Context mContext = this;
-	DatabaseHandler db;
-	ModifyFavoriteStimuli modifyFavoriteStimuli;
+	ImageManager im;
 	
 	private int mode;
 	private String categoryName; 
+	private boolean isFavourites;
 	private Set currentSet;
 	
 	@Override
@@ -41,29 +41,20 @@ public class EndSetActivity extends UserActivity {
  		super.onCreate(savedInstanceState);
 		setContentView(R.layout.end_dialog);//.favorite_gridview);
 
-		db = new DatabaseHandler(this);
-		modifyFavoriteStimuli = new ModifyFavoriteStimuli(db);
+		im = new ImageManager(this.getUserName(), this.getApplicationContext());
 		
-	    //LayoutInflater inflater = this.getLayoutInflater();//(LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    //View layout = inflater.inflate(R.layout.dialog_endset, null);
-	    //View layout = inflater.inflate(R.layout.end_dialog, null);
-	    
-	//	gridView = (GridView) findViewById(R.id.favorite_grid);
 		gridView = (GridView) this.findViewById(R.id.gridview);
 		
 	    //list of string names, results
 	    Intent i = getIntent();
 	    categoryName = i.getStringExtra("categoryName"); 
+	    isFavourites = i.getBooleanExtra("startFavourites", false);
 		//currentSetStatistics = (SetStatistics) i.getParcelableExtra("currentSetStatistics");
 		
 	    
 		
 		currentSet = (Set)i.getParcelableExtra("currentSet");
 		
-	    //System.out.println("size is here " + currentSet.size());
-		
-		
-	//	currentSet = (Set) i.getParcelableExtra("currentSet");
 		mode = i.getIntExtra("mode", -1);
 	    
 	    //int[] results = currentSetStatistics.getImageSetScore();
@@ -75,36 +66,8 @@ public class EndSetActivity extends UserActivity {
 			imageWords[j] = currentSet.get(j).getImageName();
 		}
 		
-	    adapter = new ImageAdapter(this, currentSet.getScores(), 
-	    		imageWords,getUserName());
+	    adapter = new ImageAdapter(this, currentSet, getUserName());
 		gridView.setAdapter(adapter);
-		/*
-		gridView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
-				System.out.println(getResources().getColor(android.R.color.holo_green_light));
-				v.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
-				
-				ImageView iv = (ImageView)v.findViewById(R.id.item_image);
-				
-				TextView tv = (TextView)v.findViewById(R.id.item_image_label);
-				tv.setText("ASDASd");
-				CheckBox cb = (CheckBox)v.findViewById(R.id.item_checkbox);
-				System.out.println(cb.isChecked() + " " + position);
-			}
-		});
-		
-		
-		//System.out.println(((CheckBox)gridView.findViewById(R.id.item_checkbox)).isChecked());
-		
-		for(int i = 0; i < 20; i++)
-		{
-			View v = (View)gridView.getAdapter().getView(0, null, null);
-			CheckBox ba = (CheckBox)v.findViewById(R.id.item_checkbox);
-			System.out.println(ba.isChecked());
-			
-		}
-		 */
 		
 		RatingBar score = (RatingBar) this.findViewById(R.id.scoreBar);
 	    int starScore = currentSet.getStarScore();
@@ -129,11 +92,11 @@ public class EndSetActivity extends UserActivity {
 	    completeness.setText(completeness.getText() + completenessPercent+"%");
 	    
 	    TextView streak=(TextView) this.findViewById(R.id.streak);
-	    String longestStreak= new Integer(currentSet.getLongestStreak()).toString();
+	    String longestStreak= Integer.valueOf(currentSet.getLongestStreak()).toString();
 	    streak.setText(streak.getText()+longestStreak);
 	    
 	    TextView setScoreNum = (TextView) this.findViewById(R.id.endScore);
-	    setScoreNum.setText(setScoreNum.getText().toString() + this.getIntent().getExtras().getInt("setScore")); 
+	    setScoreNum.setText(setScoreNum.getText().toString() + currentSet.getTotalScore()); 
 
 	    TextView totalScoreNum = (TextView) this.findViewById(R.id.endScoreTotal);
 	    totalScoreNum.setText(totalScoreNum.getText().toString() + getScore()); 
@@ -156,22 +119,29 @@ public class EndSetActivity extends UserActivity {
 			if(checked[i])
 			{
 								
+				currentSet.get(i).setIsFavorite(true);
+				/*
 				modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getImageName(),
 						currentSet.get(i).getCategory(), currentSet.get(i).getAttempts(),
 						correctAttempt, currentSet.get(i).getSoundHints(), 
 						currentSet.get(i).getWordHints(), 2, currentSet.get(i).getUrl(), 1);
+						*/
 			}
 			else
 			{
+				currentSet.get(i).setIsFavorite(false);
 				boolean[] origin = adapter.getOriginallyChecked();
 
 				//if originally checked, but now it is unchecked, set to not favorite in DB	
 				if(origin[i])
+				{
+					/*
 					modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getImageName(),
 							currentSet.get(i).getCategory(), currentSet.get(i).getAttempts(),
 							correctAttempt, currentSet.get(i).getSoundHints(), 
 							currentSet.get(i).getWordHints(), 2, currentSet.get(i).getUrl(), 0);
-					
+							*/
+				}	
 				//update if it is
 				
 				//skip otherwise
@@ -179,6 +149,7 @@ public class EndSetActivity extends UserActivity {
 				
 			}
 		}
+		im.setUserStimuli(currentSet.getImages());
 	}
 	
 	public void send(View v) {
@@ -187,12 +158,7 @@ public class EndSetActivity extends UserActivity {
 		updateDB();
 		
 
-		/*List<UserStimuli> l =  db.getFavoriteStimuli();
-		
-		System.out.println("------------------------------------------------------");
-		for(UserStimuli u : l)
-			System.out.println(u.getImageName());
-			*/
+
 		//create and send report
 		Intent nameAndEmail = new Intent(this, NameAndEmailActivity.class);
 		startActivityForResult(nameAndEmail, 2);
@@ -201,13 +167,15 @@ public class EndSetActivity extends UserActivity {
 		//select choice, replay | main | next Set
 	}
 	
-	public void doNotSend(View v) {
+	public void save(View v) {
 		System.out.println("No");
 		//update database
 		updateDB();
 		
+		createSavedReport();
+		
 		//select choice, replay | main | next Set
-	displayOptions();
+		displayOptions();
 	}
 	
 	public File createReport(String name) throws IOException
@@ -216,7 +184,22 @@ public class EndSetActivity extends UserActivity {
 		File dir = new File(path.getAbsolutePath() + "/textfiles");
 		dir.mkdirs();
 		
-		File reportFile = new File(dir,("Report.txt"));
+		
+		File reportFile = null;
+
+		
+		File[] files = dir.listFiles();
+
+		
+		if(files.length != 0)
+		{
+			reportFile = files[0];
+		}
+		else
+		{
+			reportFile = new File(dir, ("Report.txt"));
+		}
+
 		//OutputStreamWriter reportOut = new OutputStreamWriter(openFileOutput(currentSet.getName()+"Report.txt", this.MODE_PRIVATE));
 		
 		String[] imgNames = new String[currentSet.getSize()];
@@ -227,21 +210,32 @@ public class EndSetActivity extends UserActivity {
 		}
 		
 		String reportString = currentSet.generateSetReport(imgNames, name);
-		FileWriter report=new FileWriter(reportFile);
+		FileWriter report=new FileWriter(reportFile, true);
 		report.write(reportString);
-		//reportOut.write(reportString);
-		//reportOut.close();
 		report.close();
-		//reportOut.println("User: "+currentUser.name);
-		//reportOut.close();
 		return reportFile;
+	}
+	
+	public void createSavedReport()
+	{
+		try
+		{
+			createReport(this.getUserName());
+		}
+		catch(IOException i)
+		{
+			i.printStackTrace();
+		}
 	}
 
 	
 	public void sendReportViaEmail(File fileName, String email)
 	{
 		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+		
+		//this makes it not close... i don't know if this was intended.
 		emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		//
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
 				new String[]{email});
 		String subject="Wordle "/*+currentSet.getName()*/ +" Report";
@@ -277,20 +271,24 @@ public class EndSetActivity extends UserActivity {
 	{
 		if(requestCode == 1)
 		{
+			//delete
+			System.out.println("Back from Email");
+			deleteFile();
 			displayOptions();
 		}
 		else if(requestCode == 2)
 		{
 			boolean cancel = data.getBooleanExtra("Cancel", false);
-			System.out.println("CANCEL VALUE: "+ cancel);
-
-			cancel = data.getBooleanExtra("Cancel", true);
-			System.out.println("CANCEL VALUE: "+ cancel);
 
 			if(!cancel)
+			{
 				createAndSendReport(data.getStringExtra("Username"), data.getStringExtra("Email"));
+			}
 			else
+			{
+				createSavedReport();
 				displayOptions();
+			}
 		}
 	}
 	
@@ -304,10 +302,24 @@ public class EndSetActivity extends UserActivity {
 	private void displayOptions()
 	{
 		Intent returnOptions = new Intent(this, EndSetReturnActivity.class);
-		returnOptions.putExtra("currentSetStatistics", currentSet);
+		returnOptions.putExtra("currentSet", currentSet);
 		returnOptions.putExtra("categoryName", categoryName);
+		returnOptions.putExtra("startFavourites", isFavourites);
 		startActivity(returnOptions);
 		finish();
+	}
+	
+	public void deleteFile()
+	{
+		File path = Environment.getExternalStorageDirectory();
+		File dir = new File(path.getAbsolutePath() + "/textfiles");
+		if(dir.exists())
+		{
+			for(File f : dir.listFiles())
+			{
+				f.delete();
+			}
+		}
 	}
 	
 

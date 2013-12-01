@@ -11,7 +11,17 @@ public class Set implements Parcelable {
 	private ArrayList<ImageStatistics> images;
 	public final static int NUM_STARS = 5;
 
+	public ArrayList<ImageStatistics> getImages()
+	{
+		return images;
+	}
 
+	public void resetImagesStatistics()
+	{
+		for(int i = 0; i < images.size(); i++)
+			images.get(i).resetImageStatistics();
+	}
+	
 	// BEGINNNING --- IMPLEMENT PARCELABLE INTERFACE
 	public int describeContents() {
         return 0;
@@ -177,6 +187,7 @@ public class Set implements Parcelable {
 		for(int i=0; i<images.length; i++) 
 			fullReport += generateImageReport(images[i], i);
 		
+		fullReport += "\n----------------------------------------------------------------\n";
 		return fullReport;
 	}
 	

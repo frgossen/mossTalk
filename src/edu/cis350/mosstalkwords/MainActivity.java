@@ -48,7 +48,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			"Well done!", 
 			"Outstanding!", 
 			"Very good!", 
-			"Remarkable!"};
+	"Remarkable!"};
 	private final int MODE_CATEGORY = 35675;
 	private final int MODE_FAVOURITES = 62230;
 
@@ -69,9 +69,10 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		super.onCreate(savedInstanceState);
 
 		im  = new ImageManager(getUserName(), getApplicationContext());
-		backgroundTask = new LoadSetAndImages();
+
 		tts = new TextToSpeech(this, this);
 		imCache = ImageCache.getInstance();
+		backgroundTask = new LoadSetAndImages();
 
 		Intent i = getIntent();
 		if(i.hasExtra("startCategory")){
@@ -81,11 +82,12 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			currentSet = null;
 			mode = MODE_CATEGORY;
 			i.removeExtra("startCategory");
-			backgroundTask.execute(true);
+//			backgroundTask.execute(true);
 		}
 		else if(i.hasExtra("startFavourites")){
 			categoryName = null;
 			//
+			System.out.println("FAVOUR ITES");
 			numImages = im.getImagesForFavorites().size();
 			if(numImages == 0)
 			{
@@ -99,28 +101,42 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 						Intent gotoMainMenu = new Intent(MainActivity.this, 
 								WelcomeActivity.class); 
 						startActivity(gotoMainMenu); 
+						System.out.println("FINISH HIM");
+						finish();
 					} 
 				}).setCancelable(false).show(); return;
-				
 			}
-			
-			if(numImages != 0)
+			else
 			{
 				imageIndex = 0;
 				currentSet = null;
 				mode = MODE_FAVOURITES;
 				i.removeExtra("startFavourites");			
-				backgroundTask.execute(true);
-			}
-			else
-			{
-				finish();
+	//			backgroundTask.execute(true);
 			}
 		}
 		else{
 			restoreState(savedInstanceState);
+//			backgroundTask.execute(false);
+		}
+
+		Bundle extras = this.getIntent().getExtras();
+		if(extras != null && extras.get("currentSet") != null)
+		{
+			System.out.println("currentSet not null");
+			currentSet = (Set)this.getIntent().getExtras().get("currentSet");
+			numImages = currentSet.getSize();
 			backgroundTask.execute(false);
 		}
+		else
+		{
+
+			System.out.println("currentSet null");
+			backgroundTask.execute(true);			
+		}
+		
+		
+
 
 		setContentView(R.layout.activity_main);
 		ImageSwitcher imSwitcher = (ImageSwitcher) findViewById(R.id.imgSwitcher);
@@ -220,13 +236,14 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 
 		showCurrentImageFromCache();
-		updateLayoutInformation();
+		//updateLayoutInformation();
 
 		gotoEndOfSet.putExtra("currentSet", currentSet);
 		//gotoEndOfSet.putExtra("currentSet", currentSet);
 		gotoEndOfSet.putExtra("mode", mode);
 		startActivity(gotoEndOfSet);		
-		//finish();
+		finish();
+
 	}
 
 	private void nextImage() {
@@ -364,30 +381,30 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	}
 
 	private void updateLayoutInformation(){
-		
+
 		Log.d("SCORE_BOARD", "updateScoreBoard called");
 		if(numImages != 0 && currentSet != null)
 		{
-		int attempts = currentSet.get(imageIndex).getAttempts();
-		int soundHints = currentSet.get(imageIndex).getSoundHints();
-		int wordHints = currentSet.get(imageIndex).getWordHints();
-		int imageScore = currentSet.getScore(imageIndex, true);
-		String scoreBoardMsg = "Attempts: " + attempts + 
-				"\nSound hints: " + soundHints + 
-				"\nWord hints: " + wordHints + 
-				"\nImage Score: " + imageScore;
-		TextView scoreBoard = (TextView) findViewById(R.id.scoBoStatistics);
-		scoreBoard.setText(scoreBoardMsg);
+			int attempts = currentSet.get(imageIndex).getAttempts();
+			int soundHints = currentSet.get(imageIndex).getSoundHints();
+			int wordHints = currentSet.get(imageIndex).getWordHints();
+			int imageScore = currentSet.getScore(imageIndex, true);
+			String scoreBoardMsg = "Attempts: " + attempts + 
+					"\nSound hints: " + soundHints + 
+					"\nWord hints: " + wordHints + 
+					"\nImage Score: " + imageScore;
+			TextView scoreBoard = (TextView) findViewById(R.id.scoBoStatistics);
+			scoreBoard.setText(scoreBoardMsg);
 
-		VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
-		imageScoreProgBar.setProgress(imageScore);
+			VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
+			imageScoreProgBar.setProgress(imageScore);
 
-		int setScore = currentSet.getTotalScore(imageIndex);
-		TextView txtScore = (TextView) findViewById(R.id.txtScore);
-		txtScore.setText(setScore + " Points");
+			int setScore = currentSet.getTotalScore(imageIndex);
+			TextView txtScore = (TextView) findViewById(R.id.txtScore);
+			txtScore.setText(setScore + " Points");
 
-		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
-		pbar.setProgress(1 + imageIndex);
+			ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
+			pbar.setProgress(1 + imageIndex);
 		}
 
 

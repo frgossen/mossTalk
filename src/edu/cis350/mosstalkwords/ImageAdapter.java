@@ -24,52 +24,43 @@ public class ImageAdapter extends BaseAdapter {
 	private int[] results; // scores (will be used to mark them correct/incorrect
 	private ArrayList<String> imageNames; // list of names of the images
 	private boolean[] checked;
-	private DatabaseHandler db;
 
 	private boolean[] originallyChecked;
 	
-
-
 	private View gridView;
-//	private ImageCache imCache; // image cache.
+	Set currentSet;
 	
-	public ImageAdapter(Context ctx, int[] res, String[] imn, String userName) {
+	public ImageAdapter(Context ctx, Set s, String userName) {
 		super();
+		currentSet = s;
 		context = ctx;
-		results = res;
+		results = currentSet.getScores();
 		imageNames = new ArrayList<String>();
-		for(String i : imn)
+		for(String i : currentSet.getWords())
 		{
 			imageNames.add(i);
 		}
-		checked = new boolean[res.length];
-		originallyChecked = new boolean[res.length];
+		checked = new boolean[results.length];
+		originallyChecked = new boolean[results.length];
 
-		db = new DatabaseHandler(context);
-		db.getTable(userName);
+	
 		
-		setCheckBoxesFromDB();
+		setCheckBoxes();
 		
-//		System.out.println(res.length +"--" + imn.length);
-//		System.out.println(results[0] +"--" + imageNames[0]);
 	}
 	
 	public boolean[] getChecked() {
 		return checked;
 	}
 	
-	public void setCheckBoxesFromDB()
+	public void setCheckBoxes()
 	{
-		List<UserStimuli> list = db.getFavoriteStimuli();
-		for (UserStimuli l: list)
+		int count = 0;
+		for(ImageStatistics l : currentSet.getImages())
 		{
-			String listImageName = l.getImageName();
-			if(imageNames.contains(listImageName))
-			{
-				//need index and if it is a favorite
-				if(l.getIsFavorite() == 1)
-					originallyChecked[imageNames.indexOf(listImageName)] = true;
-			}
+			if(l.getIsFavorite())
+				originallyChecked[count] = true;
+			count++;
 		}
 	}
 	
