@@ -47,7 +47,8 @@ public class EndSetActivity extends UserActivity {
 		
 	    //list of string names, results
 	    Intent i = getIntent();
-	    categoryName = i.getStringExtra("categoryName"); 
+	    categoryName = i.getStringExtra("categoryName");
+	    System.out.println("CN:"+categoryName);
 	    isFavourites = i.getBooleanExtra("startFavourites", false);
 		//currentSetStatistics = (SetStatistics) i.getParcelableExtra("currentSetStatistics");
 		

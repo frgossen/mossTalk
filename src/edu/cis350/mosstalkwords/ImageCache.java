@@ -47,7 +47,17 @@ public class ImageCache {
 		return imCache.get(key);
 	}
 	
-	public void clearCache() {
+	public void clearCache(String[] words) {
+		for(String w : words)
+		{
+			Bitmap b = imCache.get(w);
+			if(b != null)
+			{
+				System.out.println("Freed:" + w);
+				b.recycle();
+			}
+		}
+
 		imCache.evictAll();
 	}
 	
