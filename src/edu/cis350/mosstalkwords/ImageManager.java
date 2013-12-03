@@ -22,6 +22,7 @@ public class ImageManager {
 		List<ImageStatistics> imageStatisticsList = new ArrayList<ImageStatistics>();
 		
 		img_SDB = new Images_SDB();
+		
 		List<Image> imageList = img_SDB.returnImages(category);
 		
 		for(int i = 0; i<imageList.size(); i++){
@@ -66,16 +67,10 @@ public List<ImageStatistics> getImagesForFavorites(){
 		/* Code to Fetch Favorite Images from database table and create a list of 20 favorite images */
 		
 		List<UserStimuli> usList = new ArrayList<UserStimuli>();
-		//List<Image> imgList = new ArrayList<Image>();
-		//DatabaseHandler dbHandler = new DatabaseHandler(context);
-		
-
-		//dbHandler.getTable(userName);
-
 		usList = dbHandler.getFavoriteStimuli();
 
 		Collections.shuffle(usList);
-		System.out.println("ASDASDSDAS:"+usList.size());
+		
 		if(usList.size() > 0)
 		{
 			for(int i=0;i < 20;i++)
@@ -110,7 +105,7 @@ public List<ImageStatistics> getImagesForFavorites(){
 		{
 			return false;
 		}
-		System.out.println("l:"+lastSeen);
+		
 		double hours = (System.currentTimeMillis() - lastSeen.getTimeInMillis()) / 1000 / 60 / 60;			
 		if(hours<=24)
 			return true;
@@ -131,17 +126,29 @@ public List<ImageStatistics> getImagesForFavorites(){
 			userStimuli.setIsFavorite(imageStatisticsList.get(i).getIsFavorite()==true?1:0);
 			userStimuli.setLastSeen(imageStatisticsList.get(i).getLastSeen());
 
-			userStimuli.setAttempts(prevUserStimuli.getAttempts()+1);
-			userStimuli.setCorrectAttempts(prevUserStimuli.getCorrectAttempts()+(imageStatisticsList.get(i).isSolved()==true?1:0));
-			userStimuli.setSoundHints(prevUserStimuli.getSoundHints()+(imageStatisticsList.get(i).getSoundHints()));
-			userStimuli.setPlaywordHints(prevUserStimuli.getPlaywordHints()+(imageStatisticsList.get(i).getWordHints()));
-			if(imageStatisticsList.get(i).getWordHints()==0 && imageStatisticsList.get(i).getSoundHints() == 0 && imageStatisticsList.get(i).isSolved() == true)
-				userStimuli.setNoHint(prevUserStimuli.getNoHint()+1);
+			if(prevUserStimuli != null)
+			{
+				userStimuli.setAttempts(prevUserStimuli.getAttempts()+1);
+				userStimuli.setCorrectAttempts(prevUserStimuli.getCorrectAttempts()+(imageStatisticsList.get(i).isSolved()==true?1:0));
+				userStimuli.setSoundHints(prevUserStimuli.getSoundHints()+(imageStatisticsList.get(i).getSoundHints()));
+				userStimuli.setPlaywordHints(prevUserStimuli.getPlaywordHints()+(imageStatisticsList.get(i).getWordHints()));
+				if(imageStatisticsList.get(i).getWordHints()==0 && imageStatisticsList.get(i).getSoundHints() == 0 && imageStatisticsList.get(i).isSolved() == true)
+					userStimuli.setNoHint(prevUserStimuli.getNoHint()+1);
+				else
+					userStimuli.setNoHint(prevUserStimuli.getNoHint());
+			}
 			else
-				userStimuli.setNoHint(prevUserStimuli.getNoHint());
-			
+			{
+				userStimuli.setAttempts(1);
+				userStimuli.setCorrectAttempts(imageStatisticsList.get(i).isSolved()==true?1:0);
+				userStimuli.setSoundHints(imageStatisticsList.get(i).getSoundHints());
+				userStimuli.setPlaywordHints(imageStatisticsList.get(i).getWordHints());
+				if(imageStatisticsList.get(i).getWordHints()==0 && imageStatisticsList.get(i).getSoundHints() == 0 && imageStatisticsList.get(i).isSolved() == true)
+					userStimuli.setNoHint(1);
+				else
+					userStimuli.setNoHint(0);
+			}
 			dbHandler.setStimuli(userStimuli);
-
 		}
 	}
 }

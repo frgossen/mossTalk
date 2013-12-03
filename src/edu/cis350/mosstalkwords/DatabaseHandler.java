@@ -66,23 +66,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public UserStimuli getUserStimuli(String imageName) {
     	SQLiteDatabase db = this.getReadableDatabase();
-        UserStimuli userStimuli = new UserStimuli();
-        
-        Cursor cursor = db.query(tableName, null, this.imageName + "=?", new String[] {imageName}, null, null, null,null);
-        
-        if(cursor == null)
-        	return null;
-        
-		if (cursor != null && cursor.getCount() > 0)
-		    cursor.moveToFirst();
+    	UserStimuli us = null;
+    	
+    	String getUserStimuli = "select * from " + tableName + " where imageName = '" + imageName + "'";
+		Cursor cursor = db.rawQuery(getUserStimuli, null);
 		
-		if (cursor.moveToFirst()) {
-//		do {
-	        try
-	        {
-	        UserStimuli us = new UserStimuli();
-	        
-	        us.setImageName(cursor.getString(0));
+        if(cursor == null)
+        {
+        	return null;
+        }
+      
+        if (cursor.moveToFirst() && cursor != null) {
+	    try
+	    {
+	        us = new UserStimuli();
+	    	us.setImageName(cursor.getString(0));
 	        us.setCategory(cursor.getString(1));
 	        us.setIsFavorite(Integer.parseInt(cursor.getString(2)));
 	        us.setAttempts(Integer.parseInt(cursor.getString(3)));
@@ -102,93 +100,98 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	        {
 	                Log.d("Exception in parsing",e.toString());
 	        }
-		//	} while (cursor.moveToNext());
 		}
-		return userStimuli;
+		return us;
     }
  
     public List<UserStimuli> getFavoriteStimuli()
-        {
-                SQLiteDatabase db = this.getReadableDatabase();
-                List<UserStimuli> usList = new ArrayList<UserStimuli>();
-                
-                Cursor cursor = db.query(tableName, null, isFavorite + "=?", new String[] {"1"}, null, null, null,null);
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<UserStimuli> usList = new ArrayList<UserStimuli>();
+        
+        Cursor cursor = db.query(tableName, null, isFavorite + "=?", new String[] {"1"}, null, null, null,null);
                 
         if (cursor != null && cursor.getCount() > 0)
             cursor.moveToFirst();
         
-       if (cursor.moveToFirst()) {
-        do {
-                try
-                {
-                UserStimuli us = new UserStimuli();
-                
-                us.setImageName(cursor.getString(0));
-                us.setCategory(cursor.getString(1));
-                us.setIsFavorite(Integer.parseInt(cursor.getString(2)));
-                us.setAttempts(Integer.parseInt(cursor.getString(3)));
-                us.setCorrectAttempts(Integer.parseInt(cursor.getString(4)));
-                us.setSoundHints(Integer.parseInt(cursor.getString(5)));
-                us.setPlaywordHints(Integer.parseInt(cursor.getString(6)));
-                us.setNoHint(Integer.parseInt(cursor.getString(7)));
-                         
-                                Calendar cd = Calendar.getInstance();
-                                cd.setTime(new Date(cursor.getString(8)));
-                us.setLastSeen(cd);
-                us.setDifficulty(Double.parseDouble(cursor.getString(9)));
-                us.setUrl(cursor.getString(10));
-                
-                usList.add(us);}
-                catch(Exception e)
-                {
-                        Log.d("Exception in parsing",e.toString());
-                }
-            } while (cursor.moveToNext());
+	    if (cursor.moveToFirst()) {
+	    do{
+            try
+            {
+            UserStimuli us = new UserStimuli();
+            
+            us.setImageName(cursor.getString(0));
+            us.setCategory(cursor.getString(1));
+            us.setIsFavorite(Integer.parseInt(cursor.getString(2)));
+            us.setAttempts(Integer.parseInt(cursor.getString(3)));
+            us.setCorrectAttempts(Integer.parseInt(cursor.getString(4)));
+            us.setSoundHints(Integer.parseInt(cursor.getString(5)));
+            us.setPlaywordHints(Integer.parseInt(cursor.getString(6)));
+            us.setNoHint(Integer.parseInt(cursor.getString(7)));
+                     
+                            Calendar cd = Calendar.getInstance();
+                            cd.setTime(new Date(cursor.getString(8)));
+            us.setLastSeen(cd);
+            us.setDifficulty(Double.parseDouble(cursor.getString(9)));
+            us.setUrl(cursor.getString(10));
+            
+            usList.add(us);}
+            catch(Exception e)
+            {
+                    Log.d("Exception in parsing",e.toString());
+            }
+         } while (cursor.moveToNext());
         }
         return usList;
-        }
+    }
         
         
-        public void setStimuli(UserStimuli stimuli){
-        	SQLiteDatabase db = this.getWritableDatabase();
-        	Cursor cursor = db.query(tableName, null,imageName+ "=?",new String[] {stimuli.getImageName()}, null, null, null);
-                    
-        	ContentValues values = new ContentValues();
-                    
-        	values.put(imageName, stimuli.getImageName());
-        	values.put(category, stimuli.getCategory());
-            values.put(isFavorite, stimuli.getIsFavorite());
-            values.put(attempts, stimuli.getAttempts());
-            values.put(correctAttempts, stimuli.getCorrectAttempts());
-            values.put(soundHints, stimuli.getSoundHints());
-            values.put(playwordHints, stimuli.getPlaywordHints());
-            values.put(noHint, stimuli.getNoHint());
-            values.put(lastSeen, stimuli.getLastSeen().getTime().toString());
-            values.put(difficulty, stimuli.getDifficulty());
-            values.put(url, stimuli.getUrl());
-           
-            Log.d("cursor rows",Integer.toString(cursor.getCount()));
-          
-            if (cursor.getCount() == 0)
-            {
-                    db.insert(tableName, null, values);
-                    Log.d("cursor null","adding ant image");
-            }
-            
-            else {
-                    db.update(tableName, values, imageName+"=?", new String[] {stimuli.getImageName()});
-            }
-            db.close(); // Closing database connection
-                    
-            }
+    public void setStimuli(UserStimuli stimuli){
+		SQLiteDatabase db = this.getWritableDatabase();
+		//Cursor cursor = db.query(tableName, null,imageName+ "=?",new String[] {stimuli.getImageName()}, null, null, null);
+		String getUserStimuli = "select * from " + tableName + " where imageName = '" + stimuli.getImageName() + "'";
+		Cursor cursor = db.rawQuery(getUserStimuli, null);
+		
+		
+		ContentValues values = new ContentValues();
+	            
+		values.put(imageName, stimuli.getImageName());
+		values.put(category, stimuli.getCategory());
+	    values.put(isFavorite, stimuli.getIsFavorite());
+	    values.put(attempts, stimuli.getAttempts());
+	    values.put(correctAttempts, stimuli.getCorrectAttempts());
+	    values.put(soundHints, stimuli.getSoundHints());
+	    values.put(playwordHints, stimuli.getPlaywordHints());
+	    values.put(noHint, stimuli.getNoHint());
+	    values.put(lastSeen, stimuli.getLastSeen().getTime().toString());
+	    values.put(difficulty, stimuli.getDifficulty());
+	    values.put(url, stimuli.getUrl());
+	   
+	    //Log.d("cursor rows",Integer.toString(cursor.getCount()));
+	  
+	    //if (cursor.getCount() == 0)
+	    if(cursor == null)
+	    	return;
+	    
+	    if(cursor.moveToFirst() && cursor != null)
+	    {
+	    	db.update(tableName, values, imageName+"=?", new String[] {stimuli.getImageName()});
+	    }
+	    else {
+	    	db.insert(tableName, null, values);
+	        Log.d("cursor null","adding an image");
+	    }
+	    db.close(); // Closing database connection
+	            
+	}
 
-        	@Override
-        	public void onCreate(SQLiteDatabase db) {
-                        // TODO Auto-generated method stub
-        	}
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+                // TODO Auto-generated method stub
+	}
 
-        	@Override
-        	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
                         // TODO Auto-generated method stub
         	}
 }
