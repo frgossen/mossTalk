@@ -181,6 +181,14 @@ public List<ImageStatistics> getImagesForFavorites(){
 		return wq.getImagesForLevel(level);
 	}
 	
+	/* This function will return upto which levels are unlocked 
+	 * For example, if this method returns 2, it means first two levels are unlocked.
+	 * Call this every time user selects word quest module.
+	 * */
+	public int getLevelsForWordQuest()
+	{
+		return wq.getLevelsForMode("easy");
+	}
 	/*public String getWordQuestData(){
 		
 	}*/
