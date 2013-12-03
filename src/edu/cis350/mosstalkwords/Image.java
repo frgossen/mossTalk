@@ -12,6 +12,7 @@ public class Image implements Parcelable {
 	private int length;
 	private int imageability;
 	private boolean favourite;
+	private int level;
 	
 	// BEGINNNING --- IMPLEMENT PARCELABLE INTERFACE
 	public int describeContents() {
@@ -46,16 +47,16 @@ public class Image implements Parcelable {
     }
 	// END --- IMPLEMENT PARCELABLE INTERFACE
     
-	public Image(String w, String c, String i, String l, String f, String u) {
+	public Image(String word, String category, String imageability, String length, String level, String frequency, String url) {
 		try {
-			this.setCategory(c);
-			this.setWord(w);
-			this.setUrl(u);
-			this.setFrequency(Integer.parseInt(f));
-			this.setLength(Integer.parseInt(l));
-			this.setImageability(Integer.parseInt(i));
-			//TODO: add this attribute and probably more properly
+			this.setCategory(category);
+			this.setWord(word);
+			this.setUrl(url);
+			//this.setFrequency(Integer.parseInt(frequency));
+			//this.setLength(Integer.parseInt(length));
+			//this.setImageability(Integer.parseInt(imageability));
 			this.setFavourite(false);
+			this.setLevel(level);
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -145,5 +146,11 @@ public class Image implements Parcelable {
 				+ length + " / "
 				+ imageability + " / "
 				+ favourite;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = Integer.parseInt(level);
 	}
 }

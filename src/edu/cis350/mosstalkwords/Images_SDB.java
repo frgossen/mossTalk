@@ -23,10 +23,11 @@ import com.amazonaws.services.simpledb.model.ReplaceableItem;
 import com.amazonaws.services.simpledb.model.SelectRequest;
 
 
+
 public class Images_SDB {
 
         private static int index=0;
-    private static String myDomain = "mossWords";
+    private static String myDomain = "mosswords";
     private static AmazonSimpleDB sdb;
     
     public Images_SDB() {
@@ -77,18 +78,47 @@ public class Images_SDB {
             System.out.println("Error Message: " + ace.getMessage());
         }
     }
-     
+    
+    public List<Image> returnAllImages(){
+    	List<Image> imgList = new ArrayList<Image>();
+        String selectExpression = "select * from `" + myDomain + "`";
+        try{
+            SelectRequest selectRequest = new SelectRequest(selectExpression);
+            List<Item> items = sdb.select(selectRequest).getItems();
+            
+            System.out.println("Items size is:" + items.size());
+            
+            Item item;
+            String[] arg= new String[7];
+            for(int i=0;i<items.size(); i++){
+	        	item=items.get(i);
+	            arg[0]=item.getName();
+	            int j=1;
+	            for (Attribute attribute : item.getAttributes()) {
+	        		arg[j]=attribute.getValue();
+	    			j++;         
+	            }
+	            
+	            imgList.add(new Image(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5], arg[6]));
+	        }
+            
+        }
+        catch(Exception e)
+        {
+                Log.d("exception",e.toString());
+                
+        }
+        return imgList;
+    }
+    
     public List<Image> returnImages(String category) {
             List<Image> img= new ArrayList<Image>();
         String selectExpression = "select * from `" + myDomain + "` where Category = '"+category+"' ";
         System.out.println("Selecting: " + selectExpression + "\n");
         try{
         SelectRequest selectRequest = new SelectRequest(selectExpression);
-        String[] arg= new String[6];
-        int num=0;
-        int[] randomIndexes = new int[20];
-        
-        
+        String[] arg= new String[7];       
+
         List<Item> items = sdb.select(selectRequest).getItems();
         // To randomize images
         Collections.shuffle(items);
@@ -100,11 +130,10 @@ public class Images_SDB {
                  arg[0]=item.getName();
          int j=1;
          for (Attribute attribute : item.getAttributes()) {
-         arg[j]=","+attribute.getValue();
-         j++;         
+        		 arg[j]=attribute.getValue();
+                 j++;    
          }
-         img.add(new Image(arg[0],arg[1].substring(1),arg[2].substring(1),arg[3].substring(1),arg[4].substring(1),arg[5].substring(1)));
-         num++;
+         img.add(new Image(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5], arg[6]));
          }
         }
         catch(Exception e)

@@ -29,7 +29,7 @@ public class UserDataHandler {
 			for(int i=0;i < 20;i++)
 			{
 				Image img = new Image(usList.get(i).getImageName(), usList.get(i).getCategory(), 
-						"0", "0", "0", usList.get(i).getUrl());
+						"0", "0", "0", "0", usList.get(i).getUrl());
 				imgList.add(img);
 				if(i+1 == 20 || i+1 == usList.size())
 					break;

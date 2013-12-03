@@ -11,10 +11,18 @@ public class ImageManager {
 	
 	Images_SDB img_SDB;
 	DatabaseHandler dbHandler;
+	WordQuestDataHandler wqHandler;
+	WordQuest wq;
+	private static boolean wordQuestUpdatedFromSDB;
 	
 	ImageManager(String userName,Context context) {
 		dbHandler = new DatabaseHandler(context);
 		dbHandler.getTable(userName);
+		wq = new WordQuest(context);
+		wq.getTable(userName);
+		wqHandler = new WordQuestDataHandler(context);
+		wqHandler.createTable(userName);
+		wordQuestUpdatedFromSDB = false;
 	}
 
 	public List<ImageStatistics> getImagesForCategory(String category){
@@ -151,4 +159,29 @@ public List<ImageStatistics> getImagesForFavorites(){
 			dbHandler.setStimuli(userStimuli);
 		}
 	}
+	
+	public boolean updateWordQuest(List<ImageStatistics> imgList, int currentLevel)
+	{
+		return wqHandler.updateWordQuest(imgList, currentLevel);
+	}
+	
+	public List<ImageStatistics> getImagesForWordQuest(int level){
+		if(wordQuestUpdatedFromSDB == false)
+		{
+			img_SDB = new Images_SDB();
+			/* Getting all images from Simple DB and updating the Word Quest Table */
+			List<Image> imgList = new ArrayList<Image>();
+			imgList = img_SDB.returnAllImages();
+			
+			System.out.println("Images from Simple DB:" + imgList.size());
+			
+			wqHandler.updateWQTable(imgList);
+			wordQuestUpdatedFromSDB = true;
+		}
+		return wq.getImagesForLevel(level);
+	}
+	
+	/*public String getWordQuestData(){
+		
+	}*/
 }

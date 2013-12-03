@@ -10,7 +10,7 @@ public class ImageTest extends AndroidTestCase {
 	private Image img;
 	
 	public void setUp(){
-		img = new Image("Elephant", "Living", "20", "30", "40", "http://www.google.com/elephant.png");
+		img = new Image("Elephant", "Living", "20", "30","1","40", "http://www.google.com/elephant.png");
 	}
 	
 	public void testWriteToParcel() {
@@ -51,7 +51,7 @@ public class ImageTest extends AndroidTestCase {
 	}
 
 	public void testEquals(){
-		Image img2 = new Image("Elephant", "Living", "20", "30", "40", "http://www.google.com/elephant.png");
+		Image img2 = new Image("Elephant", "Living", "20", "30","1", "40", "http://www.google.com/elephant.png");
 		assertEquals(img, img2);
 	}
 
