@@ -1,6 +1,8 @@
 package edu.cis350.mosstalkwords;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.os.Parcel;
@@ -117,6 +119,14 @@ public class Set implements Parcelable {
 	public void incSoundHint(int imageIdx){
 		ImageStatistics is = get(imageIdx);
 		is.setSoundHints(is.getSoundHints()+1);
+	}
+	
+	public void setLastSeen(int imageIdx, long timeMillis){
+		ImageStatistics is = get(imageIdx);
+		Date d = new Date(timeMillis);
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		is.setLastSeen(c);
 	}
 		
 	public int getScore(int imageIdx, boolean ignoreSolvedStatus){

@@ -260,6 +260,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		if(imageIndex == currentSet.getSize())
 			finishedSet();
 		else {
+			currentSet.setLastSeen(imageIndex, System.currentTimeMillis());
 			showCurrentImageFromCache();
 			updateLayoutInformation();
 		}

@@ -74,7 +74,8 @@ public class ImageStatistics implements Parcelable {
 	}
 	// END --- IMPLEMENT PARCELABLE INTERFACE
 	
-	public ImageStatistics(){}
+	public ImageStatistics(){
+	}
 
 	public String getImageName() {
 		return imageName;

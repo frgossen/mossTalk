@@ -1,4 +1,3 @@
-/*
 package edu.cis350.mosstalkwords.test;
 
 import java.util.ArrayList;
@@ -7,7 +6,9 @@ import android.os.Bundle;
 import android.os.Parcel;
 
 import edu.cis350.mosstalkwords.Image;
+import edu.cis350.mosstalkwords.ImageStatistics;
 import edu.cis350.mosstalkwords.Set;
+import edu.cis350.mosstalkwords.SetStatistics;
 
 import junit.framework.TestCase;
 
@@ -19,7 +20,8 @@ public class SetTest extends TestCase {
 	
 	public void setUp(){
 		sampleImages = new ArrayList<Image>();
-		img1 = new Image("Elephant", "Living", "20", "30", "40", "http://www.google.com/elephant.png");
+		img1 = new ImageStatistics();
+		img1.set"Elephant", "Living", "20", "30", "40", "http://www.google.com/elephant.png");
 		img2 = new Image("House", "NonLiving", "21", "31", "41", "http://www.google.com/house.png");
 		img3 = new Image("Car", "NonLiving", "22", "32", "42", "http://www.google.com/car.png");
 		sampleImages.add(img1);
@@ -73,4 +75,3 @@ public class SetTest extends TestCase {
 		assertEquals(s, s2);
 	}
 }
-*/
