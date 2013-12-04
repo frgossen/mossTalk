@@ -1,5 +1,9 @@
 package edu.cis350.mosstalkwords;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,6 +13,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
+import android.util.Log;
 
 public class WordQuest extends SQLiteOpenHelper {
 	
@@ -189,5 +195,97 @@ public class WordQuest extends SQLiteOpenHelper {
 		
 	}
     
+	public File generateWordQuestReport(String username) throws IOException {
+		File path = Environment.getExternalStorageDirectory();
+		File dir = new File(path.getAbsolutePath() + "/htmlfiles");
+		dir.mkdirs();
+		
+		File reportFile = null;
+		String timeStamp = new SimpleDateFormat("dd_MMM").format(Calendar.getInstance().getTime());
+		
+		reportFile = new File(dir, (username+"_Report_"+timeStamp+".html"));
+		
+		try {
+			FileWriter report = new FileWriter(reportFile, true);
+			String wordQuestReportHTML = generateWordQuestHTML(username);
+			report.write(wordQuestReportHTML);
+			report.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Log.d("Exception","Exception in creating a report file: " + e.toString());
+		}
+		
+		return reportFile;
+	}
 
+	public String generateWordQuestHTML(String username){
+		SQLiteDatabase db = this.getReadableDatabase();
+		String getAllImagesData = "select * from " + tableName;
+		
+    	Cursor cursor = db.rawQuery(getAllImagesData, null);
+    	
+		String wordQuestHTML = "";
+		String timeStamp = new SimpleDateFormat("dd/MM/yyyy_HH:mm").format(Calendar.getInstance().getTime());
+		
+		wordQuestHTML += "<html> <head> <title> Report of " + username + " on " + 
+				timeStamp + "</title> " +
+		  		"<style type=\"text/css\"> td,h1 {text-align:center} " +
+		  		"</style>" +
+		  		"<link rel=\"stylesheet\" " +
+		  		"href=\"http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css\"/>" +
+		  		"<script type=\"text/javascript\"" +
+		  		"src=\"http://code.jquery.com/jquery-1.10.2.min.js\">" +
+		  		"</script>" +
+		  		"<script type=\"text/javascript\"" +
+		  		"src=\"http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js\">" +
+		  		"</script>" +
+		  		"<script type=\"text/javascript\"> " +
+		  		" $(document).ready(function(){" +
+		  		"	$(\"#wqTable\").dataTable();" +
+		  			"});</script>" +
+		  		"</head>";
+		
+		wordQuestHTML += "<body> <h1> Report of " + username + " on " + 
+						  timeStamp + "</h1>";
+		
+		/* Progress column is near to weight making table easy to understand */
+		wordQuestHTML += "<table border=\"0\" id=\"wqTable\"> <thead> <tr>" +
+						"<th> Level </th>" +
+						"<th> Image Name </th>" +
+						"<th> Weight </th>" +
+						"<th> Progress </th>" +
+						"<th> #Times successful unassisted naming when image last seen > 24 hrs </th>" +
+						"<th> Count for Penalty Box </th>" +
+						"<th> #Times successful unassisted naming when image last seen < 24 hrs </th>" +
+						"<th> #Times successful assisted naming </th>" +
+						"<th> Trial # of an item at last presentation </th>" +
+						"<th> Lifetime trial #</th>" +
+						"<th> Image Last Seen </th> " +
+						"</tr> </thead><tbody>";
+		
+		/* Populating the table from Database to HTML */
+		if(cursor != null)
+    	{
+			cursor.moveToFirst();
+			while(cursor.moveToNext())
+			{
+				wordQuestHTML += "<tr> <td>" + cursor.getString(0) + "</td>" +
+						"<td>" + cursor.getString(1) + "</td>" +
+						"<td>" + cursor.getString(2) + "</td>" +
+						"<td>" + cursor.getString(10) + "</td>" +
+						"<td>" + cursor.getString(3) + "</td>" +
+						"<td>" + cursor.getString(4) + "</td>" +
+						"<td>" + cursor.getString(5) + "</td>" +
+						"<td>" + cursor.getString(6) + "</td>" +
+						"<td>" + cursor.getString(7) + "</td>" +
+						"<td>" + cursor.getString(8) + "</td>" +
+						"<td>" + cursor.getString(9) + "</td> </tr>";
+			}
+    	}
+		
+		wordQuestHTML += "</tbody></table> </body> </html>";
+		
+		return wordQuestHTML;
+	}
 }

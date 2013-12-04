@@ -17,7 +17,7 @@ public class EndSetReturnActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	
-Context mContext = this; //this.getApplicationContext();
+	    Context mContext = this; //this.getApplicationContext();
 		   
 	    
 	    
@@ -59,9 +59,8 @@ Context mContext = this; //this.getApplicationContext();
 						
 						
 						//fix this, need to close main activity.
-						
-						
-						
+						freeCacheMem();
+												
 						if(EndSetReturnActivity.this.getIntent().getStringExtra("categoryName") != null)
 						{
 							activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
@@ -92,6 +91,7 @@ Context mContext = this; //this.getApplicationContext();
 						
 						menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						
+						freeCacheMem();
 						
 						startActivity(menu);
 						finish();
@@ -102,6 +102,19 @@ Context mContext = this; //this.getApplicationContext();
 		AlertDialog alert= builder.create();//create the AlertDialog object and return it
 		//alert.setContentView(R.layout.dialog_endset);
 		alert.show();
+	}
+	
+	private void freeCacheMem()
+	{
+		Set s = EndSetReturnActivity.this.getIntent().getExtras().getParcelable("currentSet");
+
+		String [] temp = s.getWords();
+		String[] del = new String[temp.length];
+		
+		for(int z = 0; z < del.length; z++)
+			del[z] = temp[z];
+		
+		ImageCache.getInstance().clearCache(del);
 	}
 
 }
