@@ -34,7 +34,8 @@ public class EndSetActivity extends UserActivity {
 	
 	private int mode;
 	private String categoryName; 
-	private boolean isFavourites;
+//	private boolean isFavourites;
+	private int wordQuestLevel;
 	private Set currentSet;
 	
 	@Override
@@ -50,14 +51,18 @@ public class EndSetActivity extends UserActivity {
 	    Intent i = getIntent();
 	    categoryName = i.getStringExtra("categoryName");
 	    System.out.println("CN:"+categoryName);
-	    isFavourites = i.getBooleanExtra("startFavourites", false);
-		//currentSetStatistics = (SetStatistics) i.getParcelableExtra("currentSetStatistics");
+	    //  isFavourites = i.getBooleanExtra("startFavourites", false);
+
+		mode = i.getIntExtra("mode", -1);
+
+		wordQuestLevel = i.getIntExtra("wordQuestLevel", -1);
+		
+	    //currentSetStatistics = (SetStatistics) i.getParcelableExtra("currentSetStatistics");
 		
 	    
 		
 		currentSet = (Set)i.getParcelableExtra("currentSet");
 		
-		mode = i.getIntExtra("mode", -1);
 	    
 	    //int[] results = currentSetStatistics.getImageSetScore();
 	    //Context ctx, String[] res, String[] imn
@@ -68,9 +73,12 @@ public class EndSetActivity extends UserActivity {
 			imageWords[j] = currentSet.get(j).getImageName();
 		}
 		
-	    adapter = new ImageAdapter(this, currentSet, getUserName());
-		gridView.setAdapter(adapter);
-		
+		//pseudo-solution to WQ favorites issue
+		if(mode != 45645656)
+		{
+			adapter = new ImageAdapter(this, currentSet, getUserName());
+			gridView.setAdapter(adapter);
+		}
 		RatingBar score = (RatingBar) this.findViewById(R.id.scoreBar);
 	    int starScore = currentSet.getStarScore();
 	    //System.out.println("scNull:"+score);
@@ -104,7 +112,26 @@ public class EndSetActivity extends UserActivity {
 	    totalScoreNum.setText(totalScoreNum.getText().toString() + getScore()); 
 	}
 	
-	private void updateDB()
+	private void updateAll()
+	{
+		//check info about WQ in intent
+		updateCurrentSet();
+		
+		
+		//update favorites
+		updateFavoritesDB();
+		
+		//update wordquest if its wq mode
+		/*
+		if(mode == 45645656)
+		{
+			System.out.println("UpdateWordQuest");
+			updateWordQuestDB();
+		}
+		*/
+	}
+	
+	private void updateCurrentSet()
 	{
 		boolean checked[] = adapter.getChecked();
 
@@ -119,8 +146,7 @@ public class EndSetActivity extends UserActivity {
 			}
 			
 			if(checked[i])
-			{
-								
+			{		
 				currentSet.get(i).setIsFavorite(true);
 				/*
 				modifyFavoriteStimuli.updateFavoriteStimuli(getUserName(), currentSet.get(i).getImageName(),
@@ -151,13 +177,25 @@ public class EndSetActivity extends UserActivity {
 				
 			}
 		}
+	}
+	
+	private void updateFavoritesDB()
+	{
+		//update favorites
 		im.setUserStimuli(currentSet.getImages());
+	}
+	
+	private void updateWordQuestDB()
+	{
+		int diff = this.getIntent().getIntExtra("difficultyMode", -1);
+		if(diff != -1)
+			im.updateWordQuest(currentSet.getImages(), diff);
 	}
 	
 	public void send(View v) {
 		System.out.println("Send");
 		//update database
-		updateDB();
+		updateAll();
 		
 
 
@@ -172,7 +210,7 @@ public class EndSetActivity extends UserActivity {
 	public void save(View v) {
 		System.out.println("No");
 		//update database
-		updateDB();
+		updateAll();
 		
 		createSavedReport();
 		
@@ -240,16 +278,10 @@ public class EndSetActivity extends UserActivity {
 		//
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
 				new String[]{email});
-		String subject="Wordle "/*+currentSet.getName()*/ +" Report"/* + new Date().toString()*/;
+		String subject="Wordle "/*+currentSet.getName()*/ +" Report" + new Date().toString();
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 		String body= "Your report is attached below. Good Work!";
 		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
-
-		//String rawFolderPath = "android.resource://" + getPackageName() 
-		//                       + "/" + R.raw.shortcuts;
-
-		// Here my file name is shortcuts.pdf which i have stored in /res/raw folder
-		//Uri emailUri = Uri.parse(rawFolderPath );
 		emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileName));
 		emailIntent.setType("vnd.android.cursor.dir/vnd.google.note");
 		System.out.println("Email Send");
@@ -306,7 +338,11 @@ public class EndSetActivity extends UserActivity {
 		Intent returnOptions = new Intent(this, EndSetReturnActivity.class);
 		returnOptions.putExtra("currentSet", currentSet);
 		returnOptions.putExtra("categoryName", categoryName);
-		returnOptions.putExtra("startFavourites", isFavourites);
+	//	returnOptions.putExtra("startFavourites", isFavourites);
+		returnOptions.putExtra("mode", mode);
+		returnOptions.putExtra("wordQuestLevel", wordQuestLevel);
+
+
 		startActivity(returnOptions);
 		finish();
 	}

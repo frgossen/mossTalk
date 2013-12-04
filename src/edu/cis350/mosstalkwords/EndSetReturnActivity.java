@@ -39,7 +39,7 @@ public class EndSetReturnActivity extends Activity {
 						Set s = EndSetReturnActivity.this.getIntent().getExtras().getParcelable("currentSet");
 						s.resetImagesStatistics();
 						activityMain.putExtra("currentSet", s);
-						
+						populateIntentModeData(activityMain);
 						startActivity(activityMain);
 						finish();
 				}
@@ -60,7 +60,8 @@ public class EndSetReturnActivity extends Activity {
 						
 						//fix this, need to close main activity.
 						freeCacheMem();
-												
+										
+						/*
 						if(EndSetReturnActivity.this.getIntent().getStringExtra("categoryName") != null)
 						{
 							activityMain.putExtra("startCategory", EndSetReturnActivity.this.getIntent().getStringExtra("categoryName"));
@@ -70,7 +71,12 @@ public class EndSetReturnActivity extends Activity {
 							activityMain.putExtra("startFavourites", true);
 						}
 						//activityMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				
 						startActivity(activityMain);
+				*/		
+						populateIntentModeData(activityMain);
+						startActivity(activityMain);
+						
 						finish();
 					}
 				})
@@ -116,5 +122,10 @@ public class EndSetReturnActivity extends Activity {
 		
 		ImageCache.getInstance().clearCache(del);
 	}
-
+	private void populateIntentModeData(Intent i)
+	{
+		i.putExtra("mode", this.getIntent().getIntExtra("mode", -1));
+		i.putExtra("wordQuestLevel", this.getIntent().getIntExtra("wordQuestLevel",-1));
+		i.putExtra("categoryName", this.getIntent().getStringExtra("categoryName"));
+	}
 }
