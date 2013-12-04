@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList; 
+import java.util.List;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -48,9 +49,10 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			"Well done!", 
 			"Outstanding!", 
 			"Very good!", 
-	"Remarkable!"};
+			"Remarkable!"};
 	private final int MODE_CATEGORY = 35675;
 	private final int MODE_FAVOURITES = 62230;
+	private final int MODE_WORDQUEST = 45645656;
 
 	private TextToSpeech tts;
 	private ImageCache imCache;
@@ -59,6 +61,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 	private int mode;
 	private String categoryName; 
+	private int difficultyMode = -1;
 	private int imageIndex;
 	private Set currentSet;
 
@@ -115,6 +118,13 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 	//			backgroundTask.execute(true);
 			}
 		}
+		else if(i.hasExtra("startWordQuest")){
+			imageIndex = 0;
+			currentSet = null;
+			mode = MODE_WORDQUEST;
+			difficultyMode = i.getIntExtra("startWordQuest", -1);
+			i.removeExtra("startWordQuest");			
+		}
 		else{
 			restoreState(savedInstanceState);
 //			backgroundTask.execute(false);
@@ -130,7 +140,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		}
 		else
 		{
-
 			System.out.println("currentSet null");
 			backgroundTask.execute(true);			
 		}
@@ -156,6 +165,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		bundle.putParcelable("currentSet", currentSet);
 		bundle.putInt("mode", mode);
 		bundle.putInt("numImages", numImages);
+		bundle.putInt("difficultyMode", difficultyMode);
 	}
 
 	public void onRestoreInstanceState(Bundle bundle){
@@ -170,6 +180,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			currentSet = bundle.getParcelable("currentSet");
 			mode = bundle.getInt("mode");
 			numImages = bundle.getInt("numImages");
+			difficultyMode = bundle.getInt("difficultyMode");
 		}
 	}
 
@@ -222,9 +233,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		iv.setBackgroundColor(0xFFFFFFFF); //opaque white background
 		return iv;
 	}
-
-
-
 
 	public void finishedSet(){
 		imageIndex = 0;
@@ -441,8 +449,11 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 					if(mode == MODE_CATEGORY)
 						currentSet = new Set(im.getImagesForCategory(categoryName));
 					else if (mode == MODE_FAVOURITES)
-						//currentSet = new Set(sdb.returnImages("Living"));
 						currentSet = new Set(im.getImagesForFavorites());
+					else if (mode == MODE_WORDQUEST){
+						List<ImageStatistics> images = im.getImagesForWordQuest(difficultyMode); 
+						currentSet = new Set(images);
+					}
 				}
 
 				System.out.println(loadNewSet + "Right here" + currentSet);

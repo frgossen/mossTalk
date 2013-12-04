@@ -185,8 +185,7 @@ public List<ImageStatistics> getImagesForFavorites(){
 	 * For example, if this method returns 2, it means first two levels are unlocked.
 	 * Call this every time user selects word quest module.
 	 * */
-	public int getLevelsForWordQuest()
-	{
+	public int getLevelsForWordQuest() {
 		return wq.getLevelsForMode("easy");
 	}
 	/*public String getWordQuestData(){

@@ -34,7 +34,8 @@ public class WelcomeActivity extends UserActivity {
 	}
 	
 	public void openWordQuest(View v){
-		
+		Intent activityWordQuest = new Intent(this, WordQuestActivity.class);
+		startActivity(activityWordQuest);
 	}
 	
 	public void openFavourites(View v){
