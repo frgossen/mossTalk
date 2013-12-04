@@ -1,5 +1,7 @@
 package edu.cis350.mosstalkwords;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -67,7 +69,7 @@ public class ImageManager {
 		
 	}
 	
-public List<ImageStatistics> getImagesForFavorites(){
+	public List<ImageStatistics> getImagesForFavorites(){
 		
 		List<ImageStatistics> imageStatisticsList = new ArrayList<ImageStatistics>();
 		
@@ -192,4 +194,21 @@ public List<ImageStatistics> getImagesForFavorites(){
 	/*public String getWordQuestData(){
 		
 	}*/
+	
+	/* This method takes mode as parameter and returns the levels unlocked for 
+     * that particular mode.
+     * Mode must be one of the following:
+     * "easy", "medium", "hard", "harder", "hardest"
+     * Example: If method returns 3 for "easy" mode, it means you need to show
+     * levels 1,2 and 3 unlocked and further levels will be locked.
+     *  */
+	public int getLevelsForMode(String mode){
+		return wq.getLevelsForMode(mode);
+	}
+	
+	/* This method takes user name as argument and returns HTML file containing word quest
+	 * performance table for that particular user.*/
+	public File getWordQuestReport(String userName) throws IOException{
+		return wq.generateWordQuestReport(userName);
+	}
 }
