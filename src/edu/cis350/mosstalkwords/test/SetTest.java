@@ -75,3 +75,4 @@ public class SetTest extends TestCase {
 		assertEquals(s, s2);
 	}
 }
+
