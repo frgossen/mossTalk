@@ -175,7 +175,7 @@ public class ImageStatistics implements Parcelable {
 	}
 
 	public boolean equals(Object obj) {
-		if (obj instanceof Set) {
+		if (obj instanceof ImageStatistics) {
 			ImageStatistics other = (ImageStatistics) obj;
 			return imageName.equals(other.imageName) && url.equals(other.url)
 					&& category.equals(other.category)

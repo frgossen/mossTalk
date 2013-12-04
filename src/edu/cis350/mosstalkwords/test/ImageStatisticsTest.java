@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 public class ImageStatisticsTest extends TestCase {
 
 	private ImageStatistics imgStat;
+	// for calendar
 	private long calendarTime = Calendar.getInstance().getTimeInMillis();
 			
 	public void setUp() {
