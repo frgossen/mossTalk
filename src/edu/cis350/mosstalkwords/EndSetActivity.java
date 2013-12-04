@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -239,7 +240,7 @@ public class EndSetActivity extends UserActivity {
 		//
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
 				new String[]{email});
-		String subject="Wordle "/*+currentSet.getName()*/ +" Report";
+		String subject="Wordle "/*+currentSet.getName()*/ +" Report"/* + new Date().toString()*/;
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 		String body= "Your report is attached below. Good Work!";
 		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);

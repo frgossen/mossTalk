@@ -180,7 +180,21 @@ public class ImageManager {
 			wqHandler.updateWQTable(imgList);
 			wordQuestUpdatedFromSDB = true;
 		}
-		return wq.getImagesForLevel(level);
+//		return wq.getImagesForLevel(level);
+		
+ 		List<ImageStatistics> imageList = wq.getImagesForLevel(level);
+
+		for(ImageStatistics is : imageList)
+		{
+			UserStimuli userStimuli = dbHandler.getUserStimuli(is.getImageName());
+			if(userStimuli != null)
+			{
+				is.setIsFavorite(userStimuli.getIsFavorite()==0?false:true);
+			}
+		}
+		
+		return imageList;
+ 
 	}
 	
 	/* This function will return upto which levels are unlocked 
