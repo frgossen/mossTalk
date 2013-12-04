@@ -61,7 +61,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 	private int mode;
 	private String categoryName; 
-	private int difficultyMode = -1;
+	private int difficultyLevel = -1;
 	private int imageIndex;
 	private Set currentSet;
 
@@ -122,7 +122,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			imageIndex = 0;
 			currentSet = null;
 			mode = MODE_WORDQUEST;
-			difficultyMode = i.getIntExtra("startWordQuest", -1);
+			difficultyLevel = i.getIntExtra("startWordQuest", -1);
 			i.removeExtra("startWordQuest");			
 		}
 		else{
@@ -165,7 +165,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		bundle.putParcelable("currentSet", currentSet);
 		bundle.putInt("mode", mode);
 		bundle.putInt("numImages", numImages);
-		bundle.putInt("difficultyMode", difficultyMode);
+		bundle.putInt("difficultyMode", difficultyLevel);
 	}
 
 	public void onRestoreInstanceState(Bundle bundle){
@@ -180,7 +180,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 			currentSet = bundle.getParcelable("currentSet");
 			mode = bundle.getInt("mode");
 			numImages = bundle.getInt("numImages");
-			difficultyMode = bundle.getInt("difficultyMode");
+			difficultyLevel = bundle.getInt("difficultyMode");
 		}
 	}
 
@@ -249,6 +249,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		gotoEndOfSet.putExtra("currentSet", currentSet);
 		//gotoEndOfSet.putExtra("currentSet", currentSet);
 		gotoEndOfSet.putExtra("mode", mode);
+		gotoEndOfSet.putExtra("wordQuestLevel", difficultyLevel);
 		startActivity(gotoEndOfSet);		
 		finish();
 
@@ -451,7 +452,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 					else if (mode == MODE_FAVOURITES)
 						currentSet = new Set(im.getImagesForFavorites());
 					else if (mode == MODE_WORDQUEST){
-						List<ImageStatistics> images = im.getImagesForWordQuest(difficultyMode); 
+						List<ImageStatistics> images = im.getImagesForWordQuest(difficultyLevel); 
 						currentSet = new Set(images);
 					}
 				}
