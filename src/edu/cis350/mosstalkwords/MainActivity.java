@@ -104,7 +104,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 						Intent gotoMainMenu = new Intent(MainActivity.this, 
 								WelcomeActivity.class); 
 						startActivity(gotoMainMenu); 
-						System.out.println("FINISH HIM");
 						finish();
 					} 
 				}).setCancelable(false).show(); return;
@@ -131,12 +130,23 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		}
 
 		Bundle extras = this.getIntent().getExtras();
-		if(extras != null && extras.get("currentSet") != null)
+		if(extras != null)
 		{
-			System.out.println("currentSet not null");
-			currentSet = (Set)this.getIntent().getExtras().get("currentSet");
-			numImages = currentSet.getSize();
-			backgroundTask.execute(false);
+			mode = extras.getInt("mode");
+			difficultyLevel = extras.getInt("wordQuestLevel");
+			categoryName = extras.getString("categoryName"); 
+
+			
+			if(extras.get("currentSet") != null)
+			{
+				currentSet = (Set)this.getIntent().getExtras().get("currentSet");
+				numImages = currentSet.getSize();
+				backgroundTask.execute(false);
+			}
+			else
+			{
+				backgroundTask.execute(true);			
+			}
 		}
 		else
 		{
@@ -447,6 +457,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				 */ 
 				boolean loadNewSet = params[0].booleanValue();
 				Log.d("ASYNC", "started, loadNewSet = " + loadNewSet);
+				System.out.println("MODE:" + mode);
 				if(loadNewSet){
 					if(mode == MODE_CATEGORY)
 						currentSet = new Set(im.getImagesForCategory(categoryName));
@@ -460,6 +471,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 				System.out.println(loadNewSet + "Right here" + currentSet);
 				int size = currentSet.getSize();
+				numImages = size;
 				for(int i=0; i<size; i++) {
 					// Skip passed images 
 					while(i < imageIndex)

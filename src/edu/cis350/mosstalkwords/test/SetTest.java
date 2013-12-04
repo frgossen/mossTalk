@@ -1,3 +1,4 @@
+/*
 package edu.cis350.mosstalkwords.test;
 
 import java.util.ArrayList;
@@ -75,3 +76,4 @@ public class SetTest extends TestCase {
 		assertEquals(s, s2);
 	}
 }
+*/
