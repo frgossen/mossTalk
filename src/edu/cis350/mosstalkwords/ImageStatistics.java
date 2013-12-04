@@ -19,16 +19,6 @@ public class ImageStatistics implements Parcelable {
 	private boolean isSeenToday;
 	private Calendar lastSeen;
 
-	
-	public void resetImageStatistics()
-	{
-		wordHints = 0;
-		soundHints = 0;
-		attempts = 0;
-		isSolved = false;
-		isSeenToday = true;
-	}
-	
 	// BEGINNNING --- IMPLEMENT PARCELABLE INTERFACE
 	public int describeContents() {
 		return 0;
@@ -72,9 +62,36 @@ public class ImageStatistics implements Parcelable {
 		lastSeen = c;
 
 	}
+
 	// END --- IMPLEMENT PARCELABLE INTERFACE
-	
-	public ImageStatistics(){
+
+	/**
+	 * Constructor for tests
+	 */
+	public ImageStatistics(String imageName, String url, String category,
+			Boolean isFavorite, int wordHints, int soundHints, int attempts,
+			boolean isSolved, boolean isSeenToday, Calendar lastSeen) {
+		this.imageName = imageName;
+		this.url = url;
+		this.category = category;
+		this.isFavorite = isFavorite;
+		this.wordHints = wordHints;
+		this.soundHints = soundHints;
+		this.attempts = attempts;
+		this.isSolved = isSolved;
+		this.isSeenToday = isSeenToday;
+		this.lastSeen = lastSeen;
+	}
+
+	public ImageStatistics() {
+	}
+
+	public void resetImageStatistics() {
+		wordHints = 0;
+		soundHints = 0;
+		attempts = 0;
+		isSolved = false;
+		isSeenToday = true;
 	}
 
 	public String getImageName() {
@@ -155,5 +172,19 @@ public class ImageStatistics implements Parcelable {
 
 	public void setLastSeen(Calendar lastSeen) {
 		this.lastSeen = lastSeen;
+	}
+
+	public boolean equals(Object obj) {
+		if (obj instanceof Set) {
+			ImageStatistics other = (ImageStatistics) obj;
+			return imageName.equals(other.imageName) && url.equals(other.url)
+					&& category.equals(other.category)
+					&& isFavorite == other.isFavorite
+					&& wordHints == other.wordHints
+					&& soundHints == other.soundHints
+					&& attempts == other.attempts && isSolved == other.isSolved
+					&& isSeenToday == other.isSeenToday;
+		} else
+			return false;
 	}
 }
