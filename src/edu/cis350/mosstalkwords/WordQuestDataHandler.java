@@ -219,6 +219,7 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     				", lastTimeTrialNum = " + lastTimeTrialNum +
     				", lastSeen = '" + lastSeen +
     				"', progress = " + progress + " where itemName = '" + imgStat.getImageName() + "'";
+    		System.out.println(updateWordQuest);
     		db.execSQL(updateWordQuest);
     	}
     	

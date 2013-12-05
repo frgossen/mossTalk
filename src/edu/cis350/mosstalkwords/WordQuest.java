@@ -107,6 +107,7 @@ public class WordQuest extends SQLiteOpenHelper {
 	        		}
 	        	}
 	    }while(lockedLevelFound == false && level <= 4);
+    	System.out.println("Level:"+level);
     	return level;
     }
     
@@ -201,17 +202,25 @@ public class WordQuest extends SQLiteOpenHelper {
 	}
     
 	public File generateWordQuestReport(String username) throws IOException {
+		
 		File path = Environment.getExternalStorageDirectory();
 		File dir = new File(path.getAbsolutePath() + "/htmlfiles");
+		
 		dir.mkdirs();
 		
+		for(File f : dir.listFiles())
+		{
+			f.delete();
+		}
+		
 		File reportFile = null;
+		
 		String timeStamp = new SimpleDateFormat("dd_MMM").format(Calendar.getInstance().getTime());
 		
 		reportFile = new File(dir, (username+"_Report_"+timeStamp+".html"));
 		
 		try {
-			FileWriter report = new FileWriter(reportFile, true);
+			FileWriter report = new FileWriter(reportFile, false);
 			String wordQuestReportHTML = generateWordQuestHTML(username);
 			report.write(wordQuestReportHTML);
 			report.close();
@@ -273,7 +282,7 @@ public class WordQuest extends SQLiteOpenHelper {
 		if(cursor != null && cursor.getCount()!=0)
     	{
 			cursor.moveToFirst();
-			while(cursor.moveToNext())
+			do
 			{
 				wordQuestHTML += "<tr> <td>" + cursor.getString(0) + "</td>" +
 						"<td>" + cursor.getString(1) + "</td>" +
@@ -286,7 +295,7 @@ public class WordQuest extends SQLiteOpenHelper {
 						"<td>" + cursor.getString(7) + "</td>" +
 						"<td>" + cursor.getString(8) + "</td>" +
 						"<td>" + cursor.getString(9) + "</td> </tr>";
-			}
+			}while(cursor.moveToNext());
     	}
 		else
 			return null;

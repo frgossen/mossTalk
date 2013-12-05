@@ -112,17 +112,13 @@ public class EndSetActivity extends UserActivity {
 	
 	private void updateAll()
 	{
-		//check info about WQ in intent
-		//------------------------------------------
+		for(ImageStatistics i : currentSet.getImages())
+		{
+			System.out.println(i.getImageName() + " : " + i.getLastSeen());
+		}
 			updateCurrentSet();		
 			
-			
-			//if(mode != 45645656)
-			//{
-				updateFavoritesDB();
-			//}
-		//--------------------------------------------
-		//just delete if and keep the updateFavoritesDB() when backend fixes their stuff.
+			updateFavoritesDB();
 		
 		if(mode == 45645656)
 		{
@@ -188,9 +184,8 @@ public class EndSetActivity extends UserActivity {
 	
 	private void updateWordQuestDB()
 	{
-		int diff = this.getIntent().getIntExtra("difficultyMode", -1);
-		if(diff != -1)
-			im.updateWordQuest(currentSet.getImages(), diff);
+			System.out.println("In updateWordQuestDB");
+			im.updateWordQuest(currentSet.getImages(), wordQuestLevel);
 	}
 	
 	public void send(View v) {
@@ -250,7 +245,7 @@ public class EndSetActivity extends UserActivity {
 			imgNames[i] = currentSet.get(i).getImageName();
 		}
 		
-		String reportString = currentSet.generateSetReport(imgNames, name);
+		String reportString = currentSet.generateSetReport(imgNames, name, mode, wordQuestLevel);
 		FileWriter report=new FileWriter(reportFile, true);
 		report.write(reportString);
 		report.close();

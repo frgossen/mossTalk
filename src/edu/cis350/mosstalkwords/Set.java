@@ -195,14 +195,24 @@ public class Set implements Parcelable {
 			return false;
 	}
 	
-	public String generateSetReport(String[] images, String userName)
+	public String generateSetReport(String[] images, String userName, int mode, int level)
 	{
 		String fullReport = "";
 		fullReport += ("User: " + userName + "\n");
-		//fullReport+=("CurrentSet: "+currentSet.getName()+"\n");
+		if(mode == 35675)//cat
+		{
+			fullReport+=("Category: "+this.images.get(0).getCategory()+"\n");
+		}
+		else if(mode == 62230)//fav
+		{
+			fullReport+=("Favorites: "+"\n");
+		}
+		else
+		{
+			fullReport+=("WordQuest: Difficulty: " + level);
+		}
 		String efficiencyPercent = "" + getCompletenessPercent();
 		fullReport += ("Completeness: " + efficiencyPercent+"%\n");
-		//String longestStreak=Integer.valueOf(getLongestStreak(currentSet.getName())).toString();
 		fullReport += ("Longest Streak: " + getLongestStreak() + "\n");
 		fullReport += ("\nImage By Image Statistics:\n\n");
 		for(int i=0; i<images.length; i++) 

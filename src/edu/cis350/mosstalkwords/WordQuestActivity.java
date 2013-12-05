@@ -32,6 +32,7 @@ public class WordQuestActivity extends UserActivity {
 	
 	@Override
 	public void onResume(){
+		super.onResume();
 		new LoadUnlockedLevels().execute();
 	}
 	

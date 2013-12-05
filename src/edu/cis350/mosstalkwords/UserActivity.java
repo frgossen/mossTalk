@@ -57,6 +57,8 @@ public class UserActivity extends Activity {
 		editor.putString(EMAIL_KEY, email);
 		editor.putInt(SCORE_KEY, 0);
 		editor.commit();
+		System.out.println("name: " + getUserName());
+
 		return true;
 	}
 	
@@ -73,6 +75,7 @@ public class UserActivity extends Activity {
 	}
 	
 	public String getUserName(){
+		System.out.println(userData + "name: ");
 		return userData.getString(NAME_KEY, null);
 	}
 	

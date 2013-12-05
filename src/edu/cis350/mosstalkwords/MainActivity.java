@@ -270,7 +270,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 		if(imageIndex == currentSet.getSize())
 			finishedSet();
 		else {
-			currentSet.setLastSeen(imageIndex, System.currentTimeMillis());
 			showCurrentImageFromCache();
 			updateLayoutInformation();
 		}
@@ -327,6 +326,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 
 	public void onNextButtonClick(View view) {
 		currentSet.setSolved(imageIndex, false);
+		currentSet.setLastSeen(imageIndex, System.currentTimeMillis());
 		nextImage();
 	}
 
@@ -467,11 +467,6 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 						List<ImageStatistics> images = im.getImagesForWordQuest(difficultyLevel); 
 
 						currentSet = new Set(images);
-						
-						//should merger class should be deleted and functionality
-						//should be be moved to ImageManager
-						WordQuestFavoriteMerger wqfm = new WordQuestFavoriteMerger(im);
-						wqfm.mergeWQandFavorites(currentSet);
 					}
 				}
 

@@ -182,9 +182,8 @@ public class ImageManager {
 		}
 		
 
-		return wq.getImagesForLevel(level);
+		//return wq.getImagesForLevel(level);
 		
-		/*
  		List<ImageStatistics> imageList = wq.getImagesForLevel(level);
 
 		for(ImageStatistics is : imageList)
@@ -193,11 +192,17 @@ public class ImageManager {
 			if(userStimuli != null)
 			{
 				is.setIsFavorite(userStimuli.getIsFavorite()==0?false:true);
+				
+				is.setLastSeen(userStimuli.getLastSeen());
+				if(checkIfSeenToday(userStimuli.getLastSeen()))
+					is.setSeenToday(true);
+				else
+					is.setSeenToday(false);
 			}
+			
 		}
 		
 		return imageList;
-		*/
 		
 	}
 	

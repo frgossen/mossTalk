@@ -1,10 +1,15 @@
 package edu.cis350.mosstalkwords;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,9 +18,12 @@ import android.widget.TextView;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WelcomeActivity extends UserActivity {
 	
+	ImageManager im ;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		im = new ImageManager(getUserName(), getApplicationContext());
 		setContentView(R.layout.main_menu);
 	}
 	
@@ -76,6 +84,32 @@ public class WelcomeActivity extends UserActivity {
 	}
 	
 	public void sendDatabase(View v){
+		File fileName = null;
+		try {
+			fileName = im.wq.generateWordQuestReport(getUserName());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+			String email = getEmail();
+		
+			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+			
+			//this makes it not close... i don't know if this was intended.
+			emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			//
+			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
+					new String[]{email});
+			String subject="Wordle "/*+currentSet.getName()*/ +" Report " + new Date().toString();
+			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+			String body= "Your report is attached below. Good Work!";
+			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+			emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileName));
+			emailIntent.setType("vnd.android.cursor.dir/vnd.google.note");
+			System.out.println("Email Send");
+			startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+		
 	}
 	
 }
