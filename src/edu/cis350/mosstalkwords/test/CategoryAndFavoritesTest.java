@@ -16,9 +16,10 @@ import edu.cis350.mosstalkwords.Image;
 import edu.cis350.mosstalkwords.Images_SDB;
 import edu.cis350.mosstalkwords.UserDataHandler;
 import edu.cis350.mosstalkwords.UserStimuli;
+import edu.cis350.mosstalkwords.WordQuest;
 
 
-public class BackEndTest extends AndroidTestCase {
+public class CategoryAndFavoritesTest extends AndroidTestCase {
 	List<Image> images= new ArrayList<Image>();
 	List<ReplaceableItem> sampleData=new ArrayList<ReplaceableItem>();
 
@@ -26,6 +27,8 @@ public class BackEndTest extends AndroidTestCase {
 	Images_SDB testImageSDB =new Images_SDB();
 	UserDataHandler usd = new UserDataHandler("testUser");
 	
+	
+	/******* Test Cases for Categories *******/
 	public void testreturn20Image() {
 		String category="Living";
 		images=testImageSDB.returnImages(category);
@@ -54,6 +57,7 @@ public class BackEndTest extends AndroidTestCase {
 		Assert.assertTrue(actual == 0);
 	}
 	
+	/******* Test Cases for Favorites *******/
 	// Case when we get 20 favorite images using getFavoriteStimuli() and check for the size of returned list
 	public void testGet20FavoriteImages()
 	{
@@ -156,4 +160,6 @@ public class BackEndTest extends AndroidTestCase {
 		
 		Assert.assertEquals(0, listOfReturnedImages.size());
 	}
+
+	
 }

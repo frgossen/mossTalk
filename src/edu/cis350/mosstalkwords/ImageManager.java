@@ -11,13 +11,13 @@ import android.content.Context;
 
 public class ImageManager {
 	
-	Images_SDB img_SDB;
-	DatabaseHandler dbHandler;
-	WordQuestDataHandler wqHandler;
-	WordQuest wq;
+	public Images_SDB img_SDB;
+	public DatabaseHandler dbHandler;
+	public WordQuestDataHandler wqHandler;
+	public WordQuest wq;
 	private static boolean wordQuestUpdatedFromSDB;
 	
-	ImageManager(String userName,Context context) {
+	public ImageManager(String userName,Context context) {
 		dbHandler = new DatabaseHandler(context);
 		dbHandler.getTable(userName);
 		wq = new WordQuest(context);
@@ -26,7 +26,7 @@ public class ImageManager {
 		wqHandler.createTable(userName);
 		wordQuestUpdatedFromSDB = false;
 	}
-
+	
 	public List<ImageStatistics> getImagesForCategory(String category){
 		
 		List<ImageStatistics> imageStatisticsList = new ArrayList<ImageStatistics>();
@@ -180,9 +180,10 @@ public class ImageManager {
 			wqHandler.updateWQTable(imgList);
 			wordQuestUpdatedFromSDB = true;
 		}
-		return wq.getImagesForLevel(level);
+		
 
-		/*
+		//return wq.getImagesForLevel(level);
+		
  		List<ImageStatistics> imageList = wq.getImagesForLevel(level);
 
 		for(ImageStatistics is : imageList)
@@ -195,7 +196,8 @@ public class ImageManager {
 		}
 		
 		return imageList;
-		 */
+		
+		
 	}
 	
 	/* This function will return upto which levels are unlocked 
