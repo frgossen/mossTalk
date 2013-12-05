@@ -12,6 +12,8 @@ public class Set implements Parcelable {
 	
 	private ArrayList<ImageStatistics> images;
 	public final static int NUM_STARS = 5;
+	final private double wordPenalty = 0.4;
+	final private double soundPenalty = 0.6;
 
 	public ArrayList<ImageStatistics> getImages()
 	{
@@ -129,14 +131,23 @@ public class Set implements Parcelable {
 		is.setLastSeen(c);
 	}
 		
-	public int getScore(int imageIdx, boolean ignoreSolvedStatus){
-		if (!ignoreSolvedStatus && !get(imageIdx).isSolved())
-			return 0;
+	public int getScore(int imageIdx, boolean ignoreSolvedStatus) {
+		if (!ignoreSolvedStatus && !get(imageIdx).isSolved()) {
+			if (get(imageIdx).getAttempts() > 0) { // if tries but failed, return 20
+				return 20;
+			} else {
+				return 0;
+			}
+		}
+		
 		int score = 100;
+		if (get(imageIdx).isSeenToday()) {
+			score = 80;
+		}
 		if (get(imageIdx).getWordHints() > 0)
-			score -= 75;
+			score = (int) (score * wordPenalty);
 		else if (get(imageIdx).getSoundHints() > 0) 
-			score -= 50;
+			score = (int) (score * soundPenalty);
 		return score;
 	}
 	
