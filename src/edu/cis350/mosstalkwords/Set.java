@@ -209,7 +209,7 @@ public class Set implements Parcelable {
 		}
 		else
 		{
-			fullReport+=("WordQuest: Difficulty: " + level);
+			fullReport+=("WordQuest: Difficulty: " + level + "\n");
 		}
 		String efficiencyPercent = "" + getCompletenessPercent();
 		fullReport += ("Completeness: " + efficiencyPercent+"%\n");
