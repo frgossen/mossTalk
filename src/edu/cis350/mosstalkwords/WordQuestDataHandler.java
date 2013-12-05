@@ -133,41 +133,6 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     	String DELETE_WORD_QUEST_TABLE = "DROP TABLE IF EXISTS " + tableName;
     	db.execSQL(DELETE_WORD_QUEST_TABLE);
     }
-    public void addSampleData()
-    {
-    	SQLiteDatabase db = this.getReadableDatabase();
-    	
-    	ContentValues values = new ContentValues();
-		
-    	for(int i=1;i<=6;i++)
-    	{
-    			for(int j=1;j<=100;j++)
-    			{
-    				values.put(level,i);
-    				values.put(itemName, "testImage"+Integer.toString(j+(i-1)*100));
-    		        values.put(weight, 1); 
-    		        values.put(unassistedGreaterThan24,0);
-    		        values.put(countForPenalty,0);
-    		        values.put(unassistedLessThan24,0);
-    		        values.put(assisted,0);
-    		        values.put(lastTimeTrialNum,0);
-    		        values.put(lifeTimeTrialNum,0);
-    		        Date d = new Date(0);
-    		        //d.toString()
-    		        values.put(lastSeen,d.toString());
-    		        values.put(progress,0);
-    		        values.put(url,"testurl.jpg");
-    		        
-    		        db.insert(tableName, null, values);
-    			}
-    	}
-    }
-
-    /*public void updateImageData(WordQuestImage wqImage){
-    	
-    }*/
-    
-   
    
     public boolean updateWordQuest(List<ImageStatistics> imgStatList,int currentLevel)
     {
@@ -186,7 +151,7 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     	for(int i=0;i<imgStatList.size();i++)
     	{
     		imgStat = imgStatList.get(i);
-    		
+    		System.out.println("Image: " + imgStat.getImageName());
     		double prevProgess = 0;
     		int prevunassistedGreaterThan24 = 0;
     		int prevUnassistedLessThan24 = 0;
@@ -211,10 +176,8 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     		
     		/* To Decide Performance Outcome */
     		performanceOutcome = getPerformanceOutcome(imgStat);
-    		
     		/* Update Weight based on performance Outcome */
     		weight = updateWeight(performanceOutcome);
-    		
     		String getPrevData = "select progress,unassistedGreaterThan24,countForPenalty,unassistedLessThan24,assisted from " + tableName + " where itemName = '"+ imgStat.getImageName() + "'";
     		Cursor cursorPrevData = db.rawQuery(getPrevData, null);
     		
@@ -247,7 +210,6 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     			weight = 0;
     		
     		progress = calculateProgress(prevProgess, performanceOutcome);
-    		
     		String updateWordQuest = "update "+ tableName +
     				" set weight = "+ weight +
     				", unassistedGreaterThan24 = " + unassistedGreaterThan24 +
@@ -257,7 +219,6 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     				", lastTimeTrialNum = " + lastTimeTrialNum +
     				", lastSeen = '" + lastSeen +
     				"', progress = " + progress + " where itemName = '" + imgStat.getImageName() + "'";
-    		
     		db.execSQL(updateWordQuest);
     	}
     	
@@ -266,7 +227,7 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     			Log.d("Error","Could not save remaining Images");
     			return false;
     		}
-    	
+    	db.close();
     	return true;
     }
     
@@ -314,10 +275,10 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getWritableDatabase();
     	int remainingImagesLastTrial = 0;
     	int remainingCountForPenalty = 0;
-    	String getRemainingImagesData = "select itemName, weight, lastTimeTrialNum, countForPenalty from "+ tableName + " where level = " + currentLevel + " and itemName NOT IN ("+imagesPlayed+")";  
-    	
+    	String getRemainingImagesData = "select itemName, weight, lastTimeTrialNum, countForPenalty from "+ tableName + " where level = " + currentLevel + " and itemName NOT IN ("+imagesPlayed+")";
+    	System.out.println(getRemainingImagesData);
     	Cursor cursorRemainingImages = db.rawQuery(getRemainingImagesData, null);
-    	if(cursorRemainingImages!=null)
+    	if(cursorRemainingImages!=null && cursorRemainingImages.getCount()!=0)
     	{
     		cursorRemainingImages.moveToFirst();
     		do
@@ -326,7 +287,6 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     			double weight = Double.parseDouble(cursorRemainingImages.getString(1));
     			remainingImagesLastTrial = Integer.parseInt(cursorRemainingImages.getString(2));
     			remainingCountForPenalty = Integer.parseInt(cursorRemainingImages.getString(3));
-    			
     			/* Checking whether to get the image out of penalty box */
     			if((lifeTimeTrialNum - remainingImagesLastTrial >= 200) && remainingCountForPenalty == 5)
     				remainingCountForPenalty = 4;
@@ -339,15 +299,29 @@ public class WordQuestDataHandler extends SQLiteOpenHelper {
     			
     			db.execSQL(updateOtherImages);
     		}while(cursorRemainingImages.moveToNext());
+    		//db.close();
     		return true;
     	}
     	else
+    	{
+    		//db.close();
     		return false;
+    	}
+    	
     }
     
     public double calculateProgress(double prevProgress,int performanceOutcome) {
+		if(prevProgress < 100)
+		{
+			double newProgress = prevProgress+progressTable[(int)(prevProgress/10)][performanceOutcome];
 		
-		return (prevProgress+progressTable[(int)(prevProgress/10)][performanceOutcome]);
+			if(newProgress <= 100)
+				return (prevProgress+progressTable[(int)(prevProgress/10)][performanceOutcome]);
+			else
+				return 100.0;
+		}
+		else
+			return prevProgress;
 	}
 
 	public double updateWeight(int performanceOutcome)

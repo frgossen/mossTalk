@@ -41,7 +41,7 @@ public class WordQuest extends SQLiteOpenHelper {
     
     public int getLevelsForMode(String mode)
     {
-    	/* I need to start from level 1 and go till I find locked level */
+    	/* Need to start from level 1 and go till locked level is found */
     	int level = 1;
     	boolean lockedLevelFound = false;
     	SQLiteDatabase db = this.getReadableDatabase();
@@ -62,7 +62,7 @@ public class WordQuest extends SQLiteOpenHelper {
 	        		cursor2.moveToFirst();
 	        		if(mode.equalsIgnoreCase("easy"))
 	    	    	{
-		        		if(Integer.parseInt(cursor1.getString(0)) >= 50 && Integer.parseInt(cursor2.getString(0)) >= 30)
+		        		if(Integer.parseInt(cursor1.getString(0)) >= 10 && Integer.parseInt(cursor2.getString(0)) >= 6)
 		        			level++;
 		        		else
 			        	{
@@ -124,7 +124,7 @@ public class WordQuest extends SQLiteOpenHelper {
 	    			do
 	    			{
 	    				ImageStatistics imageStat = new ImageStatistics();
-	    				
+	    				try{
 	    				imageStat.setImageName(cursor.getString(1));
 	    				imageStat.setCategory(null);
 	    				imageStat.setWordHints(0);
@@ -141,6 +141,11 @@ public class WordQuest extends SQLiteOpenHelper {
 	    				returnList.add(imageStat);
 	    				cursor.moveToNext();
 	    				num++;
+	    				}
+	    				catch (Exception e){
+	    					Log.d("Exception","Less Than 20 Images in a Level");
+	    					return null;
+	    				}
 	    			}while(num <= (20 - level + 1));
 	        	}
 	    		
@@ -265,7 +270,7 @@ public class WordQuest extends SQLiteOpenHelper {
 						"</tr> </thead><tbody>";
 		
 		/* Populating the table from Database to HTML */
-		if(cursor != null)
+		if(cursor != null && cursor.getCount()!=0)
     	{
 			cursor.moveToFirst();
 			while(cursor.moveToNext())
@@ -283,9 +288,11 @@ public class WordQuest extends SQLiteOpenHelper {
 						"<td>" + cursor.getString(9) + "</td> </tr>";
 			}
     	}
+		else
+			return null;
 		
 		wordQuestHTML += "</tbody></table> </body> </html>";
-		
+	
 		return wordQuestHTML;
 	}
 }
