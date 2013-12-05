@@ -182,8 +182,9 @@ public class ImageManager {
 		}
 		
 
-		//return wq.getImagesForLevel(level);
+		return wq.getImagesForLevel(level);
 		
+		/*
  		List<ImageStatistics> imageList = wq.getImagesForLevel(level);
 
 		for(ImageStatistics is : imageList)
@@ -196,7 +197,7 @@ public class ImageManager {
 		}
 		
 		return imageList;
-		
+		*/
 		
 	}
 	

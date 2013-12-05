@@ -469,7 +469,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 						currentSet = new Set(images);
 						
 						//should merger class should be deleted and functionality
-						//shoul dbe be moved to ImageManager
+						//should be be moved to ImageManager
 						WordQuestFavoriteMerger wqfm = new WordQuestFavoriteMerger(im);
 						wqfm.mergeWQandFavorites(currentSet);
 					}
