@@ -38,6 +38,7 @@ public class EndSetActivity extends UserActivity {
 	private int wordQuestLevel;
 	private Set currentSet;
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
  		super.onCreate(savedInstanceState);
@@ -74,11 +75,8 @@ public class EndSetActivity extends UserActivity {
 		}
 		
 		//pseudo-solution to WQ favorites issue
-		if(mode != 45645656)
-		{
-			adapter = new ImageAdapter(this, currentSet, getUserName());
-			gridView.setAdapter(adapter);
-		}
+		adapter = new ImageAdapter(this, currentSet, getUserName());
+		gridView.setAdapter(adapter);
 		RatingBar score = (RatingBar) this.findViewById(R.id.scoreBar);
 	    int starScore = currentSet.getStarScore();
 	    //System.out.println("scNull:"+score);
@@ -115,20 +113,23 @@ public class EndSetActivity extends UserActivity {
 	private void updateAll()
 	{
 		//check info about WQ in intent
-		updateCurrentSet();
+		//------------------------------------------
+			updateCurrentSet();		
+			
+			
+			//if(mode != 45645656)
+			//{
+				updateFavoritesDB();
+			//}
+		//--------------------------------------------
+		//just delete if and keep the updateFavoritesDB() when backend fixes their stuff.
 		
-		
-		//update favorites
-		updateFavoritesDB();
-		
-		//update wordquest if its wq mode
-		/*
 		if(mode == 45645656)
 		{
 			System.out.println("UpdateWordQuest");
 			updateWordQuestDB();
 		}
-		*/
+		
 	}
 	
 	private void updateCurrentSet()
@@ -278,7 +279,7 @@ public class EndSetActivity extends UserActivity {
 		//
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
 				new String[]{email});
-		String subject="Wordle "/*+currentSet.getName()*/ +" Report" + new Date().toString();
+		String subject="Wordle "/*+currentSet.getName()*/ +" Report " + new Date().toString();
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 		String body= "Your report is attached below. Good Work!";
 		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
