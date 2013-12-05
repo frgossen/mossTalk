@@ -87,13 +87,8 @@ public class WelcomeActivity extends UserActivity {
 		File fileName = null;
 		try {
 			fileName = im.wq.generateWordQuestReport(getUserName());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 			String email = getEmail();
-		
+			
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 			
 			//this makes it not close... i don't know if this was intended.
@@ -109,7 +104,13 @@ public class WelcomeActivity extends UserActivity {
 			emailIntent.setType("vnd.android.cursor.dir/vnd.google.note");
 			System.out.println("Email Send");
 			startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-		
+		} catch (Exception e) {
+			new AlertDialog.Builder(this)
+			.setTitle("Send Report")
+			.setMessage("You cannot send the report for Word Quest until you have played it.")
+			.setNeutralButton("OK", null)
+			.show();
+		}
 	}
 	
 }
