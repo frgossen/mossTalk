@@ -21,7 +21,6 @@ public class WordQuestActivity extends UserActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_word_quest);
-		new LoadUnlockedLevels().execute();
 	}
 
 	@Override
@@ -29,6 +28,11 @@ public class WordQuestActivity extends UserActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.word_quest, menu);
 		return true;
+	}
+	
+	@Override
+	public void onResume(){
+		new LoadUnlockedLevels().execute();
 	}
 	
     public void btn_tap_mode_1(View v) { btn_tap_mode(v, 1); }

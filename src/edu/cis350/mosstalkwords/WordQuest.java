@@ -18,7 +18,7 @@ import android.util.Log;
 
 public class WordQuest extends SQLiteOpenHelper {
 	
-	  // All Static variables
+    // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
  
@@ -48,7 +48,7 @@ public class WordQuest extends SQLiteOpenHelper {
 		
     	
     	do{
-	    		String getProgress = "select count(*) from " + tableName + " where progress >= 80 AND level = "+ level;
+	    		String getProgress = "select count(*) from " + tableName + " where progress >= 10 AND level = "+ level;
 	    		String getUnassisted = "select count(*) from " + tableName + " where unassistedGreaterThan24 >= 1 AND level = "+ level;
 	    		
 	    		

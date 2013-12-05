@@ -75,5 +75,7 @@ public class WelcomeActivity extends UserActivity {
 				.show();
 	}
 	
+	public void sendDatabase(View v){
+	}
 	
 }
