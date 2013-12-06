@@ -59,19 +59,6 @@
         android:paddingRight="16dp"
         android:layout_marginBottom="16dp">
         
-        <ImageButton
-            android:id="@+id/btnFav"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/scoBoStatistics"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="#CCC"
-            android:padding="16dp"
-            android:scaleType="fitCenter"
-            android:textSize="30sp" 
-            android:onClick="onFavouritesButtonClick"/>
-        
         <TextView
             android:id="@+id/scoBoStatistics"
             android:layout_width="wrap_content"
