@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewPropertyAnimator;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,10 +30,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.Menu;
 import android.widget.TextView;
 import android.widget.ImageSwitcher;
 
+@SuppressLint("DefaultLocale")
 public class MainActivity extends UserActivity implements ViewFactory,
 		TextToSpeech.OnInitListener {
 
@@ -42,6 +43,7 @@ public class MainActivity extends UserActivity implements ViewFactory,
 	private final int MAX_RECOGNIZED_REPETITIONS = 1;
 	private final String[] praisePhrases = new String[] { "Great job!",
 			"Well done!", "Outstanding!", "Very good!", "Remarkable!" };
+
 	private final int MODE_CATEGORY = 35675;
 	private final int MODE_FAVOURITES = 62230;
 	private final int MODE_WORDQUEST = 45645656;
@@ -64,7 +66,6 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		super.onCreate(savedInstanceState);
 
 		im = new ImageManager(getUserName(), getApplicationContext());
-
 		tts = new TextToSpeech(this, this);
 		imCache = ImageCache.getInstance();
 		backgroundTask = new LoadSetAndImages();
@@ -138,8 +139,8 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		ProgressBar pbar = (ProgressBar) findViewById(R.id.progBar);
 		pbar.setMax(numImages + 1);
 		VerticalProgressBar imageScoreProgBar = (VerticalProgressBar) findViewById(R.id.imageScoreProgBar);
+		// Reason for +5: The progress bar should never appear empty
 		imageScoreProgBar.setMax(100 + 5);
-
 	}
 
 	public void onSaveInstanceState(Bundle bundle) {
@@ -154,6 +155,7 @@ public class MainActivity extends UserActivity implements ViewFactory,
 
 	public void onRestoreInstanceState(Bundle bundle) {
 		super.onRestoreInstanceState(bundle);
+		// extracted to be reused in onCreate
 		restoreState(bundle);
 	}
 
@@ -179,13 +181,6 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		backgroundTask.cancel(true);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
-
 	// required method for image switcher class
 	public View makeView() {
 		ImageView iv = new ImageView(this);
@@ -203,8 +198,6 @@ public class MainActivity extends UserActivity implements ViewFactory,
 
 		Intent gotoEndOfSet = new Intent(this, EndSetActivity.class);
 		gotoEndOfSet.putExtra("categoryName", categoryName);
-
-		showCurrentImageFromCache();
 
 		gotoEndOfSet.putExtra("currentSet", currentSet);
 		gotoEndOfSet.putExtra("mode", mode);
@@ -224,7 +217,7 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		}
 	}
 
-	private synchronized void showCurrentImageFromCache() {
+	private void showCurrentImageFromCache() {
 		try {
 			String word = currentSet.getWord(imageIndex);
 			Bitmap im = imCache.getBitmapFromCache(word);
@@ -234,7 +227,7 @@ public class MainActivity extends UserActivity implements ViewFactory,
 				imSwitcher.setImageDrawable(drawableBitmap);
 			}
 		} catch (Exception e) {
-			Log.d("ERROR", "Could not load image from cache. ");
+			Log.e("ImageCache", "Could not load image from cache. ");
 		}
 	}
 
@@ -368,7 +361,7 @@ public class MainActivity extends UserActivity implements ViewFactory,
 	}
 
 	public void onInit(int status) {
-		// Is called when tts is initialized. This may take a while. 
+		// Is called when tts is initialized. This may take a while.
 		// speak("Welcome to Wordle!", 1);
 	}
 
@@ -476,13 +469,11 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		tts.setSpeechRate((float) (0.4));
 		tts.speak(s1, 0, null);
 		try {
-			Thread.sleep(200 + (100 * (long) Math.floor((0.5 * s1.length()))),
-					0);
-			tts.stop();
+			long millis = 200 + (100 * (long) Math.floor((0.5 * s1.length())));
+			Thread.sleep(millis, 0);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Log.d("Error of Exception", "Error");
+			// If interrupted tts should stop anyway.
 		}
+		tts.stop();
 	}
 }

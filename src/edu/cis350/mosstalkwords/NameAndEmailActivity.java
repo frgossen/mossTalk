@@ -12,75 +12,71 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
 
-public class NameAndEmailActivity extends Activity
-{
+public class NameAndEmailActivity extends Activity {
 	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Context mContext = this; //this.getApplicationContext();
-		   
-	    
-		 Intent i=getIntent();
-		 SetStatistics currentUser=(SetStatistics) i.getSerializableExtra("User");
-		    
+		Context mContext = this; // this.getApplicationContext();
 
-		 
-		 LayoutInflater inflater = this.getLayoutInflater();//(LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    final View layout = inflater.inflate(R.layout.dialog_enter_name_and_email, null); 
+		Intent i = getIntent();
+		SetStatistics currentUser = (SetStatistics) i
+				.getSerializableExtra("User");
 
-		SharedPreferences userSettings=getSharedPreferences("UserPreferences", MODE_PRIVATE);
-		
-		//return username and email to main activity
-		EditText username=(EditText) layout.findViewById(R.id.username);
-	    EditText email=(EditText) layout.findViewById(R.id.email);
+		LayoutInflater inflater = this.getLayoutInflater();// (LayoutInflater)
+															// mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final View layout = inflater.inflate(
+				R.layout.dialog_enter_name_and_email, null);
+
+		SharedPreferences userSettings = getSharedPreferences(
+				"UserPreferences", MODE_PRIVATE);
+
+		// return username and email to main activity
+		EditText username = (EditText) layout.findViewById(R.id.username);
+		EditText email = (EditText) layout.findViewById(R.id.email);
 
 		username.setText(userSettings.getString("name", ""));
 		email.setText(userSettings.getString("email", ""));
-	    
-	    
-	    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-	    	builder.setView(layout);
-	    	builder.setCancelable(false);
-	    	builder.setTitle("Welcome New User!");
-	    
-	    
-			builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-			{
-				public void onClick(DialogInterface dialog, int id)
-				{
-					//return to main activity
-					Intent i=getIntent();
-					i.putExtra("Cancel", true);
-					setResult(RESULT_OK, i);
-					finish();
-				}
-			})
-			.setPositiveButton(R.string.send, new DialogInterface.OnClickListener()
-			{
-				public void onClick(DialogInterface dialog, int id)
-				{
-					
-					//return username and email to main activity
-					EditText username=(EditText) layout.findViewById(R.id.username);
-				    EditText email=(EditText) layout.findViewById(R.id.email);
 
-				    Intent i=getIntent();
-					i.putExtra("Cancel", false);
-					System.out.println(username.getText().toString());
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setView(layout);
+		builder.setCancelable(false);
+		builder.setTitle("Welcome New User!");
 
-					System.out.println(email.getText().toString());
-					i.putExtra("Username", username.getText().toString());
-					i.putExtra("Email", email.getText().toString());
-					
-					setResult(RESULT_OK, i);
-					finish();
-				}
-			});
-				
-		
-		AlertDialog alert= builder.create();//create the AlertDialog object and return it
-		//alert.setContentView(R.layout.dialog_endset);
+		builder.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// return to main activity
+						Intent i = getIntent();
+						i.putExtra("Cancel", true);
+						setResult(RESULT_OK, i);
+						finish();
+					}
+				}).setPositiveButton(R.string.send,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+
+						// return username and email to main activity
+						EditText username = (EditText) layout
+								.findViewById(R.id.username);
+						EditText email = (EditText) layout
+								.findViewById(R.id.email);
+
+						Intent i = getIntent();
+						i.putExtra("Cancel", false);
+						System.out.println(username.getText().toString());
+
+						System.out.println(email.getText().toString());
+						i.putExtra("Username", username.getText().toString());
+						i.putExtra("Email", email.getText().toString());
+
+						setResult(RESULT_OK, i);
+						finish();
+					}
+				});
+
+		AlertDialog alert = builder.create();// create the AlertDialog object
+												// and return it
+		// alert.setContentView(R.layout.dialog_endset);
 		alert.show();
 	}
 }
