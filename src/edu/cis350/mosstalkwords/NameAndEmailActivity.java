@@ -10,17 +10,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RatingBar;
 
 public class NameAndEmailActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Context mContext = this; // this.getApplicationContext();
+		Context mContext = this; 
 
 		Intent i = getIntent();
-		SetStatistics currentUser = (SetStatistics) i
-				.getSerializableExtra("User");
 
 		LayoutInflater inflater = this.getLayoutInflater();// (LayoutInflater)
 															// mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -76,7 +73,6 @@ public class NameAndEmailActivity extends Activity {
 
 		AlertDialog alert = builder.create();// create the AlertDialog object
 												// and return it
-		// alert.setContentView(R.layout.dialog_endset);
 		alert.show();
 	}
 }

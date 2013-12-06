@@ -1,11 +1,9 @@
 package edu.cis350.mosstalkwords;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
