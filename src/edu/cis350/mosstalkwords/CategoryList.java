@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+/*
+ * CategoryList is to represent the category list module
+ */
 public class CategoryList extends Activity {
 
 	// The data to show

@@ -10,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/*
+ * CategoryListAdapter is used to add listener to category module
+ */
 public class CategoryListAdapter extends ArrayAdapter<Category> {
 
 	private Context context;

@@ -82,7 +82,7 @@ public final class R {
         public static final int bestScoreBar=0x7f09001f;
         public static final int bestStreak=0x7f090021;
         public static final int btnCategories=0x7f09003f;
-        public static final int btnFav=0x7f090004;
+        public static final int btnFav=0x7f090005;
         public static final int btnFavourites=0x7f09003e;
         public static final int btnHintSound=0x7f090009;
         public static final int btnHintWord=0x7f09000a;
@@ -140,7 +140,7 @@ public final class R {
         public static final int profileScore=0x7f090045;
         public static final int progBar=0x7f090002;
         public static final int save_button=0x7f090036;
-        public static final int scoBoStatistics=0x7f090005;
+        public static final int scoBoStatistics=0x7f090004;
         public static final int scoreBar=0x7f090018;
         public static final int scoreBar1=0x7f09005b;
         public static final int scoreBar2=0x7f09005e;

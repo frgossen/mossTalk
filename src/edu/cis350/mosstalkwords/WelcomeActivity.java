@@ -91,12 +91,11 @@ public class WelcomeActivity extends UserActivity {
 			
 			Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 			
-			//this makes it not close... i don't know if this was intended.
 			emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			//
+			
 			emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, 
 					new String[]{email});
-			String subject="Wordle "/*+currentSet.getName()*/ +" Report " + new Date().toString();
+			String subject="Wordle Report " + new Date().toString();
 			emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 			String body= "Your report is attached below. Good Work!";
 			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);

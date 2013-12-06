@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+/*
+ * BaseActivity is for login
+ */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class BaseActivity extends UserActivity{
 

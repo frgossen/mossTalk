@@ -6,6 +6,12 @@ import java.util.Date;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/*
+ * ImageStatistics is used as an interface to store each image 
+ * which is received from backend and go through the whole
+ * session in frontend (change the fields) and then write 
+ * back to backend
+ */
 public class ImageStatistics implements Parcelable {
 
 	private String imageName;

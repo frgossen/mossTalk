@@ -1,5 +1,8 @@
 package edu.cis350.mosstalkwords;
 
+/*
+ * Category is used to score the name and its icon corresponding with the layout
+ */
 public class Category {
 
 	private String name;

@@ -78,7 +78,6 @@ public class EndSetReturnActivity extends Activity {
 
 		AlertDialog alert = builder.create();// create the AlertDialog object
 												// and return it
-		// alert.setContentView(R.layout.dialog_endset);
 		alert.show();
 	}
 
