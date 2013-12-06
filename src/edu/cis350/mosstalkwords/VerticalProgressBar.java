@@ -8,6 +8,10 @@ import android.widget.ProgressBar;
 public class VerticalProgressBar extends ProgressBar{
     private int x, y, z, w;
 
+    /**
+     * http://stackoverflow.com/questions/3926395/android-set-a-progressbar-to-be-a-vertical-bar-instead-of-horizontal 
+     */
+    
     @Override
     protected void drawableStateChanged() {
         // TODO Auto-generated method stub
