@@ -88,7 +88,7 @@ public class UserActivity extends Activity {
 	}
 	
 	private boolean validName(String name){
-		if(name == null)
+		if(name == null || name.indexOf(" ") != -1)
 			return false;
 		return !name.equals("");
 	}

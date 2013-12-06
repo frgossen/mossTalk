@@ -355,6 +355,7 @@ public class MainActivity extends UserActivity implements ViewFactory, TextToSpe
 				updateLayoutInformation();
 				praiseUser();
 				currentSet.setSolved(imageIndex, true);
+				currentSet.setLastSeen(imageIndex, System.currentTimeMillis());
 				nextImage();
 				matchFound = true;
 				break;

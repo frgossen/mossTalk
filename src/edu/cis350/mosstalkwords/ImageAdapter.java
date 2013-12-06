@@ -113,18 +113,20 @@ public class ImageAdapter extends BaseAdapter {
 			System.out.println("p:"+position);
 			textView.setText("" + results[position]);
 			
-			if(results[position] == 100)
+			//80 is perfect for words seen today, 100 is perfect otherwise
+			if(results[position] >= 80) 
 			{
-				System.out.println("HERE!");
+				//green
 				gridView.findViewById(R.id.fav_item).setBackgroundResource(0x01060014);	
 			}
-			else if(results[position] == 0)
+			else if(results[position] <= 20)// if its wrong, 20 is for attempting
 			{
-				System.out.println("HERE1!");
+				//red
 				gridView.findViewById(R.id.fav_item).setBackgroundResource(0x01060016);	
 			}
-			else
+			else//otherwise used hints and succeeded
 			{
+				//yellow
 				gridView.findViewById(R.id.fav_item).setBackgroundColor(0xFFFFFF00);	
 			}
 			

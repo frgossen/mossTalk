@@ -120,7 +120,7 @@ public class EndSetActivity extends UserActivity {
 			
 			updateFavoritesDB();
 		
-		if(mode == 45645656)
+		if(mode == 45645656)//word quest
 		{
 			System.out.println("UpdateWordQuest");
 			updateWordQuestDB();
