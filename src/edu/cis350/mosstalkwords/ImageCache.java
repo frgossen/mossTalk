@@ -13,14 +13,12 @@ public class ImageCache {
 	private LruCache<String, Bitmap> imCache; 
 	
 	private ImageCache() {
-	//set up cache for images
+		//set up cache for images
 		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);	
 		
 		//use 1/2 size of available memory for cache (probably a bad idea, but YOLO) 
 		final int cacheSize = maxMemory/2;
 		imCache = new LruCache<String, Bitmap>(cacheSize) {
-			//had to add this line to get it to compile; it won't like anything
-			//less than api v12
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 			@Override
 			protected int sizeOf(String key, Bitmap bitmap) {
@@ -60,7 +58,6 @@ public class ImageCache {
 
 		imCache.evictAll();
 	}
-	
 
 	//scale down images based on display size; helps with OOM errors
 	public static int calculateInSampleSize(
@@ -82,7 +79,5 @@ public class ImageCache {
 	
 	    return inSampleSize;
 	}
-		
-	
 	
 }
