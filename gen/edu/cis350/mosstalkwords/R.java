@@ -81,14 +81,14 @@ public final class R {
         public static final int bestCompleteness=0x7f09001f;
         public static final int bestScoreBar=0x7f09001e;
         public static final int bestStreak=0x7f090020;
-        public static final int btnCategories=0x7f09003e;
-        public static final int btnFavourites=0x7f09003d;
+        public static final int btnCategories=0x7f09003f;
+        public static final int btnFavourites=0x7f09003e;
         public static final int btnHintSound=0x7f090008;
         public static final int btnHintWord=0x7f090009;
         public static final int btnNext=0x7f09000b;
         public static final int btnReset=0x7f090040;
         public static final int btnSpeak=0x7f09000a;
-        public static final int btnWordQuest=0x7f09003f;
+        public static final int btnWordQuest=0x7f09003d;
         public static final int category_list=0x7f090016;
         public static final int difficultGridview=0x7f090025;
         public static final int divider=0x7f09001c;
