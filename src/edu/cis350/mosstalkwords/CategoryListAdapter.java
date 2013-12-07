@@ -29,6 +29,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 		this.categoryList = categoryList;
 	}
 
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;

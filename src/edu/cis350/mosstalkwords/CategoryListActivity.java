@@ -16,11 +16,6 @@ public class CategoryListActivity extends UserActivity {
 	// The data to show
 	ArrayList<Category> categoryList;
 
-	private void initList() {
-		// new dynamic categories, but no image icon
-		new LoadCategories().execute(this);
-	}
-
 	public void startMain(String categoryName) {
 		Intent activityMain = new Intent(this, MainActivity.class);
 		activityMain.putExtra("startCategory", categoryName);
@@ -32,11 +27,10 @@ public class CategoryListActivity extends UserActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.category_list);
 
-		initList();
-
-		// We get the ListView component from the layout
+		new LoadCategories().execute(this);
 	}
 
+	//dyanmically get all of the categories and update the categoryList
 	private class LoadCategories extends
 			AsyncTask<CategoryListActivity, Category, Void> {
 		@Override
@@ -60,13 +54,6 @@ public class CategoryListActivity extends UserActivity {
 		@Override
 		public void onPostExecute(Void v) {
 			ListView lv = (ListView) findViewById(R.id.category_list);
-
-			// This is a simple adapter that accepts as parameter
-			// Context
-			// Data list
-			// The row layout that is used during the row creation
-			// The View id used to show the data. The key number and the view id
-			// must match
 
 			lv.setAdapter(new CategoryListAdapter(CategoryListActivity.this
 					.getApplicationContext(), R.layout.row_image, categoryList));

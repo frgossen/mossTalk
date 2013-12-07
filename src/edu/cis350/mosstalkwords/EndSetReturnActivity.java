@@ -20,6 +20,7 @@ public class EndSetReturnActivity extends Activity {
 
 		Context mContext = this;
 
+		//dialog that shows |main menu | replay | next set|
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setCancelable(false);
 		builder.setTitle("Play Again?")
@@ -65,11 +66,6 @@ public class EndSetReturnActivity extends Activity {
 								Intent menu = new Intent(
 										EndSetReturnActivity.this,
 										WelcomeActivity.class);
-								// menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-								// need to make main activity exit.
-
-								// fix this, main activity needs to close.
 
 								menu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -85,6 +81,7 @@ public class EndSetReturnActivity extends Activity {
 		alert.show();
 	}
 
+	// free the ImageCache's memory, 
 	private void freeCacheMem() {
 		Set s = EndSetReturnActivity.this.getIntent().getExtras()
 				.getParcelable("currentSet");

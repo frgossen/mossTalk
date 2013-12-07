@@ -38,7 +38,6 @@ public class EndSetActivity extends UserActivity {
 
 		gridView = (GridView) this.findViewById(R.id.gridview);
 
-		// list of string names, results
 		Intent i = getIntent();
 		categoryName = i.getStringExtra("categoryName");
 		mode = i.getIntExtra("mode", -1);
@@ -51,7 +50,6 @@ public class EndSetActivity extends UserActivity {
 			imageWords[j] = currentSet.get(j).getImageName();
 		}
 
-		// pseudo-solution to WQ favorites issue
 		adapter = new ImageAdapter(this, currentSet, getUserName());
 		gridView.setAdapter(adapter);
 		RatingBar score = (RatingBar) this.findViewById(R.id.scoreBar);
@@ -256,7 +254,6 @@ public class EndSetActivity extends UserActivity {
 		Intent returnOptions = new Intent(this, EndSetReturnActivity.class);
 		returnOptions.putExtra("currentSet", currentSet);
 		returnOptions.putExtra("categoryName", categoryName);
-		// returnOptions.putExtra("startFavourites", isFavourites);
 		returnOptions.putExtra("mode", mode);
 		returnOptions.putExtra("wordQuestLevel", wordQuestLevel);
 
