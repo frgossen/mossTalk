@@ -208,7 +208,7 @@ public final class R {
         public static final int email=0x7f060021;
         public static final int email_base=0x7f060001;
         public static final int email_btn=0x7f060007;
-        public static final int favourites=0x7f060026;
+        public static final int favorites=0x7f060026;
         public static final int four_star=0x7f06001c;
         public static final int hello_world=0x7f06000b;
         public static final int login=0x7f060002;

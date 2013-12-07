@@ -58,7 +58,7 @@
         android:layout_weight="1"
         android:background="@android:color/holo_red_dark"
         android:onClick="openFavourites"
-        android:text="@string/favourites"
+        android:text="@string/favorites"
         android:textColor="@android:color/white"
         android:textSize="50sp" />
 

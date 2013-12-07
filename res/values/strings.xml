@@ -55,7 +55,7 @@
     <string name="btnSound">Sound</string>
     <string name="logo">Logo</string>
     <string name="reset">Reset Score</string>
-    <string name="favourites">Favourites</string>
+    <string name="favorites">Favorites</string>
     <string name="wordQuest">Word Quest</string>
     <string name="categories">Categories</string>
     <string name="title_activity_word_quest">WordQuest</string>
