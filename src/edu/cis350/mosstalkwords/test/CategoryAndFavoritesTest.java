@@ -161,5 +161,12 @@ public class CategoryAndFavoritesTest extends AndroidTestCase {
 		Assert.assertEquals(0, listOfReturnedImages.size());
 	}
 
-	
+	public void testGetAllCategories(){
+		List<String> categories = new ArrayList<String>();
+		categories = testImageSDB.getAllCategories();
+		for(String str:categories){
+			System.out.println("Category: " + str);
+		}
+		
+	}
 }

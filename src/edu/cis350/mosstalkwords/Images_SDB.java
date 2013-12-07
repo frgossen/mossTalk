@@ -300,4 +300,35 @@ public class Images_SDB {
             return Integer.toString(word.length());
     }
 
+    public List<String> getAllCategories(){
+    	List<String> catogoriesList = new ArrayList<String>();
+        String selectExpression = "select * from `" + myDomain + "`";
+        try{
+            SelectRequest selectRequest = new SelectRequest(selectExpression);
+            List<Item> items = sdb.select(selectRequest).getItems();
+            
+            System.out.println("Items size is:" + items.size());
+            
+            Item item;
+            for(int i=0;i<items.size(); i++){
+	        	item=items.get(i);
+	            
+	        	String itemCategory = item.getAttributes().get(0).getValue();
+	        	int match = 0;
+	        	for(String str: catogoriesList){
+	        		if(str.equals(itemCategory))
+	        		{
+	        			match = 1;
+	        			break;
+	        		}
+	        	}
+	        	if(match == 0)
+	        		catogoriesList.add(itemCategory);
+            }
+        }catch(Exception e)
+        {
+            Log.d("exception",e.toString());
+        }
+        return catogoriesList;
+    }
 }
