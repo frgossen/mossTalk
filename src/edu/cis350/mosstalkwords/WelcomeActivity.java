@@ -2,7 +2,6 @@ package edu.cis350.mosstalkwords;
 
 import java.io.File;
 import java.util.Date;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,15 +12,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+/*
+ * WelcomeActivity is the screen that lets the user pick the module to play
+ * Also allows the user to reset score and send a formatted html document
+ * of information in the wordquest database in email form.
+ */
+
+
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WelcomeActivity extends UserActivity {
 	
-	ImageManager im ;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		im = new ImageManager(getUserName(), getApplicationContext());
 		setContentView(R.layout.main_menu);
 	}
 	
@@ -51,7 +55,7 @@ public class WelcomeActivity extends UserActivity {
 	}
 	
 	public void openCategories(View v){
-		Intent i = new Intent(this, CategoryList.class);	
+		Intent i = new Intent(this, CategoryListActivity.class);	
 		startActivity(i);
 		finish();
 	}
@@ -83,6 +87,8 @@ public class WelcomeActivity extends UserActivity {
 	
 	public void sendDatabase(View v){
 		File fileName = null;
+		ImageManager im = new ImageManager(getUserName(), getApplicationContext());
+		
 		try {
 			fileName = im.wq.generateWordQuestReport(getUserName());
 			String email = getEmail();
@@ -99,7 +105,6 @@ public class WelcomeActivity extends UserActivity {
 			emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
 			emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileName));
 			emailIntent.setType("vnd.android.cursor.dir/vnd.google.note");
-			System.out.println("Email Send");
 			startActivity(Intent.createChooser(emailIntent, "Send mail..."));
 		} catch (Exception e) {
 			new AlertDialog.Builder(this)

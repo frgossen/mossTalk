@@ -16,6 +16,8 @@ import android.os.Environment;
 
 /*
  * EndSetActivity is called at the end of each session
+ * Shows the user a summary of the set and allows
+ * for favorite selection and saving/sending reports
  */
 public class EndSetActivity extends UserActivity {
 	GridView gridView;
@@ -54,7 +56,6 @@ public class EndSetActivity extends UserActivity {
 		gridView.setAdapter(adapter);
 		RatingBar score = (RatingBar) this.findViewById(R.id.scoreBar);
 		int starScore = currentSet.getStarScore();
-		// System.out.println("scNull:"+score);
 		score.setNumStars(Set.NUM_STARS);
 		score.setRating(starScore);
 
@@ -101,16 +102,12 @@ public class EndSetActivity extends UserActivity {
 	}
 
 	private void updateAll() {
-		for (ImageStatistics i : currentSet.getImages()) {
-			System.out.println(i.getImageName() + " : " + i.getLastSeen());
-		}
 		updateCurrentSet();
 
 		updateFavoritesDB();
 
 		if (mode == 45645656)// word quest
 		{
-			System.out.println("UpdateWordQuest");
 			updateWordQuestDB();
 		}
 
@@ -143,12 +140,10 @@ public class EndSetActivity extends UserActivity {
 	}
 
 	private void updateWordQuestDB() {
-		System.out.println("In updateWordQuestDB");
 		im.updateWordQuest(currentSet.getImages(), wordQuestLevel);
 	}
 
 	public void send(View v) {
-		System.out.println("Send");
 		// update database
 		updateAll();
 
@@ -217,7 +212,6 @@ public class EndSetActivity extends UserActivity {
 		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
 		emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileName));
 		emailIntent.setType("vnd.android.cursor.dir/vnd.google.note");
-		System.out.println("Email Send");
 		startActivityForResult(
 				Intent.createChooser(emailIntent, "Send mail..."), 1);
 	}

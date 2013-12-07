@@ -11,6 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+
+/*
+ * NameAndEmailActivity allows users to enter a name and email, which will can be sent
+ * to an email intent and to auto-populate
+ */
+
 public class NameAndEmailActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,9 +66,7 @@ public class NameAndEmailActivity extends Activity {
 
 						Intent i = getIntent();
 						i.putExtra("Cancel", false);
-						System.out.println(username.getText().toString());
-
-						System.out.println(email.getText().toString());
+						
 						i.putExtra("Username", username.getText().toString());
 						i.putExtra("Email", email.getText().toString());
 

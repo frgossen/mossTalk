@@ -21,7 +21,9 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
 	public CategoryListAdapter(Context context, int layoutResourceId,
 			ArrayList<Category> categoryList) {
+
 		super(context, layoutResourceId, categoryList);
+		
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
 		this.categoryList = categoryList;
@@ -38,7 +40,9 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 			row = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new CategoryHolder();
-			holder.imgIcon = (ImageView) row.findViewById(R.id.icon);
+
+			//no icons yet.
+			//holder.imgIcon = (ImageView) row.findViewById(R.id.icon);
 			holder.txtTitle = (TextView) row.findViewById(R.id.name);
 
 			row.setTag(holder);
@@ -48,8 +52,10 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
 		Category category = categoryList.get(position);
 		holder.txtTitle.setText(category.getName());
-		holder.imgIcon.setImageResource(category.getIcon());
-
+		
+		//no icons yet
+		//holder.imgIcon.setImageResource(category.getIcon());
+		
 		return row;
 	}
 

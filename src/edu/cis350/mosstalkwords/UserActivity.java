@@ -1,12 +1,14 @@
 package edu.cis350.mosstalkwords;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.widget.EditText;
+
+/*
+ * Provides an means for all activites to access sharedpreferences 
+ * for score, email, and user name
+ */
 
 public class UserActivity extends Activity {
 
@@ -57,8 +59,7 @@ public class UserActivity extends Activity {
 		editor.putString(EMAIL_KEY, email);
 		editor.putInt(SCORE_KEY, 0);
 		editor.commit();
-		System.out.println("name: " + getUserName());
-
+		
 		return true;
 	}
 	
@@ -75,7 +76,6 @@ public class UserActivity extends Activity {
 	}
 	
 	public String getUserName(){
-		System.out.println(userData + "name: ");
 		return userData.getString(NAME_KEY, null);
 	}
 	

@@ -8,6 +8,12 @@ import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/*
+ * Set stores all of the information about the current set and performs
+ * calculations such as calculation of streak, score, completeness, etc.
+ * 
+ */
+
 public class Set implements Parcelable {
 
 	private ArrayList<ImageStatistics> images;
@@ -54,7 +60,6 @@ public class Set implements Parcelable {
 		images = new ArrayList<ImageStatistics>();
 
 		for (ImageStatistics i : imageList) {
-			System.out.println("NAME:" + i.getImageName());
 			images.add(i);
 		}
 	}

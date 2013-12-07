@@ -7,6 +7,10 @@ import android.os.Build;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
+/*
+ * Cache of the images as bitmaps
+ */
+
 public class ImageCache {
 	private static ImageCache imc;
 
@@ -47,7 +51,6 @@ public class ImageCache {
 		for (String w : words) {
 			Bitmap b = imCache.get(w);
 			if (b != null) {
-				System.out.println("Freed:" + w);
 				b.recycle();
 			}
 		}

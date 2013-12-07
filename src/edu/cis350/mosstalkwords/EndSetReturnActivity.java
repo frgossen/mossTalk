@@ -7,9 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+/*
+ * EndSetReturnActivity simply shows a dialog that allows the user
+ * to replay the set, return to main menu, or go to the next set
+ */
+
 public class EndSetReturnActivity extends Activity {
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

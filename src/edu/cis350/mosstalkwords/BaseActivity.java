@@ -10,7 +10,9 @@ import android.widget.EditText;
 
 /*
  * BaseActivity is for login
+ * Only shows up the first time or after the user resets his data.
  */
+
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class BaseActivity extends UserActivity{
 
@@ -50,5 +52,4 @@ public class BaseActivity extends UserActivity{
 			.show();
 		}
 	}
-	
 }

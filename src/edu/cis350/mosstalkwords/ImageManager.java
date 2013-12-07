@@ -25,14 +25,14 @@ public class ImageManager {
 		wqHandler = new WordQuestDataHandler(context);
 		wqHandler.createTable(userName);
 		wordQuestUpdatedFromSDB = false;
+		img_SDB = new Images_SDB();
+
 	}
 	
 	public List<ImageStatistics> getImagesForCategory(String category){
 		
 		List<ImageStatistics> imageStatisticsList = new ArrayList<ImageStatistics>();
-		
-		img_SDB = new Images_SDB();
-		
+				
 		List<Image> imageList = img_SDB.returnImages(category);
 		
 		for(int i = 0; i<imageList.size(); i++){

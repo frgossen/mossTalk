@@ -15,6 +15,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/*
+ * Adapter for the EndSetActivity grid that shows the image, score, 
+ * and favorite checkbox
+ */
+
 public class ImageAdapter extends BaseAdapter {
 	private Context context; // context for inflater
 	private int[] results; // scores (will be used to mark them correct/incorrect

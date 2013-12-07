@@ -7,7 +7,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +31,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.TextView;
 import android.widget.ImageSwitcher;
+
+/*
+ * MainActivity is the game screen, displays a scoreboard and the image. 
+ * includes speak, next, sound hint, and word hint buttons
+ * 
+ */
+
+
 
 @SuppressLint("DefaultLocale")
 public class MainActivity extends UserActivity implements ViewFactory,
@@ -247,23 +254,32 @@ public class MainActivity extends UserActivity implements ViewFactory,
 	}
 
 	public void onSoundHintButtonClick(View view) {
-		currentSet.incSoundHint(imageIndex);
-		String word = currentSet.get(imageIndex).getImageName();
-		speakSound(word);
-		updateLayoutInformation();
+		if(currentSet != null && currentSet.getSize() != 0)
+		{
+			currentSet.incSoundHint(imageIndex);
+			String word = currentSet.get(imageIndex).getImageName();
+			speakSound(word);
+			updateLayoutInformation();
+		}
 	}
 
 	public void onWordHintButtonClick(View view) {
-		String word = currentSet.get(imageIndex).getImageName();
-		speak(word, 1);
-		currentSet.incWordHint(imageIndex);
-		updateLayoutInformation();
+		if(currentSet != null && currentSet.getSize() != 0)
+		{
+			String word = currentSet.get(imageIndex).getImageName();
+			speak(word, 1);
+			currentSet.incWordHint(imageIndex);
+			updateLayoutInformation();
+		}
 	}
 
 	public void onNextButtonClick(View view) {
-		currentSet.setSolved(imageIndex, false);
-		currentSet.setLastSeen(imageIndex, System.currentTimeMillis());
-		nextImage();
+		if(currentSet != null && currentSet.getSize() != 0)
+		{
+			currentSet.setSolved(imageIndex, false);
+			currentSet.setLastSeen(imageIndex, System.currentTimeMillis());
+			nextImage();
+		}
 	}
 
 	public void onSpeakButtonClick(View view) {
@@ -360,9 +376,8 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		tts.speak(words2say, TextToSpeech.QUEUE_FLUSH, null);
 	}
 
+	// Is called when tts is initialized. This may take a while.
 	public void onInit(int status) {
-		// Is called when tts is initialized. This may take a while.
-		// speak("Welcome to Wordle!", 1);
 	}
 
 	class LoadSetAndImages extends AsyncTask<Boolean, Integer, Object> {
@@ -377,7 +392,6 @@ public class MainActivity extends UserActivity implements ViewFactory,
 				 */
 				boolean loadNewSet = params[0].booleanValue();
 				Log.d("ASYNC", "started, loadNewSet = " + loadNewSet);
-				System.out.println("MODE:" + mode);
 				if (loadNewSet) {
 					if (mode == MODE_CATEGORY)
 						currentSet = new Set(
@@ -392,7 +406,6 @@ public class MainActivity extends UserActivity implements ViewFactory,
 					}
 				}
 
-				System.out.println(loadNewSet + "Right here" + currentSet);
 				int size = currentSet.getSize();
 				numImages = size;
 				for (int i = 0; i < size; i++) {

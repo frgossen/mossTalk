@@ -1,7 +1,8 @@
 package edu.cis350.mosstalkwords;
 
 /*
- * Category is used to score the name and its icon corresponding with the layout
+ * Category is used to store the name and its icon corresponding with the layout
+ * Currently icons are not shown since categories are dynamically updated from S3
  */
 public class Category {
 
