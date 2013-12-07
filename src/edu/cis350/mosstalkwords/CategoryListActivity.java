@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 /*
- * CategoryList is to represent the category list module
+ * CategoryListActivity is to represent the category list module
  */
 public class CategoryListActivity extends UserActivity {
 
@@ -19,13 +19,6 @@ public class CategoryListActivity extends UserActivity {
 	private void initList() {
 		// new dynamic categories, but no image icon
 		new LoadCategories().execute(this);
-
-		// old has hardocoded categoris(living/nonliving) + image
-
-		// categoryList = new ArrayList<Category>();
-		// We populate the category list
-		// categoryList.add(new Category(R.drawable.living, "Living"));
-		// categoryList.add(new Category(R.drawable.nonliving, "NonLiving"));
 	}
 
 	public void startMain(String categoryName) {
