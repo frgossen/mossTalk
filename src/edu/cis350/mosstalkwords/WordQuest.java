@@ -293,8 +293,11 @@ public class WordQuest extends SQLiteOpenHelper {
 						"<td>" + cursor.getString(5) + "</td>" +
 						"<td>" + cursor.getString(6) + "</td>" +
 						"<td>" + cursor.getString(7) + "</td>" +
-						"<td>" + cursor.getString(8) + "</td>" +
-						"<td>" + cursor.getString(9) + "</td> </tr>";
+						"<td>" + cursor.getString(8) + "</td>";
+				if(cursor.getString(9).equals("Wed Dec 31 19:00:00 EST 1969"))
+						wordQuestHTML += "<td>-</td></tr>";
+				else
+						wordQuestHTML += "<td>" + cursor.getString(9) + "</td> </tr>";
 			}while(cursor.moveToNext());
     	}
 		else
