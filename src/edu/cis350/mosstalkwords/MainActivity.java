@@ -60,11 +60,13 @@ public class MainActivity extends UserActivity implements ViewFactory,
 	private ImageManager im;
 	private LoadSetAndImages backgroundTask;
 
-	private int mode;
-	private String categoryName;
-	private int difficultyLevel = -1;
-	private int imageIndex;
-	private Set currentSet;
+	
+	// its made public for testing!
+	public int mode;
+	public String categoryName;
+	public int difficultyLevel = -1;
+	public int imageIndex;
+	public Set currentSet;
 
 	private int numImages = 20;
 

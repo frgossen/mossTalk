@@ -1,9 +1,7 @@
 package edu.cis350.mosstalkwords.test;
 
 import edu.cis350.mosstalkwords.UserActivity;
-import android.os.Bundle;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.AndroidTestCase;
 
 public class UserActivityTest extends /*AndroidTestCase{//*/ActivityInstrumentationTestCase2<UserActivity> {
 
