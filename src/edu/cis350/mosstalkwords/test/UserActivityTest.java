@@ -29,7 +29,8 @@ public class UserActivityTest extends /*AndroidTestCase{//*/ActivityInstrumentat
 
 	public void testSetUserNameAnyString() {
 		
-		assertTrue(uA.setUserName("a q z Az 1"));
+		assertFalse(uA.setUserName("a q z Az 1"));
+		assertTrue(uA.setUserName("asdf"));
 	}
 	
 	public void testSetUserNameNull() {
@@ -57,12 +58,7 @@ public class UserActivityTest extends /*AndroidTestCase{//*/ActivityInstrumentat
 	public void testSetEmailInvalidNoPeriod() {
 		assertFalse(uA.setEmail("email@mailcom"));
 	}
-	
-	public void testGetScoreNoUser() {
-		assertEquals(uA.getScore(), 0);
-	}
-
-	public void testSetScore() {
+	public void testSetAndGetScore() {
 		
 		uA.setScore(999);
 		assertEquals(999, uA.getScore());
