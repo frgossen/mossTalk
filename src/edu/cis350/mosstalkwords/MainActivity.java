@@ -484,7 +484,11 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		tts.setSpeechRate((float) (0.4));
 		tts.speak(s1, 0, null);
 		try {
-			long millis = 200 + (100 * (long) Math.floor((0.5 * s1.length())));
+			long millis = 0;
+			if(s1.length() == 3)
+				millis = 200 + (100 * (long) Math.floor((0.7 * s1.length())));
+			else
+				millis = 200 + (100 * (long) Math.floor((0.5 * s1.length())));
 			Thread.sleep(millis, 0);
 		} catch (InterruptedException e) {
 			// If interrupted tts should stop anyway.
