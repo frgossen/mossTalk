@@ -78,8 +78,19 @@ public class MainActivity extends UserActivity implements ViewFactory,
 		tts = new TextToSpeech(this, this);
 		imCache = ImageCache.getInstance();
 		backgroundTask = new LoadSetAndImages();
-
+		
 		Intent i = getIntent();
+	
+		boolean stateRestored = false;
+		
+		if(savedInstanceState != null)
+		{
+			stateRestored = true;
+			System.out.println("State REstored");
+			restoreState(savedInstanceState);
+		}
+	
+		
 		if (i.hasExtra("startCategory")) {
 			categoryName = getIntent().getExtras().getString("startCategory");
 
@@ -120,28 +131,32 @@ public class MainActivity extends UserActivity implements ViewFactory,
 			mode = MODE_WORDQUEST;
 			difficultyLevel = i.getIntExtra("startWordQuest", -1);
 			i.removeExtra("startWordQuest");
-		} else {
-			restoreState(savedInstanceState);
-		}
+		} 
 
-		Bundle extras = this.getIntent().getExtras();
-		if (extras != null) {
-			mode = extras.getInt("mode");
-			difficultyLevel = extras.getInt("wordQuestLevel");
-			categoryName = extras.getString("categoryName");
-
-			if (extras.get("currentSet") != null) {
-				currentSet = (Set) this.getIntent().getExtras()
-						.get("currentSet");
-				numImages = currentSet.getSize();
-				backgroundTask.execute(false);
+		if(!stateRestored)
+		{
+			Bundle extras = this.getIntent().getExtras();
+			if (extras != null) {
+				mode = extras.getInt("mode");
+				difficultyLevel = extras.getInt("wordQuestLevel");
+				categoryName = extras.getString("categoryName");
+	
+				if (extras.get("currentSet") != null) {
+					currentSet = (Set) this.getIntent().getExtras()
+							.get("currentSet");
+					numImages = currentSet.getSize();
+					backgroundTask.execute(false);
+				} else {
+					backgroundTask.execute(true);
+				}
 			} else {
 				backgroundTask.execute(true);
 			}
-		} else {
-			backgroundTask.execute(true);
 		}
-
+		else
+		{
+			backgroundTask.execute(false);
+		}
 		setContentView(R.layout.activity_main);
 		ImageSwitcher imSwitcher = (ImageSwitcher) findViewById(R.id.imgSwitcher);
 		imSwitcher.setFactory(this);
