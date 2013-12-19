@@ -48,7 +48,7 @@ public class WordQuest extends SQLiteOpenHelper {
 		
     	
     	do{
-	    		String getProgress = "select count(*) from " + tableName + " where progress >= 10 AND level = "+ level;
+	    		String getProgress = "select count(*) from " + tableName + " where progress >= 80 AND level = "+ level;
 	    		String getUnassisted = "select count(*) from " + tableName + " where unassistedGreaterThan24 >= 1 AND level = "+ level;
 	    		
 	    		
@@ -62,7 +62,7 @@ public class WordQuest extends SQLiteOpenHelper {
 	        		cursor2.moveToFirst();
 	        		if(mode.equalsIgnoreCase("easy"))
 	    	    	{
-		        		if(Integer.parseInt(cursor1.getString(0)) >= 10 && Integer.parseInt(cursor2.getString(0)) >= 6)
+		        		if(Integer.parseInt(cursor1.getString(0)) >= 50 && Integer.parseInt(cursor2.getString(0)) >= 30)
 		        			level++;
 		        		else
 			        	{
